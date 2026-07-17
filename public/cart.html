@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Корзина — NADIA HAIR</title>
+    <meta name="robots" content="noindex, follow" />
+<link rel="stylesheet" href="/site/css/catalog.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="catalog-body">
+    <header class="header" data-header>
+  <div class="header__inner glass">
+    <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" data-burger><span></span><span></span></button>
+    <nav class="header__nav header__nav--left" aria-label="Левая навигация">
+      <a href="/public/index.html">Главная</a>
+      <a href="/public/index.html#services">Услуги</a>
+      <a href="/public/works/work-main.html">Работы</a>
+      <a href="/public/blog/blog.html">Блог</a>
+    </nav>
+    <a class="header__logo" href="/public/index.html" aria-label="На главную"><img src="/site/img/logo.png" alt="NADIA HAIR" /></a>
+    <nav class="header__nav header__nav--right" aria-label="Правая навигация">
+      <a href="/catalog" aria-current="page">Каталог</a>
+      <a href="/public/contacts.html">Контакты</a>
+    </nav>
+    <div class="header__commerce-actions" data-header-commerce-actions>
+      <button class="header__commerce-button" type="button" aria-label="Открыть поиск" aria-expanded="false" data-header-search-open>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+      </button>
+      <a class="header__commerce-button header__commerce-button--cart" href="/cart" aria-label="Открыть корзину">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>
+        <span data-header-cart-count hidden>0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="header__mobile" aria-label="Мобильная навигация" data-mobile-menu>
+    <div class="header__mobile-nav">
+      <a href="/public/index.html">Главная</a>
+      <a href="/public/index.html#services">Услуги</a>
+      <a href="/public/works/work-main.html">Работы</a>
+      <a href="/public/blog/blog.html">Блог</a>
+      <a href="/catalog" aria-current="page">Каталог</a>
+      <a href="/public/contacts.html">Контакты</a>
+    </div>
+    <div class="header__mobile-contact"><span>Записаться в салон</span><a href="tel:+79233906649">+7 (923) 390-66-49</a></div>
+  </nav>
+</header>
+    <main class="cart-page" data-cart-page>
+  <div class="cart-page__head">
+    <span>NADIA STORE</span>
+    <h1>Корзина</h1>
+    <p>Проверьте выбранные варианты и количество перед оформлением.</p>
+  </div>
+  <div class="catalog-status" data-cart-loading>Обновляем корзину…</div>
+  <p class="cart-page__message" data-cart-message hidden></p>
+  <section class="cart-empty" data-cart-empty hidden>
+    <span>Корзина пуста</span>
+    <h2>Вы ещё ничего не добавили</h2>
+    <p>Вернитесь в каталог и выберите подходящие товары.</p>
+    <a href="/catalog">Перейти в каталог</a>
+  </section>
+  <div class="cart-layout" data-cart-content hidden>
+    <div class="cart-list" data-cart-items></div>
+    <aside class="cart-summary">
+      <span>Ваш заказ</span>
+      <div><p>Товары <b data-cart-count>0</b></p><strong data-cart-subtotal>0 ₽</strong></div>
+      <div><p>Получение</p><strong>Уточняется при оформлении</strong></div>
+      <div class="cart-summary__total"><p>Итого</p><strong data-cart-total>0 ₽</strong></div>
+      <a href="/checkout" data-cart-checkout>Перейти к оформлению</a>
+      <p>Окончательная сумма пересчитывается сервером по актуальным ценам.</p>
+    </aside>
+  </div>
+</main>
+    <footer class="catalog-footer">
+  <div class="catalog-footer__inner">
+    <div><a href="/public/index.html">NADIA HAIR</a><p>Профессиональные товары для красоты, ухода и работы мастера.</p></div>
+    <nav aria-label="Каталог"><span>Каталог</span><a href="/catalog?category=hair">Волосы</a><a href="/catalog?category=tools">Инструменты</a><a href="/catalog?category=lashes-brows">Ресницы и брови</a><a href="/catalog?category=consumables">Расходные материалы</a></nav>
+    <nav aria-label="Информация"><span>Информация</span><a href="/public/contacts.html">Контакты</a><a href="/cart">Корзина</a><a href="/public/blog/blog.html">Журнал</a></nav>
+  </div>
+  <div class="catalog-footer__bottom"><span>© 2026 Клуб Эстетики</span><span>Абакан</span></div>
+</footer>
+    <script src="/site/script/catalog.js"></script>
+  </body>
+</html>

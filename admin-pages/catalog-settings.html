@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Структура каталога — Клуб Эстетики</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/site/css/admin.min.css" />
+    <link rel="stylesheet" href="/site/css/admin-catalog.css" />
+    <script src="/site/script/admin/admin.js" defer></script>
+  </head>
+  <body class="admin-body" data-admin-page="catalog-settings">
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="admin-sidebar__logo" href="/admin/dashboard">Клуб Эстетики</a>
+        <span class="admin-sidebar__caption">Управление</span>
+        <nav class="admin-sidebar__nav" aria-label="Навигация админ-панели">
+          <a class="admin-sidebar__link" href="/admin/dashboard">Обзор</a>
+          <a class="admin-sidebar__link" href="/admin/requests">Заявки</a>
+          <a class="admin-sidebar__link" href="/admin/works">Работы</a>
+          <a class="admin-sidebar__link admin-sidebar__link--active" href="/admin/catalog">Каталог</a>
+          <a class="admin-sidebar__link" href="/admin/orders">Заказы</a>
+          <a class="admin-sidebar__link" href="/admin/blog">Статьи</a>
+          <a class="admin-sidebar__link" href="/admin/staff">Сотрудники</a>
+        </nav>
+        <div class="admin-sidebar__bottom"><a class="admin-sidebar__site-link" href="/admin/catalog">К товарам</a><button class="admin-sidebar__logout" type="button" data-admin-logout>Выйти</button></div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-header"><div><span class="admin-header__eyebrow">Архитектура каталога</span><h1 class="admin-header__title">Категории и фильтры</h1></div><div class="admin-user"><div class="admin-user__info"><span class="admin-user__role" data-admin-user-role>—</span><span class="admin-user__email" data-admin-user-email>—</span></div><button class="admin-user__logout-mobile" type="button" data-admin-logout>Выйти</button></div></header>
+
+        <section class="admin-catalog-settings" data-catalog-settings-page>
+          <div class="admin-catalog-settings__head"><div><a href="/admin/catalog">← Вернуться к товарам</a><span>NADIA STORE</span><h2>Структура каталога</h2><p>Направления, вложенные категории, бренды и фильтры редактируются независимо от товаров.</p></div><button type="button" data-settings-refresh>Обновить</button></div>
+          <p class="admin-catalog-settings__message" data-settings-message hidden></p>
+          <div class="admin-catalog-settings__loading" data-settings-loading>Загружаем структуру…</div>
+
+          <div class="admin-catalog-settings__content" data-settings-content hidden>
+            <section class="admin-settings-panel">
+              <div class="admin-settings-panel__head"><div><span>01</span><h3>Категории</h3><p>Верхний уровень — направления, вложенный — типы товаров.</p></div><button type="button" data-category-create>+ Категория</button></div>
+              <div class="admin-settings-list" data-category-list></div>
+            </section>
+
+            <section class="admin-settings-panel">
+              <div class="admin-settings-panel__head"><div><span>02</span><h3>Бренды</h3><p>Бренд необязателен, но помогает пользователю сузить выбор.</p></div><button type="button" data-brand-create>+ Бренд</button></div>
+              <div class="admin-settings-list" data-brand-list></div>
+            </section>
+
+            <section class="admin-settings-panel admin-settings-panel--wide">
+              <div class="admin-settings-panel__head"><div><span>03</span><h3>Динамические фильтры</h3><p>Каждый набор привязан к направлению и содержит варианты выбора.</p></div><button type="button" data-filter-create>+ Фильтр</button></div>
+              <div class="admin-settings-list" data-filter-list></div>
+            </section>
+          </div>
+        </section>
+
+        <div class="admin-settings-modal" data-settings-modal hidden>
+          <div class="admin-settings-modal__backdrop" data-settings-close></div>
+          <div class="admin-settings-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+            <button class="admin-settings-modal__close" type="button" aria-label="Закрыть" data-settings-close>×</button>
+            <span class="admin-settings-modal__eyebrow" data-settings-modal-eyebrow>Структура каталога</span>
+            <h2 id="settings-modal-title" data-settings-modal-title>Новая запись</h2>
+            <form data-settings-form novalidate></form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

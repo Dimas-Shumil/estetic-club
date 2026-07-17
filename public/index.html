@@ -14,6 +14,7 @@
     />
 
     <title>Document</title>
+    <link rel="stylesheet" href="/site/css/catalog-header.css" />
   </head>
   <body>
     <header class="header" data-header>
@@ -21,21 +22,20 @@
         <nav class="header__nav header__nav--left" aria-label="Левая навигация">
           <a href="#home">Главная</a>
           <a href="/public/contacts.html">Контакты</a>
-
+          <a href="/public/catalog/catalog.html">Каталог</a>
         </nav>
 
         <a href="#home" class="header__logo" aria-label="На главную">
-          <img src="site/img/logo.png" alt="Nadia Hair Studio" />
+          <img src="/site/img/logo.png" alt="Nadia Hair Studio" />
         </a>
 
         <nav
           class="header__nav header__nav--right"
           aria-label="Правая навигация"
         >
-        <a href="#services">Услуги</a>
-        <a href="/public/works/work-main.html">Работы</a>
-        <a href="/public/blog/blog.html">Блог</a>
-
+          <a href="#services">Услуги</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
         </nav>
 
         <button
@@ -197,7 +197,7 @@
           <div class="personal-service__media">
             <video
               class="personal-service__video"
-              src="site/video/personal-service.mp4"
+              src="/site/video/personal-service.mp4"
               autoplay
               muted
               loop
@@ -419,5 +419,6 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="/site/script/main.js"></script>
+    <script src="/site/script/catalog-header.js" defer></script>
   </body>
 </html>

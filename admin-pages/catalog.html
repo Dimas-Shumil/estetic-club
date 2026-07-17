@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Каталог — Клуб Эстетики</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/site/css/admin.min.css" />
+    <link rel="stylesheet" href="/site/css/admin-catalog.css" />
+    <script src="/site/script/admin/admin.js" defer></script>
+  </head>
+  <body class="admin-body" data-admin-page="catalog">
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="admin-sidebar__logo" href="/admin/dashboard">Клуб Эстетики</a>
+        <span class="admin-sidebar__caption">Управление</span>
+        <nav class="admin-sidebar__nav" aria-label="Навигация админ-панели">
+          <a class="admin-sidebar__link" href="/admin/dashboard">Обзор</a>
+          <a class="admin-sidebar__link" href="/admin/requests">Заявки</a>
+          <a class="admin-sidebar__link" href="/admin/works">Работы</a>
+          <a class="admin-sidebar__link admin-sidebar__link--active" href="/admin/catalog">Каталог</a>
+          <a class="admin-sidebar__link" href="/admin/orders">Заказы</a>
+          <a class="admin-sidebar__link" href="/admin/blog">Статьи</a>
+          <a class="admin-sidebar__link" href="/admin/staff">Сотрудники</a>
+        </nav>
+        <div class="admin-sidebar__bottom">
+          <a class="admin-sidebar__site-link" href="/catalog" target="_blank" rel="noopener">Открыть каталог</a>
+          <button class="admin-sidebar__logout" type="button" data-admin-logout>Выйти</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-header">
+          <div>
+            <span class="admin-header__eyebrow">Товары и направления</span>
+            <h1 class="admin-header__title">Каталог</h1>
+          </div>
+          <div class="admin-user">
+            <div class="admin-user__info">
+              <span class="admin-user__role" data-admin-user-role>—</span>
+              <span class="admin-user__email" data-admin-user-email>—</span>
+            </div>
+            <button class="admin-user__logout-mobile" type="button" data-admin-logout>Выйти</button>
+          </div>
+        </header>
+
+        <section class="admin-catalog" data-admin-catalog-page>
+          <div class="admin-catalog__hero">
+            <div>
+              <span class="admin-catalog__eyebrow">NADIA STORE</span>
+              <h2 class="admin-catalog__title">Управление товарами</h2>
+              <p class="admin-catalog__description">Добавляйте товары, варианты и изображения, управляйте публикацией, категориями, брендами и динамическими фильтрами.</p>
+            </div>
+            <div class="admin-catalog__hero-actions">
+              <a class="admin-catalog__secondary" href="/admin/catalog/settings">Категории и фильтры</a>
+              <a class="admin-catalog__primary" href="/admin/catalog/edit"><span>+</span> Добавить товар</a>
+            </div>
+          </div>
+
+          <div class="admin-catalog__stats">
+            <article><span>Всего товаров</span><strong data-catalog-count="all">0</strong><small>Все записи каталога</small></article>
+            <article><span>Опубликованы</span><strong data-catalog-count="published">0</strong><small>Доступны посетителям</small></article>
+            <article><span>Черновики</span><strong data-catalog-count="drafts">0</strong><small>Скрыты на сайте</small></article>
+            <article><span>Новые заказы</span><strong data-catalog-count="newOrders">0</strong><small>Ожидают обработки</small></article>
+          </div>
+
+          <div class="admin-catalog__toolbar">
+            <form class="admin-catalog__search" data-catalog-search-form>
+              <label for="catalog-admin-search">Поиск товаров</label>
+              <div>
+                <input id="catalog-admin-search" type="search" maxlength="120" placeholder="Название, артикул, бренд или адрес" data-catalog-search />
+                <button type="submit">Найти</button>
+                <button type="button" data-catalog-search-reset hidden>Сбросить</button>
+              </div>
+            </form>
+
+            <div class="admin-catalog__filter-row">
+              <div class="admin-catalog__status" aria-label="Статус публикации">
+                <button class="is-active" type="button" data-catalog-status="all">Все</button>
+                <button type="button" data-catalog-status="published">Опубликованные</button>
+                <button type="button" data-catalog-status="draft">Черновики</button>
+              </div>
+              <label class="admin-catalog__category-select">
+                <span>Категория</span>
+                <select data-catalog-category>
+                  <option value="">Все категории</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <p class="admin-catalog__message" role="status" aria-live="polite" data-catalog-message hidden></p>
+          <div class="admin-catalog__loading" data-catalog-loading>Загружаем товары…</div>
+          <div class="admin-catalog__empty" data-catalog-empty hidden>
+            <span>Товары не найдены</span>
+            <h3>В этой подборке пока ничего нет</h3>
+            <p>Измените параметры поиска или добавьте новый товар.</p>
+          </div>
+          <div class="admin-catalog__list" data-catalog-list hidden></div>
+
+          <nav class="admin-catalog__pagination" aria-label="Пагинация каталога" data-catalog-pagination hidden>
+            <button type="button" data-catalog-prev>Назад</button>
+            <span data-catalog-pagination-info>Страница 1 из 1</span>
+            <button type="button" data-catalog-next>Вперёд</button>
+          </nav>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

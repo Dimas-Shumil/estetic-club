@@ -26,6 +26,10 @@ const BLOG_UPLOADS_DIR = path.join(ROOT_DIR, 'site', 'uploads', 'blog');
 
 const BLOG_UPLOADS_URL = '/site/uploads/blog';
 
+const PRODUCT_UPLOADS_DIR = path.join(ROOT_DIR, 'site', 'uploads', 'products');
+
+const PRODUCT_UPLOADS_URL = '/site/uploads/products';
+
 const WORK_IMAGE_FIELDS = [
   'beforeImage',
   'afterImage',
@@ -75,6 +79,12 @@ function createWorkImageName() {
   return `${Date.now()}-${randomPart}.webp`;
 }
 
+function createProductImageName() {
+  const randomPart = crypto.randomBytes(12).toString('hex');
+
+  return `${Date.now()}-${randomPart}.webp`;
+}
+
 function createBlogImageName() {
   const randomPart = crypto.randomBytes(12).toString('hex');
 
@@ -87,6 +97,16 @@ function isManagedBlogImage(imagePath) {
   const fileName = path.posix.basename(value);
 
   const expectedPath = `${BLOG_UPLOADS_URL}/${fileName}`;
+
+  return value === expectedPath && /^\d{13}-[a-f0-9]{24}\.webp$/.test(fileName);
+}
+
+function isManagedProductImage(imagePath) {
+  const value = String(imagePath || '').trim();
+
+  const fileName = path.posix.basename(value);
+
+  const expectedPath = `${PRODUCT_UPLOADS_URL}/${fileName}`;
 
   return value === expectedPath && /^\d{13}-[a-f0-9]{24}\.webp$/.test(fileName);
 }
@@ -115,6 +135,16 @@ async function isBlogImageReferenced(imagePath) {
   const references = await prisma.blogPost.count({
     where: {
       coverImage: imagePath,
+    },
+  });
+
+  return references > 0;
+}
+
+async function isProductImageReferenced(imagePath) {
+  const references = await prisma.productImage.count({
+    where: {
+      imagePath,
     },
   });
 
@@ -429,6 +459,140 @@ router.delete(
       const absolutePath = path.join(
         WORK_UPLOADS_DIR,
         fileName,
+      );
+
+      await removeFileSafe(absolutePath);
+
+      return res.status(204).send();
+    } catch (error) {
+      return next(error);
+    }
+  },
+);
+
+
+// загрузка фотографии товара
+
+router.post(
+  '/product-image',
+  validateOrigin,
+  requireAuth,
+  requireRole('OWNER'),
+  requireCsrf,
+  upload.single('image'),
+  async (req, res, next) => {
+    let temporaryPath = '';
+
+    try {
+      if (!req.file?.buffer) {
+        return res.status(400).json({
+          message: 'Выберите изображение для загрузки',
+        });
+      }
+
+      const sharpOptions = {
+        failOn: 'error',
+        limitInputPixels: 40_000_000,
+      };
+
+      const metadata = await sharp(req.file.buffer, sharpOptions).metadata();
+
+      if (
+        !metadata.width ||
+        !metadata.height ||
+        !metadata.format ||
+        !ALLOWED_IMAGE_FORMATS.has(metadata.format)
+      ) {
+        return res.status(415).json({
+          message: 'Файл не является поддерживаемым изображением',
+        });
+      }
+
+      await fs.mkdir(PRODUCT_UPLOADS_DIR, {
+        recursive: true,
+      });
+
+      const fileName = createProductImageName();
+      const finalPath = path.join(PRODUCT_UPLOADS_DIR, fileName);
+      temporaryPath = `${finalPath}.tmp`;
+
+      const result = await sharp(req.file.buffer, sharpOptions)
+        .rotate()
+        .resize({
+          width: 2200,
+          height: 2200,
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .webp({
+          quality: 88,
+          effort: 4,
+        })
+        .toFile(temporaryPath);
+
+      await fs.rename(temporaryPath, finalPath);
+      temporaryPath = '';
+
+      return res.status(201).json({
+        image: {
+          path: `${PRODUCT_UPLOADS_URL}/${fileName}`,
+          width: result.width,
+          height: result.height,
+          size: result.size,
+          format: result.format,
+        },
+      });
+    } catch (error) {
+      if (temporaryPath) {
+        await removeFileSafe(temporaryPath).catch(() => undefined);
+      }
+
+      if (error?.code === 'UNSUPPORTED_IMAGE_TYPE') {
+        return res.status(415).json({
+          message: error.message,
+        });
+      }
+
+      if (/unsupported|corrupt|invalid|Input/i.test(String(error?.message || ''))) {
+        return res.status(400).json({
+          message: 'Изображение повреждено или имеет неподдерживаемый формат',
+        });
+      }
+
+      return next(error);
+    }
+  },
+);
+
+// удаление несохранённой фотографии товара
+
+router.delete(
+  '/product-image',
+  validateOrigin,
+  requireAuth,
+  requireRole('OWNER'),
+  requireCsrf,
+  async (req, res, next) => {
+    try {
+      const imagePath = String(req.body?.path || '').trim();
+
+      if (!isManagedProductImage(imagePath)) {
+        return res.status(400).json({
+          message: 'Некорректный путь изображения товара',
+        });
+      }
+
+      const isReferenced = await isProductImageReferenced(imagePath);
+
+      if (isReferenced) {
+        return res.status(409).json({
+          message: 'Изображение уже используется товаром',
+        });
+      }
+
+      const absolutePath = path.join(
+        PRODUCT_UPLOADS_DIR,
+        path.posix.basename(imagePath),
       );
 
       await removeFileSafe(absolutePath);

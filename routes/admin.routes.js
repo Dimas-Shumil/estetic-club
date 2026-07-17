@@ -1136,6 +1136,8 @@ router.get(
         publishedWorks,
         articles,
         activeStaff,
+        publishedProducts,
+        newOrders,
       ] = await prisma.$transaction([
         prisma.lead.groupBy({
           by: ['status'],
@@ -1174,6 +1176,18 @@ router.get(
             isActive: true,
           },
         }),
+
+        prisma.product.count({
+          where: {
+            isPublished: true,
+          },
+        }),
+
+        prisma.order.count({
+          where: {
+            status: 'NEW',
+          },
+        }),
       ]);
 
       return res.json({
@@ -1185,6 +1199,8 @@ router.get(
           publishedWorks,
           articles,
           activeStaff,
+          publishedProducts,
+          newOrders,
         },
       });
     } catch (error) {

@@ -242,6 +242,23 @@
       if (page === 'blog') {
         await initAdminBlogPage(data.user);
       }
+
+
+      if (page === 'catalog') {
+        await initAdminCatalogPage(data.user);
+      }
+
+      if (page === 'product-edit') {
+        await initAdminProductEditorPage(data.user);
+      }
+
+      if (page === 'catalog-settings') {
+        await initCatalogSettingsPage(data.user);
+      }
+
+      if (page === 'orders') {
+        await initAdminOrdersPage(data.user);
+      }
     } catch (error) {
       console.error('Ошибка инициализации админ-панели:', error);
 
@@ -409,6 +426,8 @@
         publishedWorks: contentCounts.publishedWorks || 0,
         articles: contentCounts.articles || 0,
         activeStaff: contentCounts.activeStaff || 0,
+        publishedProducts: contentCounts.publishedProducts || 0,
+        newOrders: contentCounts.newOrders || 0,
       };
 
       Object.entries(values).forEach(([name, value]) => {
@@ -5836,6 +5855,1105 @@
       loader.hidden = !isLoading;
     }
   }
+
+
+  // каталог
+
+  async function initAdminCatalogPage(adminUser) {
+    if (adminUser?.role !== 'OWNER') {
+      window.location.replace('/admin/requests');
+      return;
+    }
+
+    const list = document.querySelector('[data-catalog-list]');
+    const loading = document.querySelector('[data-catalog-loading]');
+    const empty = document.querySelector('[data-catalog-empty]');
+    const message = document.querySelector('[data-catalog-message]');
+    const searchForm = document.querySelector('[data-catalog-search-form]');
+    const searchInput = document.querySelector('[data-catalog-search]');
+    const searchReset = document.querySelector('[data-catalog-search-reset]');
+    const categorySelect = document.querySelector('[data-catalog-category]');
+    const statusButtons = document.querySelectorAll('[data-catalog-status]');
+    const pagination = document.querySelector('[data-catalog-pagination]');
+    const paginationInfo = document.querySelector('[data-catalog-pagination-info]');
+    const prevButton = document.querySelector('[data-catalog-prev]');
+    const nextButton = document.querySelector('[data-catalog-next]');
+
+    if (!list || !loading || !empty || !message || !searchForm || !searchInput || !searchReset || !categorySelect || !pagination || !paginationInfo || !prevButton || !nextButton) {
+      return;
+    }
+
+    const state = {
+      search: '',
+      status: 'all',
+      categoryId: '',
+      page: 1,
+      limit: 20,
+      pages: 1,
+      isLoading: false,
+    };
+
+    let requestNumber = 0;
+
+    searchForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      state.search = searchInput.value.trim();
+      state.page = 1;
+      searchReset.hidden = !state.search;
+      await loadProducts();
+    });
+
+    searchReset.addEventListener('click', async () => {
+      searchInput.value = '';
+      state.search = '';
+      state.page = 1;
+      searchReset.hidden = true;
+      await loadProducts();
+    });
+
+    categorySelect.addEventListener('change', async () => {
+      state.categoryId = categorySelect.value;
+      state.page = 1;
+      await loadProducts();
+    });
+
+    statusButtons.forEach((button) => {
+      button.addEventListener('click', async () => {
+        if (state.isLoading) return;
+        state.status = String(button.dataset.catalogStatus || 'all');
+        state.page = 1;
+        statusButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+        await loadProducts();
+      });
+    });
+
+    prevButton.addEventListener('click', async () => {
+      if (state.isLoading || state.page <= 1) return;
+      state.page -= 1;
+      await loadProducts();
+    });
+
+    nextButton.addEventListener('click', async () => {
+      if (state.isLoading || state.page >= state.pages) return;
+      state.page += 1;
+      await loadProducts();
+    });
+
+    await loadCategories();
+    await Promise.all([loadOverview(), loadProducts()]);
+
+    async function loadCategories() {
+      const { response, data } = await requestJson('/admin/api/catalog/settings');
+      if (!response.ok) return;
+
+      categorySelect.innerHTML = '<option value="">Все категории</option>' +
+        (Array.isArray(data?.categories) ? data.categories : [])
+          .map((category) => `<option value="${category.id}">${escapeHtml(category.parentId ? `— ${category.name}` : category.name)}</option>`)
+          .join('');
+    }
+
+    async function loadOverview() {
+      try {
+        const { response, data } = await requestJson('/admin/api/catalog/overview');
+        if (!response.ok) return;
+        const counts = data?.counts || {};
+        setText('[data-catalog-count="newOrders"]', String(counts.newOrders || 0));
+      } catch (error) {
+        console.error('Ошибка сводки каталога:', error);
+      }
+    }
+
+    async function loadProducts(options = {}) {
+      const currentRequest = ++requestNumber;
+      setBusy(true);
+      if (!options.preserveMessage) hideCatalogMessage();
+
+      const params = new URLSearchParams({
+        page: String(state.page),
+        limit: String(state.limit),
+        status: state.status,
+      });
+      if (state.search) params.set('search', state.search);
+      if (state.categoryId) params.set('categoryId', state.categoryId);
+
+      try {
+        const { response, data } = await requestJson(`/admin/api/catalog/products?${params.toString()}`);
+        if (currentRequest !== requestNumber) return;
+        if (response.status === 401) return redirectToLogin();
+        if (!response.ok) throw new Error(data?.message || 'Не удалось загрузить товары');
+
+        const products = Array.isArray(data?.products) ? data.products : [];
+        state.page = Number(data?.pagination?.page) || 1;
+        state.pages = Number(data?.pagination?.pages) || 1;
+
+        const counts = data?.counts || {};
+        setText('[data-catalog-count="all"]', String(counts.all || 0));
+        setText('[data-catalog-count="published"]', String(counts.published || 0));
+        setText('[data-catalog-count="drafts"]', String(counts.drafts || 0));
+
+        renderProducts(products);
+        paginationInfo.textContent = `Страница ${state.page} из ${state.pages}`;
+        prevButton.disabled = state.page <= 1;
+        nextButton.disabled = state.page >= state.pages;
+        pagination.hidden = state.pages <= 1;
+      } catch (error) {
+        console.error('Ошибка каталога:', error);
+        list.hidden = true;
+        empty.hidden = true;
+        pagination.hidden = true;
+        showCatalogMessage(error.message || 'Не удалось загрузить товары.');
+      } finally {
+        if (currentRequest === requestNumber) setBusy(false);
+      }
+    }
+
+    function renderProducts(products) {
+      if (!products.length) {
+        list.innerHTML = '';
+        list.hidden = true;
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      list.innerHTML = products.map((product) => {
+        const variant = Array.isArray(product.variants)
+          ? product.variants.find((item) => item.isActive) || product.variants[0]
+          : null;
+        const image = product.images?.[0];
+        const publicUrl = `/catalog/product/${encodeURIComponent(product.slug)}`;
+
+        return `
+          <article class="admin-catalog-product" data-catalog-product="${product.id}">
+            <div class="admin-catalog-product__media${image ? '' : ' is-empty'}">
+              ${image ? `<img src="${escapeHtml(image.imagePath)}" alt="${escapeHtml(image.alt || product.title)}" loading="lazy" />` : '<span>Нет изображения</span>'}
+              ${product.badge ? `<b>${escapeHtml(product.badge)}</b>` : ''}
+            </div>
+            <div class="admin-catalog-product__content">
+              <div class="admin-catalog-product__top">
+                <div>
+                  <span>${escapeHtml(product.category?.name || 'Без категории')}${product.brand?.name ? ` · ${escapeHtml(product.brand.name)}` : ''}</span>
+                  <h3>${escapeHtml(product.title)}</h3>
+                </div>
+                <em class="${product.isPublished ? 'is-published' : 'is-draft'}">${product.isPublished ? 'Опубликован' : 'Черновик'}</em>
+              </div>
+              <div class="admin-catalog-product__meta">
+                <span>Цена <strong>${variant ? formatCatalogMoney(variant.price) : 'Не указана'}</strong></span>
+                <span>Варианты <strong>${product.variants?.length || 0}</strong></span>
+                <span>Артикул <strong>${escapeHtml(product.sku || '—')}</strong></span>
+                <span>Обновлён <strong>${escapeHtml(formatDate(product.updatedAt))}</strong></span>
+              </div>
+              <p class="admin-catalog-product__slug">/${escapeHtml(product.slug)}</p>
+              <div class="admin-catalog-product__actions">
+                <a class="is-primary" href="/admin/catalog/edit?id=${product.id}">Редактировать</a>
+                ${product.isPublished ? `<a href="${publicUrl}" target="_blank" rel="noopener">Открыть на сайте</a>` : ''}
+                <button type="button" data-catalog-product-delete>Удалить</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      list.hidden = false;
+
+      list.querySelectorAll('[data-catalog-product]').forEach((card) => {
+        card.querySelector('[data-catalog-product-delete]')?.addEventListener('click', async () => {
+          const id = Number(card.dataset.catalogProduct);
+          const title = card.querySelector('h3')?.textContent.trim() || 'товар';
+          if (!Number.isInteger(id) || !window.confirm(`Удалить «${title}»?\n\nЭто действие нельзя отменить.`)) return;
+
+          try {
+            const { response, data } = await requestJson(`/admin/api/catalog/products/${id}`, {
+              method: 'DELETE',
+              headers: { 'X-CSRF-Token': csrfToken },
+            });
+            if (!response.ok) throw new Error(data?.message || 'Не удалось удалить товар');
+            showCatalogMessage(`Товар «${title}» удалён.`, true);
+            await Promise.all([loadOverview(), loadProducts({ preserveMessage: true })]);
+          } catch (error) {
+            showCatalogMessage(error.message || 'Не удалось удалить товар.');
+          }
+        });
+      });
+    }
+
+    function setBusy(isBusy) {
+      state.isLoading = isBusy;
+      loading.hidden = !isBusy;
+      searchInput.disabled = isBusy;
+      categorySelect.disabled = isBusy;
+      statusButtons.forEach((button) => { button.disabled = isBusy; });
+      if (isBusy) {
+        list.hidden = true;
+        empty.hidden = true;
+        pagination.hidden = true;
+      }
+    }
+
+    function showCatalogMessage(text, success = false) {
+      message.textContent = text;
+      message.hidden = false;
+      message.classList.toggle('is-success', success);
+    }
+
+    function hideCatalogMessage() {
+      message.textContent = '';
+      message.hidden = true;
+      message.classList.remove('is-success');
+    }
+  }
+
+  // редактор товара
+
+  async function initAdminProductEditorPage(adminUser) {
+    if (adminUser?.role !== 'OWNER') {
+      window.location.replace('/admin/requests');
+      return;
+    }
+
+    const form = document.querySelector('[data-product-editor-form]');
+    const loading = document.querySelector('[data-product-editor-loading]');
+    const message = document.querySelector('[data-product-editor-message]');
+    const mode = document.querySelector('[data-product-editor-mode]');
+    const heading = document.querySelector('[data-product-editor-title]');
+    const stateBadge = document.querySelector('[data-product-editor-state]');
+    const saveButton = document.querySelector('[data-product-save]');
+    const deleteButton = document.querySelector('[data-product-delete]');
+    const publicLink = document.querySelector('[data-product-public-link]');
+    const metaId = document.querySelector('[data-product-meta-id]');
+    const metaStatus = document.querySelector('[data-product-meta-status]');
+    const variantsContainer = document.querySelector('[data-product-variants]');
+    const imagesContainer = document.querySelector('[data-product-images]');
+    const filtersContainer = document.querySelector('[data-product-filter-options]');
+    const imageFile = document.querySelector('[data-product-image-file]');
+    const imageSelect = document.querySelector('[data-product-image-select]');
+    const imageStatus = document.querySelector('[data-product-image-status]');
+
+    if (!form || !loading || !message || !mode || !heading || !stateBadge || !saveButton || !deleteButton || !metaId || !metaStatus || !variantsContainer || !imagesContainer || !filtersContainer || !imageFile || !imageSelect) {
+      return;
+    }
+
+    const fields = {
+      title: form.querySelector('[data-product-title]'),
+      slug: form.querySelector('[data-product-slug]'),
+      categoryId: form.querySelector('[data-product-category]'),
+      brandId: form.querySelector('[data-product-brand]'),
+      sku: form.querySelector('[data-product-sku]'),
+      badge: form.querySelector('[data-product-badge]'),
+      shortDescription: form.querySelector('[data-product-short-description]'),
+      description: form.querySelector('[data-product-description]'),
+      seoTitle: form.querySelector('[data-product-seo-title]'),
+      seoDescription: form.querySelector('[data-product-seo-description]'),
+      isPublished: form.querySelector('[data-product-published]'),
+      sortOrder: form.querySelector('[data-product-sort-order]'),
+    };
+
+    const requestedId = Number(new URLSearchParams(window.location.search).get('id'));
+    let productId = Number.isInteger(requestedId) && requestedId > 0 ? requestedId : null;
+    let settings = { categories: [], brands: [], filterGroups: [] };
+    let variants = [];
+    let images = [];
+    let selectedFilterOptionIds = new Set();
+    let savedPublished = false;
+    let savedSlug = '';
+    let isBusy = false;
+    let slugTouched = Boolean(productId);
+    const uploadedPaths = new Set();
+
+    fields.title.addEventListener('input', () => {
+      if (!slugTouched) fields.slug.value = createCatalogSlug(fields.title.value);
+    });
+    fields.slug.addEventListener('input', () => {
+      slugTouched = true;
+      fields.slug.value = createCatalogSlug(fields.slug.value);
+    });
+    fields.shortDescription.addEventListener('input', () => {
+      setText('[data-product-short-counter]', String(fields.shortDescription.value.length));
+    });
+    fields.categoryId.addEventListener('change', renderFilterOptions);
+    fields.isPublished.addEventListener('change', updateProductEditorState);
+    document.querySelector('[data-product-variant-add]')?.addEventListener('click', addVariant);
+    imageSelect.addEventListener('click', () => imageFile.click());
+    imageFile.addEventListener('change', uploadImages);
+    form.addEventListener('submit', saveProduct);
+    deleteButton.addEventListener('click', deleteProduct);
+
+    await initialize();
+
+    async function initialize() {
+      loading.hidden = false;
+      form.hidden = true;
+      try {
+        const settingsResult = await requestJson('/admin/api/catalog/settings');
+        if (!settingsResult.response.ok) throw new Error(settingsResult.data?.message || 'Не удалось загрузить структуру каталога');
+        settings = settingsResult.data;
+        fillSettingsSelects();
+
+        if (productId) {
+          const result = await requestJson(`/admin/api/catalog/products/${productId}`);
+          if (!result.response.ok || !result.data?.product) throw new Error(result.data?.message || 'Не удалось загрузить товар');
+          fillProduct(result.data.product);
+        } else {
+          variants = [{ name: 'Стандарт', sku: '', price: 0, oldPrice: null, isActive: true, sortOrder: 100 }];
+          mode.textContent = 'Новый товар';
+          heading.textContent = 'Создание товара';
+          deleteButton.hidden = true;
+        }
+
+        renderVariants();
+        renderImages();
+        renderFilterOptions();
+        updateProductEditorState();
+        form.hidden = false;
+      } catch (error) {
+        showEditorMessage(error.message || 'Не удалось загрузить редактор.');
+      } finally {
+        loading.hidden = true;
+      }
+    }
+
+    function fillSettingsSelects() {
+      const categories = Array.isArray(settings.categories) ? settings.categories : [];
+      fields.categoryId.innerHTML = '<option value="">Выберите категорию</option>' + categories
+        .map((category) => `<option value="${category.id}">${escapeHtml(category.parentId ? `— ${category.name}` : category.name)}</option>`)
+        .join('');
+      fields.brandId.innerHTML = '<option value="">Без бренда</option>' + (Array.isArray(settings.brands) ? settings.brands : [])
+        .map((brand) => `<option value="${brand.id}">${escapeHtml(brand.name)}</option>`)
+        .join('');
+    }
+
+    function fillProduct(product) {
+      fields.title.value = product.title || '';
+      fields.slug.value = product.slug || '';
+      fields.categoryId.value = String(product.categoryId || '');
+      fields.brandId.value = product.brandId ? String(product.brandId) : '';
+      fields.sku.value = product.sku || '';
+      fields.badge.value = product.badge || '';
+      fields.shortDescription.value = product.shortDescription || '';
+      fields.description.value = product.description || '';
+      fields.seoTitle.value = product.seoTitle || '';
+      fields.seoDescription.value = product.seoDescription || '';
+      fields.isPublished.checked = product.isPublished === true;
+      fields.sortOrder.value = product.sortOrder ?? 100;
+      variants = (product.variants || []).map((variant) => ({ ...variant }));
+      images = (product.images || []).map((image) => ({ ...image }));
+      selectedFilterOptionIds = new Set(product.filterOptionIds || []);
+      savedPublished = product.isPublished === true;
+      savedSlug = product.slug || '';
+      mode.textContent = 'Редактирование товара';
+      heading.textContent = product.title || 'Редактирование товара';
+      metaId.textContent = String(product.id);
+      deleteButton.hidden = false;
+      setText('[data-product-short-counter]', String(fields.shortDescription.value.length));
+    }
+
+    function addVariant() {
+      if (isBusy || variants.length >= 60) return;
+      variants.push({ name: '', sku: '', price: 0, oldPrice: null, isActive: true, sortOrder: (variants.length + 1) * 10 });
+      renderVariants();
+    }
+
+    function readVariantsFromDom() {
+      variants = [...variantsContainer.querySelectorAll('[data-variant-row]')].map((row) => ({
+        id: Number(row.dataset.variantId) || undefined,
+        name: row.querySelector('[data-variant-name]').value.trim() || 'Стандарт',
+        sku: row.querySelector('[data-variant-sku]').value.trim(),
+        price: rublesToKopecks(row.querySelector('[data-variant-price]').value),
+        oldPrice: row.querySelector('[data-variant-old-price]').value ? rublesToKopecks(row.querySelector('[data-variant-old-price]').value) : null,
+        isActive: row.querySelector('[data-variant-active]').checked,
+        sortOrder: Number(row.querySelector('[data-variant-sort]').value) || 100,
+      }));
+    }
+
+    function renderVariants() {
+      if (!variants.length) variants = [{ name: 'Стандарт', sku: '', price: 0, oldPrice: null, isActive: true, sortOrder: 100 }];
+      variantsContainer.innerHTML = variants.map((variant, index) => `
+        <article class="admin-product-variant" data-variant-row data-variant-id="${variant.id || ''}">
+          <span class="admin-product-variant__number">${String(index + 1).padStart(2, '0')}</span>
+          <label><span>Название</span><input type="text" maxlength="120" value="${escapeHtml(variant.name || '')}" placeholder="250 мл / Стандарт" data-variant-name /></label>
+          <label><span>Артикул</span><input type="text" maxlength="120" value="${escapeHtml(variant.sku || '')}" placeholder="NH-001-250" data-variant-sku /></label>
+          <label><span>Цена, ₽</span><input type="number" min="0.01" step="0.01" value="${kopecksToRublesInput(variant.price)}" data-variant-price /></label>
+          <label><span>Старая цена, ₽</span><input type="number" min="0.01" step="0.01" value="${variant.oldPrice ? kopecksToRublesInput(variant.oldPrice) : ''}" data-variant-old-price /></label>
+          <label><span>Порядок</span><input type="number" min="0" max="100000" value="${variant.sortOrder ?? 100}" data-variant-sort /></label>
+          <label class="admin-product-variant__switch"><input type="checkbox" ${variant.isActive !== false ? 'checked' : ''} data-variant-active /><span>Активен</span></label>
+          <button type="button" aria-label="Удалить вариант" data-variant-remove>×</button>
+        </article>
+      `).join('');
+
+      variantsContainer.querySelectorAll('[data-variant-remove]').forEach((button, index) => {
+        button.addEventListener('click', () => {
+          if (isBusy || variants.length <= 1) return;
+          readVariantsFromDom();
+          variants.splice(index, 1);
+          renderVariants();
+        });
+      });
+    }
+
+    async function uploadImages() {
+      const files = [...(imageFile.files || [])].slice(0, Math.max(0, 40 - images.length));
+      imageFile.value = '';
+      if (!files.length || isBusy) return;
+
+      setBusy(true);
+      setImageStatus('Обрабатываем изображения…');
+      try {
+        for (const file of files) {
+          if (file.size > 12 * 1024 * 1024) throw new Error('Каждое изображение должно весить не больше 12 МБ');
+          const formData = new FormData();
+          formData.append('image', file);
+          const { response, data } = await requestJson('/admin/api/uploads/product-image', {
+            method: 'POST',
+            headers: { 'X-CSRF-Token': csrfToken },
+            body: formData,
+          });
+          if (!response.ok || !data?.image?.path) throw new Error(data?.message || 'Не удалось загрузить изображение');
+          uploadedPaths.add(data.image.path);
+          images.push({
+            imagePath: data.image.path,
+            alt: fields.title.value.trim(),
+            isMain: images.length === 0,
+            sortOrder: (images.length + 1) * 10,
+          });
+        }
+        renderImages();
+        setImageStatus('Изображения загружены');
+      } catch (error) {
+        setImageStatus(error.message || 'Не удалось загрузить изображения', true);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function renderImages() {
+      if (!images.length) {
+        imagesContainer.innerHTML = '<div class="admin-product-images__empty">Изображения ещё не добавлены</div>';
+        return;
+      }
+
+      imagesContainer.innerHTML = images.map((image, index) => `
+        <article class="admin-product-image" data-product-image-row data-image-id="${image.id || ''}">
+          <div><img src="${escapeHtml(image.imagePath)}" alt="" /></div>
+          <label><span>Alt-текст</span><input type="text" maxlength="240" value="${escapeHtml(image.alt || '')}" data-image-alt /></label>
+          <label><span>Порядок</span><input type="number" min="0" max="100000" value="${image.sortOrder ?? 100}" data-image-sort /></label>
+          <label class="admin-product-image__main"><input type="radio" name="mainImage" ${image.isMain || (!images.some((item) => item.isMain) && index === 0) ? 'checked' : ''} data-image-main /><span>Главное</span></label>
+          <button type="button" aria-label="Удалить изображение" data-image-remove>×</button>
+        </article>
+      `).join('');
+
+      imagesContainer.querySelectorAll('[data-image-remove]').forEach((button, index) => {
+        button.addEventListener('click', async () => {
+          if (isBusy) return;
+          readImagesFromDom();
+          const [removed] = images.splice(index, 1);
+          if (removed?.isMain && images[0]) images[0].isMain = true;
+          renderImages();
+          if (removed && uploadedPaths.has(removed.imagePath)) {
+            await deleteUnsavedImage(removed.imagePath).catch(() => undefined);
+          }
+        });
+      });
+    }
+
+    function readImagesFromDom() {
+      images = [...imagesContainer.querySelectorAll('[data-product-image-row]')].map((row, index) => ({
+        id: Number(row.dataset.imageId) || undefined,
+        imagePath: images[index]?.imagePath || '',
+        alt: row.querySelector('[data-image-alt]').value.trim(),
+        isMain: row.querySelector('[data-image-main]').checked,
+        sortOrder: Number(row.querySelector('[data-image-sort]').value) || 100,
+      }));
+    }
+
+    async function deleteUnsavedImage(imagePath) {
+      const { response } = await requestJson('/admin/api/uploads/product-image', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+        body: JSON.stringify({ path: imagePath }),
+      });
+      if (response.ok) uploadedPaths.delete(imagePath);
+    }
+
+    function getRelevantFilterGroups() {
+      const categoryId = Number(fields.categoryId.value);
+      if (!categoryId) return [];
+      const categories = Array.isArray(settings.categories) ? settings.categories : [];
+      const ids = new Set([categoryId]);
+      let current = categories.find((item) => item.id === categoryId);
+      while (current?.parentId) {
+        ids.add(current.parentId);
+        current = categories.find((item) => item.id === current.parentId);
+      }
+      return (settings.filterGroups || []).filter((group) => ids.has(group.categoryId));
+    }
+
+    function renderFilterOptions() {
+      const groups = getRelevantFilterGroups();
+      if (!groups.length) {
+        filtersContainer.innerHTML = '<div class="admin-product-filters__empty">Для этой категории фильтры пока не настроены.</div>';
+        return;
+      }
+      filtersContainer.innerHTML = groups.map((group) => `
+        <fieldset class="admin-product-filter-group">
+          <legend>${escapeHtml(group.name)}</legend>
+          <div>${(group.options || []).map((option) => `
+            <label><input type="checkbox" value="${option.id}" ${selectedFilterOptionIds.has(option.id) ? 'checked' : ''} data-product-filter-option /><span>${escapeHtml(option.name)}</span></label>
+          `).join('')}</div>
+        </fieldset>
+      `).join('');
+    }
+
+    function collectPayload() {
+      readVariantsFromDom();
+      readImagesFromDom();
+      selectedFilterOptionIds = new Set([...filtersContainer.querySelectorAll('[data-product-filter-option]:checked')].map((input) => Number(input.value)).filter(Boolean));
+
+      return {
+        title: fields.title.value.trim(),
+        slug: createCatalogSlug(fields.slug.value),
+        categoryId: Number(fields.categoryId.value),
+        brandId: fields.brandId.value ? Number(fields.brandId.value) : null,
+        shortDescription: fields.shortDescription.value.trim(),
+        description: fields.description.value.trim(),
+        badge: fields.badge.value.trim(),
+        sku: fields.sku.value.trim(),
+        seoTitle: fields.seoTitle.value.trim(),
+        seoDescription: fields.seoDescription.value.trim(),
+        isPublished: fields.isPublished.checked,
+        sortOrder: Number(fields.sortOrder.value) || 100,
+        variants,
+        images,
+        filterOptionIds: [...selectedFilterOptionIds],
+      };
+    }
+
+    function validatePayload(payload) {
+      if (payload.title.length < 2) return 'Введите название товара.';
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(payload.slug)) return 'Проверьте адрес страницы товара.';
+      if (!payload.categoryId) return 'Выберите категорию.';
+      if (!payload.variants.length) return 'Добавьте хотя бы один вариант.';
+      if (payload.variants.some((variant) => !variant.name || variant.price <= 0)) return 'У каждого варианта должны быть название и цена.';
+      if (payload.variants.some((variant) => variant.oldPrice && variant.oldPrice <= variant.price)) return 'Старая цена должна быть выше текущей.';
+      if (payload.isPublished && !payload.images.length) return 'Для публикации добавьте изображение.';
+      if (payload.isPublished && !payload.variants.some((variant) => variant.isActive)) return 'Для публикации нужен активный вариант.';
+      return '';
+    }
+
+    async function saveProduct(event) {
+      event.preventDefault();
+      if (isBusy) return;
+      const payload = collectPayload();
+      const validation = validatePayload(payload);
+      if (validation) return showEditorMessage(validation);
+
+      setBusy(true);
+      const isCreating = !productId;
+      try {
+        const { response, data } = await requestJson(isCreating ? '/admin/api/catalog/products' : `/admin/api/catalog/products/${productId}`, {
+          method: isCreating ? 'POST' : 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok || !data?.product) throw new Error(data?.message || 'Не удалось сохранить товар');
+
+        productId = data.product.id;
+        uploadedPaths.clear();
+        window.history.replaceState(null, '', `/admin/catalog/edit?id=${productId}`);
+        fillProduct({ ...data.product, filterOptionIds: data.product.filterOptions?.map((item) => item.filterOptionId) || payload.filterOptionIds });
+        renderVariants();
+        renderImages();
+        renderFilterOptions();
+        updateProductEditorState();
+        showEditorMessage(isCreating ? 'Товар создан и сохранён.' : 'Изменения товара сохранены.', true);
+      } catch (error) {
+        showEditorMessage(error.message || 'Не удалось сохранить товар.');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function deleteProduct() {
+      if (!productId || isBusy || !window.confirm(`Удалить «${fields.title.value.trim() || 'товар'}»?\n\nЭто действие нельзя отменить.`)) return;
+      setBusy(true);
+      try {
+        const { response, data } = await requestJson(`/admin/api/catalog/products/${productId}`, {
+          method: 'DELETE',
+          headers: { 'X-CSRF-Token': csrfToken },
+        });
+        if (!response.ok) throw new Error(data?.message || 'Не удалось удалить товар');
+        window.location.replace('/admin/catalog');
+      } catch (error) {
+        showEditorMessage(error.message || 'Не удалось удалить товар.');
+        setBusy(false);
+      }
+    }
+
+    function setBusy(value) {
+      isBusy = value;
+      saveButton.disabled = value;
+      deleteButton.disabled = value;
+      imageSelect.disabled = value;
+      saveButton.textContent = value ? 'Сохраняем…' : 'Сохранить товар';
+    }
+
+    function updateProductEditorState() {
+      const selected = fields.isPublished.checked;
+      const changed = selected !== savedPublished;
+      const text = changed ? (selected ? 'Будет опубликован после сохранения' : 'Будет снят после сохранения') : (savedPublished ? 'Опубликован' : 'Черновик');
+      stateBadge.textContent = text;
+      metaStatus.textContent = text;
+      stateBadge.classList.toggle('is-published', savedPublished && !changed);
+      stateBadge.classList.toggle('is-pending', changed);
+      if (publicLink && productId && savedPublished && savedSlug) {
+        publicLink.href = `/catalog/product/${encodeURIComponent(savedSlug)}`;
+        publicLink.hidden = false;
+      } else if (publicLink) {
+        publicLink.hidden = true;
+      }
+    }
+
+    function setImageStatus(text, error = false) {
+      if (!imageStatus) return;
+      imageStatus.textContent = text;
+      imageStatus.classList.toggle('is-error', error);
+    }
+
+    function showEditorMessage(text, success = false) {
+      message.textContent = text;
+      message.hidden = false;
+      message.classList.toggle('is-success', success);
+      message.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // настройки каталога
+
+  async function initCatalogSettingsPage(adminUser) {
+    if (adminUser?.role !== 'OWNER') {
+      window.location.replace('/admin/requests');
+      return;
+    }
+
+    const loading = document.querySelector('[data-settings-loading]');
+    const content = document.querySelector('[data-settings-content]');
+    const message = document.querySelector('[data-settings-message]');
+    const categoryList = document.querySelector('[data-category-list]');
+    const brandList = document.querySelector('[data-brand-list]');
+    const filterList = document.querySelector('[data-filter-list]');
+    const modal = document.querySelector('[data-settings-modal]');
+    const modalTitle = document.querySelector('[data-settings-modal-title]');
+    const modalEyebrow = document.querySelector('[data-settings-modal-eyebrow]');
+    const modalForm = document.querySelector('[data-settings-form]');
+
+    if (!loading || !content || !message || !categoryList || !brandList || !filterList || !modal || !modalTitle || !modalEyebrow || !modalForm) return;
+
+    let data = { categories: [], brands: [], filterGroups: [] };
+    let modalState = null;
+
+    document.querySelector('[data-settings-refresh]')?.addEventListener('click', loadSettings);
+    document.querySelector('[data-category-create]')?.addEventListener('click', () => openCategoryModal());
+    document.querySelector('[data-brand-create]')?.addEventListener('click', () => openBrandModal());
+    document.querySelector('[data-filter-create]')?.addEventListener('click', () => openFilterModal());
+    document.querySelectorAll('[data-settings-close]').forEach((element) => element.addEventListener('click', closeModal));
+    modalForm.addEventListener('submit', saveModal);
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
+
+    await loadSettings();
+
+    async function loadSettings() {
+      loading.hidden = false;
+      content.hidden = true;
+      hideSettingsMessage();
+      try {
+        const result = await requestJson('/admin/api/catalog/settings');
+        if (!result.response.ok) throw new Error(result.data?.message || 'Не удалось загрузить структуру');
+        data = result.data;
+        renderAll();
+        content.hidden = false;
+      } catch (error) {
+        showSettingsMessage(error.message || 'Не удалось загрузить структуру каталога.');
+      } finally {
+        loading.hidden = true;
+      }
+    }
+
+    function renderAll() {
+      categoryList.innerHTML = (data.categories || []).map((category) => `
+        <article class="admin-settings-item" data-category-id="${category.id}">
+          <div><span>${category.parentId ? 'Подкатегория' : 'Направление'}</span><h4>${escapeHtml(category.name)}</h4><p>/${escapeHtml(category.slug)} · товаров: ${category._count?.products || 0}</p></div>
+          <em class="${category.isPublished ? 'is-active' : ''}">${category.isPublished ? 'Активна' : 'Скрыта'}</em>
+          <div><button type="button" data-edit>Изменить</button><button type="button" data-delete>Удалить</button></div>
+        </article>
+      `).join('') || '<div class="admin-settings-list__empty">Категорий пока нет</div>';
+
+      brandList.innerHTML = (data.brands || []).map((brand) => `
+        <article class="admin-settings-item" data-brand-id="${brand.id}">
+          <div><span>Бренд</span><h4>${escapeHtml(brand.name)}</h4><p>/${escapeHtml(brand.slug)} · товаров: ${brand._count?.products || 0}</p></div>
+          <em class="${brand.isPublished ? 'is-active' : ''}">${brand.isPublished ? 'Активен' : 'Скрыт'}</em>
+          <div><button type="button" data-edit>Изменить</button><button type="button" data-delete>Удалить</button></div>
+        </article>
+      `).join('') || '<div class="admin-settings-list__empty">Брендов пока нет</div>';
+
+      filterList.innerHTML = (data.filterGroups || []).map((group) => `
+        <article class="admin-settings-item admin-settings-item--filter" data-filter-id="${group.id}">
+          <div><span>${escapeHtml(group.category?.name || 'Категория')}</span><h4>${escapeHtml(group.name)}</h4><p>/${escapeHtml(group.slug)} · вариантов: ${group.options?.length || 0}</p><div class="admin-settings-item__options">${(group.options || []).map((option) => `<b>${escapeHtml(option.name)}</b>`).join('')}</div></div>
+          <em class="${group.isPublished ? 'is-active' : ''}">${group.isPublished ? 'Активен' : 'Скрыт'}</em>
+          <div><button type="button" data-edit>Изменить</button><button type="button" data-delete>Удалить</button></div>
+        </article>
+      `).join('') || '<div class="admin-settings-list__empty">Фильтров пока нет</div>';
+
+      bindSettingsActions();
+    }
+
+    function bindSettingsActions() {
+      categoryList.querySelectorAll('[data-category-id]').forEach((item) => {
+        const entity = data.categories.find((category) => category.id === Number(item.dataset.categoryId));
+        item.querySelector('[data-edit]')?.addEventListener('click', () => openCategoryModal(entity));
+        item.querySelector('[data-delete]')?.addEventListener('click', () => deleteEntity('categories', entity));
+      });
+      brandList.querySelectorAll('[data-brand-id]').forEach((item) => {
+        const entity = data.brands.find((brand) => brand.id === Number(item.dataset.brandId));
+        item.querySelector('[data-edit]')?.addEventListener('click', () => openBrandModal(entity));
+        item.querySelector('[data-delete]')?.addEventListener('click', () => deleteEntity('brands', entity));
+      });
+      filterList.querySelectorAll('[data-filter-id]').forEach((item) => {
+        const entity = data.filterGroups.find((group) => group.id === Number(item.dataset.filterId));
+        item.querySelector('[data-edit]')?.addEventListener('click', () => openFilterModal(entity));
+        item.querySelector('[data-delete]')?.addEventListener('click', () => deleteEntity('filter-groups', entity));
+      });
+    }
+
+    function openCategoryModal(entity = null) {
+      modalState = { type: 'categories', id: entity?.id || null };
+      modalEyebrow.textContent = 'Структура каталога';
+      modalTitle.textContent = entity ? 'Редактирование категории' : 'Новая категория';
+      modalForm.innerHTML = `
+        <label><span>Название</span><input name="name" type="text" maxlength="120" value="${escapeHtml(entity?.name || '')}" required /></label>
+        <label><span>Адрес</span><input name="slug" type="text" maxlength="180" value="${escapeHtml(entity?.slug || '')}" required /></label>
+        <label><span>Родитель</span><select name="parentId"><option value="">Верхний уровень</option>${(data.categories || []).filter((category) => category.id !== entity?.id).map((category) => `<option value="${category.id}" ${entity?.parentId === category.id ? 'selected' : ''}>${escapeHtml(category.name)}</option>`).join('')}</select></label>
+        <label><span>Путь изображения</span><input name="imagePath" type="text" maxlength="500" value="${escapeHtml(entity?.imagePath || '')}" /></label>
+        <label class="is-wide"><span>Описание</span><textarea name="description" rows="4" maxlength="600">${escapeHtml(entity?.description || '')}</textarea></label>
+        <label><span>Порядок</span><input name="sortOrder" type="number" min="0" max="100000" value="${entity?.sortOrder ?? 100}" /></label>
+        <label class="admin-settings-modal__switch"><input name="isPublished" type="checkbox" ${entity?.isPublished !== false ? 'checked' : ''} /><span>Активна</span></label>
+        <button type="submit">Сохранить категорию</button>`;
+      bindModalSlug();
+      showModal();
+    }
+
+    function openBrandModal(entity = null) {
+      modalState = { type: 'brands', id: entity?.id || null };
+      modalEyebrow.textContent = 'Бренды';
+      modalTitle.textContent = entity ? 'Редактирование бренда' : 'Новый бренд';
+      modalForm.innerHTML = `
+        <label><span>Название</span><input name="name" type="text" maxlength="120" value="${escapeHtml(entity?.name || '')}" required /></label>
+        <label><span>Адрес</span><input name="slug" type="text" maxlength="180" value="${escapeHtml(entity?.slug || '')}" required /></label>
+        <label class="is-wide"><span>Путь логотипа</span><input name="logoPath" type="text" maxlength="500" value="${escapeHtml(entity?.logoPath || '')}" /></label>
+        <label><span>Порядок</span><input name="sortOrder" type="number" min="0" max="100000" value="${entity?.sortOrder ?? 100}" /></label>
+        <label class="admin-settings-modal__switch"><input name="isPublished" type="checkbox" ${entity?.isPublished !== false ? 'checked' : ''} /><span>Активен</span></label>
+        <button type="submit">Сохранить бренд</button>`;
+      bindModalSlug();
+      showModal();
+    }
+
+    function openFilterModal(entity = null) {
+      modalState = { type: 'filter-groups', id: entity?.id || null };
+      modalEyebrow.textContent = 'Динамические фильтры';
+      modalTitle.textContent = entity ? 'Редактирование фильтра' : 'Новый фильтр';
+      const optionsText = (entity?.options || []).map((option) => `${option.name}|${option.value}|${option.id}`).join('\n');
+      modalForm.innerHTML = `
+        <label><span>Название</span><input name="name" type="text" maxlength="120" value="${escapeHtml(entity?.name || '')}" required /></label>
+        <label><span>Адрес</span><input name="slug" type="text" maxlength="180" value="${escapeHtml(entity?.slug || '')}" required /></label>
+        <label class="is-wide"><span>Направление</span><select name="categoryId" required><option value="">Выберите направление</option>${(data.categories || []).filter((category) => !category.parentId).map((category) => `<option value="${category.id}" ${entity?.categoryId === category.id ? 'selected' : ''}>${escapeHtml(category.name)}</option>`).join('')}</select></label>
+        <label class="is-wide"><span>Варианты</span><textarea name="options" rows="10" placeholder="Окрашенные|colored\nСухие|dry">${escapeHtml(optionsText)}</textarea><small>Один вариант на строку: Название|значение. Третий служебный ID сохраняется автоматически.</small></label>
+        <label><span>Порядок</span><input name="sortOrder" type="number" min="0" max="100000" value="${entity?.sortOrder ?? 100}" /></label>
+        <label class="admin-settings-modal__switch"><input name="isPublished" type="checkbox" ${entity?.isPublished !== false ? 'checked' : ''} /><span>Активен</span></label>
+        <button type="submit">Сохранить фильтр</button>`;
+      bindModalSlug();
+      showModal();
+    }
+
+    function bindModalSlug() {
+      const name = modalForm.elements.name;
+      const slug = modalForm.elements.slug;
+      let touched = Boolean(slug.value);
+      slug.addEventListener('input', () => { touched = true; slug.value = createCatalogSlug(slug.value); });
+      name.addEventListener('input', () => { if (!touched) slug.value = createCatalogSlug(name.value); });
+    }
+
+    async function saveModal(event) {
+      event.preventDefault();
+      if (!modalState) return;
+      const formData = new FormData(modalForm);
+      let payload;
+
+      if (modalState.type === 'categories') {
+        payload = {
+          name: String(formData.get('name') || '').trim(),
+          slug: createCatalogSlug(formData.get('slug')),
+          description: String(formData.get('description') || '').trim(),
+          imagePath: String(formData.get('imagePath') || '').trim(),
+          parentId: formData.get('parentId') ? Number(formData.get('parentId')) : null,
+          sortOrder: Number(formData.get('sortOrder')) || 100,
+          isPublished: formData.get('isPublished') === 'on',
+        };
+      } else if (modalState.type === 'brands') {
+        payload = {
+          name: String(formData.get('name') || '').trim(),
+          slug: createCatalogSlug(formData.get('slug')),
+          logoPath: String(formData.get('logoPath') || '').trim(),
+          sortOrder: Number(formData.get('sortOrder')) || 100,
+          isPublished: formData.get('isPublished') === 'on',
+        };
+      } else {
+        payload = {
+          name: String(formData.get('name') || '').trim(),
+          slug: createCatalogSlug(formData.get('slug')),
+          categoryId: Number(formData.get('categoryId')),
+          sortOrder: Number(formData.get('sortOrder')) || 100,
+          isPublished: formData.get('isPublished') === 'on',
+          options: String(formData.get('options') || '').split('\n').map((line, index) => {
+            const [name, value, id] = line.split('|').map((item) => String(item || '').trim());
+            return name && value ? { id: Number(id) || undefined, name, value: createCatalogSlug(value), sortOrder: (index + 1) * 10, isPublished: true } : null;
+          }).filter(Boolean),
+        };
+      }
+
+      const submit = modalForm.querySelector('button[type="submit"]');
+      submit.disabled = true;
+      try {
+        const url = modalState.id ? `/admin/api/catalog/${modalState.type}/${modalState.id}` : `/admin/api/catalog/${modalState.type}`;
+        const result = await requestJson(url, {
+          method: modalState.id ? 'PATCH' : 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify(payload),
+        });
+        if (!result.response.ok) throw new Error(result.data?.message || 'Не удалось сохранить запись');
+        closeModal();
+        showSettingsMessage('Изменения сохранены.', true);
+        await loadSettings();
+      } catch (error) {
+        showSettingsMessage(error.message || 'Не удалось сохранить запись.');
+      } finally {
+        submit.disabled = false;
+      }
+    }
+
+    async function deleteEntity(type, entity) {
+      if (!entity || !window.confirm(`Удалить «${entity.name}»?\n\nЭто действие нельзя отменить.`)) return;
+      try {
+        const result = await requestJson(`/admin/api/catalog/${type}/${entity.id}`, {
+          method: 'DELETE',
+          headers: { 'X-CSRF-Token': csrfToken },
+        });
+        if (!result.response.ok) throw new Error(result.data?.message || 'Не удалось удалить запись');
+        showSettingsMessage(`«${entity.name}» удалено.`, true);
+        await loadSettings();
+      } catch (error) {
+        showSettingsMessage(error.message || 'Не удалось удалить запись.');
+      }
+    }
+
+    function showModal() {
+      modal.hidden = false;
+      document.body.classList.add('admin-modal-open');
+      modalForm.querySelector('input, select, textarea')?.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      modalState = null;
+      modalForm.innerHTML = '';
+      document.body.classList.remove('admin-modal-open');
+    }
+
+    function showSettingsMessage(text, success = false) {
+      message.textContent = text;
+      message.hidden = false;
+      message.classList.toggle('is-success', success);
+    }
+
+    function hideSettingsMessage() {
+      message.textContent = '';
+      message.hidden = true;
+      message.classList.remove('is-success');
+    }
+  }
+
+  // заказы каталога
+
+  async function initAdminOrdersPage(adminUser) {
+    if (adminUser?.role !== 'OWNER') {
+      window.location.replace('/admin/requests');
+      return;
+    }
+
+    const list = document.querySelector('[data-orders-list]');
+    const loading = document.querySelector('[data-orders-loading]');
+    const empty = document.querySelector('[data-orders-empty]');
+    const message = document.querySelector('[data-orders-message]');
+    const searchForm = document.querySelector('[data-orders-search-form]');
+    const searchInput = document.querySelector('[data-orders-search]');
+    const searchReset = document.querySelector('[data-orders-search-reset]');
+    const dateForm = document.querySelector('[data-orders-date-form]');
+    const dateFrom = document.querySelector('[data-orders-date-from]');
+    const dateTo = document.querySelector('[data-orders-date-to]');
+    const dateReset = document.querySelector('[data-orders-date-reset]');
+    const refresh = document.querySelector('[data-orders-refresh]');
+    const filterButtons = document.querySelectorAll('[data-order-status-filter]');
+    const pagination = document.querySelector('[data-orders-pagination]');
+    const paginationInfo = document.querySelector('[data-orders-pagination-info]');
+    const prev = document.querySelector('[data-orders-prev]');
+    const next = document.querySelector('[data-orders-next]');
+
+    if (!list || !loading || !empty || !message || !searchForm || !searchInput || !searchReset || !dateForm || !dateFrom || !dateTo || !dateReset || !refresh || !pagination || !paginationInfo || !prev || !next) return;
+
+    const state = { search: '', status: 'all', dateFrom: '', dateTo: '', page: 1, limit: 20, pages: 1, isLoading: false };
+    let requestNumber = 0;
+
+    refresh.addEventListener('click', loadOrders);
+    searchForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); state.search = searchInput.value.trim(); state.page = 1; searchReset.hidden = !state.search; await loadOrders();
+    });
+    searchReset.addEventListener('click', async () => {
+      searchInput.value = ''; state.search = ''; state.page = 1; searchReset.hidden = true; await loadOrders();
+    });
+    dateForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (dateFrom.value && dateTo.value && dateFrom.value > dateTo.value) return showOrdersMessage('Дата «с» не может быть позже даты «по».');
+      state.dateFrom = dateFrom.value; state.dateTo = dateTo.value; state.page = 1; dateReset.hidden = !state.dateFrom && !state.dateTo; await loadOrders();
+    });
+    dateReset.addEventListener('click', async () => {
+      dateFrom.value = ''; dateTo.value = ''; state.dateFrom = ''; state.dateTo = ''; state.page = 1; dateReset.hidden = true; await loadOrders();
+    });
+    filterButtons.forEach((button) => button.addEventListener('click', async () => {
+      if (state.isLoading) return;
+      state.status = button.dataset.orderStatusFilter || 'all'; state.page = 1;
+      filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+      await loadOrders();
+    }));
+    prev.addEventListener('click', async () => { if (!state.isLoading && state.page > 1) { state.page -= 1; await loadOrders(); } });
+    next.addEventListener('click', async () => { if (!state.isLoading && state.page < state.pages) { state.page += 1; await loadOrders(); } });
+
+    await loadOrders();
+
+    async function loadOrders(options = {}) {
+      const current = ++requestNumber;
+      setBusy(true);
+      if (!options.preserveMessage) hideOrdersMessage();
+      const params = new URLSearchParams({ page: String(state.page), limit: String(state.limit), status: state.status });
+      if (state.search) params.set('search', state.search);
+      if (state.dateFrom) params.set('dateFrom', state.dateFrom);
+      if (state.dateTo) params.set('dateTo', state.dateTo);
+
+      try {
+        const result = await requestJson(`/admin/api/orders?${params.toString()}`);
+        if (current !== requestNumber) return;
+        if (!result.response.ok) throw new Error(result.data?.message || 'Не удалось загрузить заказы');
+        const orders = Array.isArray(result.data?.orders) ? result.data.orders : [];
+        state.page = Number(result.data?.pagination?.page) || 1;
+        state.pages = Number(result.data?.pagination?.pages) || 1;
+        Object.entries(result.data?.counts || {}).forEach(([status, count]) => setText(`[data-order-count="${status}"]`, String(count || 0)));
+        renderOrders(orders);
+        paginationInfo.textContent = `Страница ${state.page} из ${state.pages}`;
+        prev.disabled = state.page <= 1; next.disabled = state.page >= state.pages; pagination.hidden = state.pages <= 1;
+      } catch (error) {
+        list.hidden = true; empty.hidden = true; pagination.hidden = true; showOrdersMessage(error.message || 'Не удалось загрузить заказы.');
+      } finally {
+        if (current === requestNumber) setBusy(false);
+      }
+    }
+
+    function renderOrders(orders) {
+      if (!orders.length) { list.innerHTML = ''; list.hidden = true; empty.hidden = false; return; }
+      empty.hidden = true;
+      list.innerHTML = orders.map((order) => `
+        <article class="admin-order-card" data-order-card="${order.id}" data-order-status="${escapeHtml(order.status)}">
+          <div class="admin-order-card__head">
+            <div><span>${escapeHtml(order.publicNumber)}</span><h3>${escapeHtml(order.customerName)}</h3><a href="tel:${escapeHtml(order.phone)}">${escapeHtml(formatPhone(order.phone))}</a></div>
+            <div><strong>${formatCatalogMoney(order.total)}</strong><time>${escapeHtml(formatDate(order.createdAt))}</time></div>
+          </div>
+          <div class="admin-order-card__body">
+            <div class="admin-order-card__items">${(order.items || []).map((item) => `
+              <div><img src="${escapeHtml(item.imagePathSnapshot || '')}" alt="" /><p><strong>${escapeHtml(item.productTitleSnapshot)}</strong><span>${escapeHtml(item.variantNameSnapshot)} · ${item.quantity} шт.</span></p><b>${formatCatalogMoney(item.lineTotal)}</b></div>
+            `).join('')}</div>
+            <div class="admin-order-card__details">
+              <p><span>Получение</span><strong>${order.fulfillmentMethod === 'DELIVERY' ? 'Доставка' : 'Самовывоз'}</strong></p>
+              ${order.deliveryAddress ? `<p><span>Адрес</span><strong>${escapeHtml(order.deliveryAddress)}</strong></p>` : ''}
+              <p><span>Комментарий клиента</span><strong>${escapeHtml(order.comment || 'Не указан')}</strong></p>
+            </div>
+            <div class="admin-order-card__controls">
+              <label><span>Статус</span><select data-order-status-select>${renderOrderStatusOptions(order.status)}</select></label>
+              <label><span>Внутренний комментарий</span><textarea maxlength="2000" rows="5" placeholder="Заметка для команды" data-order-comment>${escapeHtml(order.internalComment || '')}</textarea></label>
+              <button type="button" data-order-save>Сохранить</button><span data-order-save-status></span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+      list.hidden = false;
+      list.querySelectorAll('[data-order-card]').forEach((card) => card.querySelector('[data-order-save]')?.addEventListener('click', () => saveOrder(card)));
+    }
+
+    async function saveOrder(card) {
+      const id = Number(card.dataset.orderCard);
+      const button = card.querySelector('[data-order-save]');
+      const status = card.querySelector('[data-order-status-select]').value;
+      const internalComment = card.querySelector('[data-order-comment]').value.trim();
+      const saveStatus = card.querySelector('[data-order-save-status]');
+      button.disabled = true; button.textContent = 'Сохраняем…'; saveStatus.textContent = '';
+      try {
+        const result = await requestJson(`/admin/api/orders/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+          body: JSON.stringify({ status, internalComment }),
+        });
+        if (!result.response.ok) throw new Error(result.data?.message || 'Не удалось сохранить заказ');
+        saveStatus.textContent = 'Сохранено';
+        showOrdersMessage(`Заказ ${result.data.order.publicNumber} обновлён.`, true);
+        await loadOrders({ preserveMessage: true });
+      } catch (error) {
+        saveStatus.textContent = error.message || 'Ошибка';
+      } finally {
+        button.disabled = false; button.textContent = 'Сохранить';
+      }
+    }
+
+    function setBusy(value) {
+      state.isLoading = value; loading.hidden = !value; refresh.disabled = value;
+      if (value) { list.hidden = true; empty.hidden = true; pagination.hidden = true; }
+    }
+    function showOrdersMessage(text, success = false) { message.textContent = text; message.hidden = false; message.classList.toggle('is-success', success); }
+    function hideOrdersMessage() { message.textContent = ''; message.hidden = true; message.classList.remove('is-success'); }
+  }
+
+  function renderOrderStatusOptions(current) {
+    const statuses = [
+      ['NEW', 'Новый'], ['CONFIRMED', 'Подтверждён'], ['ASSEMBLING', 'Собирается'], ['READY', 'Готов'], ['COMPLETED', 'Завершён'], ['CANCELLED', 'Отменён'],
+    ];
+    return statuses.map(([value, label]) => `<option value="${value}" ${value === current ? 'selected' : ''}>${label}</option>`).join('');
+  }
+
+  function formatCatalogMoney(value) {
+    return `${(Number(value || 0) / 100).toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ₽`;
+  }
+
+  function rublesToKopecks(value) {
+    const normalized = String(value || '').replace(',', '.').trim();
+    const number = Number(normalized);
+    return Number.isFinite(number) ? Math.round(number * 100) : 0;
+  }
+
+  function kopecksToRublesInput(value) {
+    const number = Number(value || 0) / 100;
+    return Number.isInteger(number) ? String(number) : number.toFixed(2);
+  }
+
+  function createCatalogSlug(value) {
+    const transliteration = {
+      а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+    };
+    return String(value || '').trim().toLowerCase().split('').map((character) => transliteration[character] ?? character).join('').replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  }
+
 
   function showMessage(element, text, success = false) {
     element.textContent = text;

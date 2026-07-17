@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 async function main() {
   await seedBlogPosts();
   await seedWorks();
+  await seedCatalog();
 }
 
 async function seedBlogPosts() {
@@ -402,6 +403,104 @@ async function seedWorks() {
 
     console.log(`Работа добавлена/обновлена: ${work.title}`);
   }
+}
+
+async function seedCatalog() {
+  const categoryDefinitions = [
+    { name: 'Волосы', slug: 'hair', description: 'Профессиональный домашний уход и продукты для сохранения салонного результата.', imagePath: '/site/img/blog/blog-hero.png', sortOrder: 10 },
+    { name: 'Инструменты', slug: 'tools', description: 'Инструменты и техника для мастеров и домашнего использования.', imagePath: '/site/img/contacts/equipment-dyson.png', sortOrder: 20 },
+    { name: 'Ресницы и брови', slug: 'lashes-brows', description: 'Материалы для оформления, ухода и профессиональной работы.', imagePath: '/site/img/contacts/services-intro3.png', sortOrder: 30 },
+    { name: 'Расходные материалы', slug: 'consumables', description: 'Одноразовые и вспомогательные материалы для ежедневной работы.', imagePath: '/site/img/contacts/equipment-wash.png', sortOrder: 40 },
+  ];
+
+  const categories = {};
+
+  for (const category of categoryDefinitions) {
+    categories[category.slug] = await prisma.productCategory.upsert({
+      where: { slug: category.slug },
+      update: category,
+      create: category,
+    });
+  }
+
+  const childDefinitions = [
+    ['hair', 'Шампуни', 'shampoos', 10],
+    ['hair', 'Кондиционеры и маски', 'conditioners-masks', 20],
+    ['hair', 'Несмываемый уход', 'leave-in-care', 30],
+    ['hair', 'Термозащита и стайлинг', 'heat-protection-styling', 40],
+    ['tools', 'Фены и стайлеры', 'dryers-stylers', 10],
+    ['tools', 'Расчёски и брашинги', 'brushes', 20],
+    ['tools', 'Инструменты колориста', 'colorist-tools', 30],
+    ['lashes-brows', 'Для бровей', 'brows', 10],
+    ['lashes-brows', 'Для ресниц', 'lashes', 20],
+    ['consumables', 'Одноразовые материалы', 'disposables', 10],
+    ['consumables', 'Перчатки и защита', 'gloves-protection', 20],
+  ];
+
+  for (const [parentSlug, name, slug, sortOrder] of childDefinitions) {
+    await prisma.productCategory.upsert({
+      where: { slug },
+      update: { name, parentId: categories[parentSlug].id, sortOrder, isPublished: true },
+      create: { name, slug, parentId: categories[parentSlug].id, sortOrder, isPublished: true },
+    });
+  }
+
+  const brands = [
+    { name: 'L’Oréal Professionnel', slug: 'loreal-professionnel', sortOrder: 10 },
+    { name: 'Ollin Professional', slug: 'ollin-professional', sortOrder: 20 },
+    { name: 'Estel Professional', slug: 'estel-professional', sortOrder: 30 },
+  ];
+
+  for (const brand of brands) {
+    await prisma.brand.upsert({
+      where: { slug: brand.slug },
+      update: brand,
+      create: brand,
+    });
+  }
+
+  const filterDefinitions = {
+    hair: [
+      { name: 'Тип волос', slug: 'hair-type', sortOrder: 10, options: ['Окрашенные', 'Сухие', 'Повреждённые', 'Тонкие', 'Вьющиеся'] },
+      { name: 'Задача', slug: 'purpose', sortOrder: 20, options: ['Увлажнение', 'Восстановление', 'Сохранение цвета', 'Объём', 'Термозащита'] },
+      { name: 'Формат', slug: 'format', sortOrder: 30, options: ['Шампунь', 'Маска', 'Спрей', 'Масло', 'Крем'] },
+    ],
+    tools: [
+      { name: 'Тип инструмента', slug: 'tool-type', sortOrder: 10, options: ['Фен', 'Стайлер', 'Расчёска', 'Брашинг', 'Кисть'] },
+      { name: 'Назначение', slug: 'tool-purpose', sortOrder: 20, options: ['Сушка', 'Укладка', 'Окрашивание', 'Домашний уход'] },
+    ],
+    'lashes-brows': [
+      { name: 'Направление', slug: 'beauty-direction', sortOrder: 10, options: ['Брови', 'Ресницы'] },
+      { name: 'Тип продукта', slug: 'beauty-product-type', sortOrder: 20, options: ['Краска', 'Состав', 'Щёточки', 'Пинцет', 'Уход'] },
+    ],
+    consumables: [
+      { name: 'Тип материала', slug: 'consumable-type', sortOrder: 10, options: ['Перчатки', 'Пеньюары', 'Салфетки', 'Шапочки', 'Аппликаторы'] },
+    ],
+  };
+
+  for (const [categorySlug, groups] of Object.entries(filterDefinitions)) {
+    const category = categories[categorySlug];
+
+    for (const groupDefinition of groups) {
+      const group = await prisma.filterGroup.upsert({
+        where: { categoryId_slug: { categoryId: category.id, slug: groupDefinition.slug } },
+        update: { name: groupDefinition.name, sortOrder: groupDefinition.sortOrder, isPublished: true },
+        create: { name: groupDefinition.name, slug: groupDefinition.slug, categoryId: category.id, sortOrder: groupDefinition.sortOrder, isPublished: true },
+      });
+
+      for (const [index, optionName] of groupDefinition.options.entries()) {
+        const value = optionName.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, '-').replace(/^-|-$/g, '');
+
+        await prisma.filterOption.upsert({
+          where: { groupId_value: { groupId: group.id, value } },
+          update: { name: optionName, sortOrder: (index + 1) * 10, isPublished: true },
+          create: { name: optionName, value, groupId: group.id, sortOrder: (index + 1) * 10, isPublished: true },
+        });
+      }
+    }
+  }
+
+  console.log('Категории, бренды и фильтры каталога добавлены/обновлены.');
 }
 
 main()

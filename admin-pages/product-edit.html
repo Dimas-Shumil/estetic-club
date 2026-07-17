@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>Редактор товара — Клуб Эстетики</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/site/css/admin.min.css" />
+    <link rel="stylesheet" href="/site/css/admin-catalog.css" />
+    <script src="/site/script/admin/admin.js" defer></script>
+  </head>
+  <body class="admin-body" data-admin-page="product-edit">
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="admin-sidebar__logo" href="/admin/dashboard">Клуб Эстетики</a>
+        <span class="admin-sidebar__caption">Управление</span>
+        <nav class="admin-sidebar__nav" aria-label="Навигация админ-панели">
+          <a class="admin-sidebar__link" href="/admin/dashboard">Обзор</a>
+          <a class="admin-sidebar__link" href="/admin/requests">Заявки</a>
+          <a class="admin-sidebar__link" href="/admin/works">Работы</a>
+          <a class="admin-sidebar__link admin-sidebar__link--active" href="/admin/catalog">Каталог</a>
+          <a class="admin-sidebar__link" href="/admin/orders">Заказы</a>
+          <a class="admin-sidebar__link" href="/admin/blog">Статьи</a>
+          <a class="admin-sidebar__link" href="/admin/staff">Сотрудники</a>
+        </nav>
+        <div class="admin-sidebar__bottom">
+          <a class="admin-sidebar__site-link" href="/catalog" target="_blank" rel="noopener">Открыть каталог</a>
+          <button class="admin-sidebar__logout" type="button" data-admin-logout>Выйти</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-header">
+          <div>
+            <span class="admin-header__eyebrow">NADIA STORE</span>
+            <h1 class="admin-header__title">Редактор товара</h1>
+          </div>
+          <div class="admin-user">
+            <div class="admin-user__info"><span class="admin-user__role" data-admin-user-role>—</span><span class="admin-user__email" data-admin-user-email>—</span></div>
+            <button class="admin-user__logout-mobile" type="button" data-admin-logout>Выйти</button>
+          </div>
+        </header>
+
+        <section class="admin-product-editor" data-product-editor-page>
+          <div class="admin-product-editor__head">
+            <div>
+              <a class="admin-product-editor__back" href="/admin/catalog">← Вернуться к товарам</a>
+              <span class="admin-product-editor__caption" data-product-editor-mode>Новый товар</span>
+              <h2 class="admin-product-editor__title" data-product-editor-title>Создание товара</h2>
+              <p>Заполните карточку, добавьте варианты и изображения. Публикация доступна только при наличии активного варианта и фотографии.</p>
+            </div>
+            <span class="admin-product-editor__state" data-product-editor-state>Черновик</span>
+          </div>
+
+          <p class="admin-product-editor__message" role="status" aria-live="polite" data-product-editor-message hidden></p>
+          <div class="admin-product-editor__loading" data-product-editor-loading>Загружаем редактор…</div>
+
+          <form class="admin-product-editor__form" data-product-editor-form hidden novalidate>
+            <div class="admin-product-editor__layout">
+              <div class="admin-product-editor__content">
+                <section class="admin-product-card">
+                  <div class="admin-product-card__head"><div><span>01</span><h3>Основные данные</h3></div></div>
+                  <div class="admin-product-card__grid">
+                    <label class="admin-product-field admin-product-field--wide"><span>Название товара</span><input name="title" type="text" maxlength="180" placeholder="Например: Маска для сохранения холодного оттенка" required data-product-title /></label>
+                    <label class="admin-product-field admin-product-field--wide"><span>Адрес страницы</span><div class="admin-product-field__slug"><span>/catalog/product/</span><input name="slug" type="text" maxlength="180" placeholder="maska-dlya-holodnogo-blonda" required data-product-slug /></div></label>
+                    <label class="admin-product-field"><span>Категория</span><select name="categoryId" required data-product-category><option value="">Выберите категорию</option></select></label>
+                    <label class="admin-product-field"><span>Бренд</span><select name="brandId" data-product-brand><option value="">Без бренда</option></select></label>
+                    <label class="admin-product-field"><span>Артикул товара</span><input name="sku" type="text" maxlength="120" placeholder="NH-CARE-001" data-product-sku /></label>
+                    <label class="admin-product-field"><span>Визуальный бейдж</span><input name="badge" type="text" maxlength="80" placeholder="Новинка, Акция, Выбор мастера" data-product-badge /></label>
+                    <label class="admin-product-field admin-product-field--wide"><span>Краткое описание</span><textarea name="shortDescription" rows="5" maxlength="700" placeholder="Короткое описание для карточки и первого экрана" data-product-short-description></textarea><small><b data-product-short-counter>0</b> / 700</small></label>
+                    <label class="admin-product-field admin-product-field--wide"><span>Полное описание</span><textarea name="description" rows="14" maxlength="50000" placeholder="<p>Описание продукта...</p>" data-product-description></textarea><small>Разрешены безопасные теги: p, h2, h3, ul, ol, li, strong, em, blockquote.</small></label>
+                  </div>
+                </section>
+
+                <section class="admin-product-card">
+                  <div class="admin-product-card__head"><div><span>02</span><h3>Варианты и цены</h3></div><button type="button" data-product-variant-add>+ Добавить вариант</button></div>
+                  <p class="admin-product-card__hint">Даже у товара без выбора объёма должен быть один вариант «Стандарт». Цены вводятся в рублях, сервер хранит их в копейках.</p>
+                  <div class="admin-product-variants" data-product-variants></div>
+                </section>
+
+                <section class="admin-product-card">
+                  <div class="admin-product-card__head"><div><span>03</span><h3>Изображения</h3></div><button type="button" data-product-image-select>+ Загрузить фото</button></div>
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/heic,image/heif" multiple data-product-image-file hidden />
+                  <p class="admin-product-card__hint">Первое главное изображение используется в каталоге и корзине. Все файлы конвертируются в WebP.</p>
+                  <span class="admin-product-card__upload-status" data-product-image-status></span>
+                  <div class="admin-product-images" data-product-images></div>
+                </section>
+
+                <section class="admin-product-card">
+                  <div class="admin-product-card__head"><div><span>04</span><h3>Характеристики для фильтров</h3></div></div>
+                  <p class="admin-product-card__hint">Набор параметров меняется автоматически в зависимости от выбранного направления.</p>
+                  <div class="admin-product-filters" data-product-filter-options></div>
+                </section>
+
+                <section class="admin-product-card">
+                  <div class="admin-product-card__head"><div><span>05</span><h3>SEO</h3></div></div>
+                  <div class="admin-product-card__grid">
+                    <label class="admin-product-field admin-product-field--wide"><span>SEO Title</span><input name="seoTitle" type="text" maxlength="180" placeholder="Название товара — Клуб Эстетики" data-product-seo-title /></label>
+                    <label class="admin-product-field admin-product-field--wide"><span>Meta description</span><textarea name="seoDescription" rows="4" maxlength="320" placeholder="Краткое описание страницы для поисковой выдачи" data-product-seo-description></textarea></label>
+                  </div>
+                </section>
+              </div>
+
+              <aside class="admin-product-editor__aside">
+                <section class="admin-product-publish">
+                  <span>Публикация</span>
+                  <label><input type="checkbox" name="isPublished" data-product-published /><span>Показывать товар на сайте</span></label>
+                  <label class="admin-product-field"><span>Порядок</span><input name="sortOrder" type="number" min="0" max="100000" value="100" data-product-sort-order /></label>
+                  <button type="submit" data-product-save>Сохранить товар</button>
+                  <button class="admin-product-publish__delete" type="button" data-product-delete hidden>Удалить товар</button>
+                  <a href="#" target="_blank" rel="noopener" data-product-public-link hidden>Открыть на сайте</a>
+                </section>
+                <section class="admin-product-meta"><span>ID товара</span><strong data-product-meta-id>Новый</strong><span>Статус</span><strong data-product-meta-status>Черновик</strong></section>
+              </aside>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

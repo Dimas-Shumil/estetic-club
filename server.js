@@ -17,6 +17,9 @@ const adminRoutes = require('./routes/admin.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const blogRoutes = require('./routes/blog.routes');
 const publicRoutes = require('./routes/public.routes');
+const catalogRoutes = require('./routes/catalog.routes');
+const ordersRoutes = require('./routes/orders.routes');
+const adminCatalogRoutes = require('./routes/admin-catalog.routes');
 
 const validateOrigin = require('./middleware/validate-origin');
 
@@ -639,12 +642,34 @@ app.use('/admin/api/auth', authRoutes);
 
 app.use('/admin/api/uploads', uploadRoutes);
 
+app.use('/admin', adminCatalogRoutes);
+
 app.use('/admin', adminRoutes);
 
 // паблик пейджс
 
 app.get('/', (req, res) => {
   return res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+});
+
+app.get(['/catalog', '/catalog/'], (req, res) => {
+  return res.sendFile(path.join(PUBLIC_DIR, 'catalog', 'catalog.html'));
+});
+
+app.get('/catalog/product/:slug', (req, res) => {
+  return res.sendFile(path.join(PUBLIC_DIR, 'catalog', 'product.html'));
+});
+
+app.get('/cart', (req, res) => {
+  return res.sendFile(path.join(PUBLIC_DIR, 'cart.html'));
+});
+
+app.get('/checkout', (req, res) => {
+  return res.sendFile(path.join(PUBLIC_DIR, 'checkout.html'));
+});
+
+app.get('/order-success', (req, res) => {
+  return res.sendFile(path.join(PUBLIC_DIR, 'order-success.html'));
 });
 
 // публ апи
@@ -723,6 +748,8 @@ app.post('/api/leads', leadLimiter, validateOrigin, async (req, res, next) => {
 
 // публичный API
 
+app.use('/api/catalog', catalogRoutes);
+app.use('/api/orders', ordersRoutes);
 app.use('/api', blogRoutes);
 app.use('/api', publicRoutes);
 

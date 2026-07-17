@@ -5,6 +5,9 @@ $color-brown: #796046;
   position: relative;
   overflow: hidden;
 
+  width: 100%;
+
+  margin: 0 auto;
   padding: 28px 24px 28px;
 
   color: #2f231a;
@@ -37,20 +40,16 @@ $color-brown: #796046;
     position: relative;
     z-index: 1;
     overflow: hidden;
-
-    padding:
-    32px
-    clamp(20px, 4vw, 72px)
-    28px;
+    max-width: 1720px;
+    padding: 32px clamp(20px, 4vw, 72px) 28px;
     margin: 0 auto;
 
-    background:
-      linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.92) 0%,
-        rgba(255, 250, 244, 0.88) 48%,
-        rgba(247, 239, 230, 0.82) 100%
-      );
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 250, 244, 0.88) 48%,
+      rgba(247, 239, 230, 0.82) 100%
+    );
 
     border: 1px solid rgba(79, 59, 43, 0.11);
     border-radius: 28px;
@@ -69,9 +68,21 @@ $color-brown: #796046;
     pointer-events: none;
 
     background:
-      radial-gradient(circle at 8% 18%, rgba(255, 255, 255, 0.88), transparent 22%),
-      radial-gradient(circle at 74% 14%, rgba(255, 255, 255, 0.58), transparent 20%),
-      radial-gradient(circle at 92% 70%, rgba(121, 96, 70, 0.06), transparent 26%),
+      radial-gradient(
+        circle at 8% 18%,
+        rgba(255, 255, 255, 0.88),
+        transparent 22%
+      ),
+      radial-gradient(
+        circle at 74% 14%,
+        rgba(255, 255, 255, 0.58),
+        transparent 20%
+      ),
+      radial-gradient(
+        circle at 92% 70%,
+        rgba(121, 96, 70, 0.06),
+        transparent 26%
+      ),
       linear-gradient(
         90deg,
         rgba(255, 255, 255, 0.44) 0%,
@@ -104,10 +115,8 @@ $color-brown: #796046;
     grid-template-columns: 1.28fr 0.72fr 0.86fr 1fr;
     gap: clamp(42px, 4vw, 72px);
 
-    padding:
-    clamp(52px, 5vw, 72px)
-    clamp(36px, 5vw, 80px)
-    clamp(44px, 4vw, 58px);
+    padding: clamp(52px, 5vw, 72px) clamp(36px, 5vw, 80px)
+      clamp(44px, 4vw, 58px);
   }
 
   &__brand {

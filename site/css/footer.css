@@ -1,6 +1,8 @@
 .footer {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
   padding: 28px 24px 28px;
   color: #2f231a;
   background: #796046;
@@ -10,6 +12,7 @@
   position: relative;
   z-index: 1;
   overflow: hidden;
+  max-width: 1720px;
   padding: 32px clamp(20px, 4vw, 72px) 28px;
   margin: 0 auto;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 250, 244, 0.88) 48%, rgba(247, 239, 230, 0.82) 100%);

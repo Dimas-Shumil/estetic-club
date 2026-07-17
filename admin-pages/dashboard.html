@@ -45,14 +45,13 @@
             Работы
           </a>
 
-          <span
-            class="admin-sidebar__link admin-sidebar__link--disabled"
-            data-owner-only
-            aria-disabled="true"
-            title="Раздел будет добавлен позже"
-          >
+          <a class="admin-sidebar__link" href="/admin/catalog" data-owner-only>
             Каталог
-          </span>
+          </a>
+
+          <a class="admin-sidebar__link" href="/admin/orders" data-owner-only>
+            Заказы
+          </a>
 
           <a class="admin-sidebar__link" href="/admin/blog" data-owner-only>
             Статьи
@@ -286,6 +285,16 @@
                       0
                     </strong>
                   </article>
+
+                  <a class="admin-content-stat" href="/admin/catalog">
+                    <span class="admin-content-stat__label">Опубликованные товары</span>
+                    <strong class="admin-content-stat__value" data-dashboard-content-count="publishedProducts">0</strong>
+                  </a>
+
+                  <a class="admin-content-stat" href="/admin/orders">
+                    <span class="admin-content-stat__label">Новые заказы</span>
+                    <strong class="admin-content-stat__value" data-dashboard-content-count="newOrders">0</strong>
+                  </a>
                 </div>
               </aside>
             </div>
