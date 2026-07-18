@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Услуги NADIA HAIR: AirTouch, шатуш, мелирование, тотал блонд, тонирование, реконструкция и индивидуальный уход за волосами."
+    />
+    <link rel="stylesheet" href="/site/css/services.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Услуги — NADIA HAIR</title>
+  </head>
+
+  <body class="services-page">
+    <header class="header" data-header>
+      <div class="header__inner glass">
+        <a href="#home" class="header__logo" aria-label="На главную">
+          <img
+            src="/site/img/logo.png"
+            alt="Nadia Hair Studio"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </a>
+
+        <nav class="header__nav header__nav" aria-label="Левая навигация">
+          <a href="/public/index.html">Главная</a>
+          <a href="/public/services/services.html" aria-current="page">Услуги</a>
+          <a href="/public/catalog/catalog.html">Каталог</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
+        </nav>
+
+        <a class="header__button" href="tel:+79235853333"> Записаться</a>
+
+        <button
+          class="header__burger"
+          type="button"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+          data-burger
+        >
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav
+        class="header__mobile"
+        aria-label="Мобильная навигация"
+        data-mobile-menu
+      >
+        <div class="header__mobile-nav">
+          <a href="/public/index.html">Главная</a>
+          <a href="#services" aria-current="page">Услуги</a>
+          <a href="/public/catalog/catalog.html">Каталог</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
+        </div>
+
+        <div class="header__mobile-contact">
+          <span>Записаться в салон</span>
+          <a href="tel:89233906649">8 923 390-66-49</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="services-hero" id="home" aria-labelledby="services-title">
+        <div class="services-hero__glow" aria-hidden="true"></div>
+
+        <div class="services-hero__content">
+          <div class="services-hero__copy">
+            <div class="services-hero__eyebrow">
+              <span>NADIA SERVICES</span>
+              <span>07</span>
+            </div>
+
+            <h1 id="services-title">Услуги<br />для ваших<br />волос</h1>
+
+            <p>
+              Персональные техники окрашивания, реконструкции и ухода —
+              с вниманием к качеству и естественной красоте волос.
+            </p>
+
+            <a class="services-button services-button--light" href="#services">
+              <span>Подобрать услугу</span>
+            </a>
+          </div>
+
+          <div class="services-hero__visual">
+            <img
+              class="services-hero__image"
+              src="/site/img/main-hero-bg.png"
+              alt="Результат работы мастера NADIA HAIR"
+              decoding="async"
+              fetchpriority="high"
+            />
+
+            <div class="services-hero__detail" aria-hidden="true">
+              <img src="/site/img/pablito.jpg" alt="" />
+            </div>
+
+            <div class="services-hero__note">
+              <strong>7 направлений</strong>
+              <span>индивидуальный результат</span>
+            </div>
+          </div>
+
+          <div class="services-hero__meta" aria-label="Направления услуг">
+            <span>Окрашивание</span>
+            <i></i>
+            <span>Реконструкция</span>
+            <i></i>
+            <span>Уход</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="services-flow" data-services-flow>
+        <section class="services-catalog" id="services" aria-labelledby="catalog-title">
+          <div class="services-container">
+            <div class="services-catalog__header" data-services-reveal>
+              <span class="services-label">Наши услуги</span>
+              <h2 id="catalog-title">
+                Каждое преображение<br />начинается с диалога
+              </h2>
+              <p>
+                Мы проводим диагностику, учитываем историю волос и подбираем
+                технику, которая подчеркнёт вашу индивидуальность.
+              </p>
+            </div>
+
+            <div class="services-grid">
+              <article class="service-card service-card--feature service-card--dark" data-services-reveal>
+                <div class="service-card__content">
+                  <span class="service-card__number">01</span>
+                  <h3>AirTouch</h3>
+                  <p>Мягкие переходы и воздушный рисунок цвета.</p>
+                  <span class="service-card__price">от 15 000 ₽</span>
+                  <button class="service-card__open" type="button" data-service-open="airtouch" aria-label="Подробнее об AirTouch">→</button>
+                </div>
+                <img src="/site/img/img1aft.jpg" alt="Окрашивание AirTouch" loading="lazy" />
+              </article>
+
+              <article class="service-card service-card--feature service-card--dark" data-services-reveal>
+                <div class="service-card__content">
+                  <span class="service-card__number">02</span>
+                  <h3>Шатуш</h3>
+                  <p>Естественный эффект выгоревших на солнце прядей.</p>
+                  <span class="service-card__price">от 12 000 ₽</span>
+                  <button class="service-card__open" type="button" data-service-open="shatush" aria-label="Подробнее о шатуш">→</button>
+                </div>
+                <img src="/site/img/img2aft.jpg" alt="Окрашивание шатуш" loading="lazy" />
+              </article>
+
+              <article class="service-card service-card--wide" data-services-reveal>
+                <div class="service-card__content">
+                  <span class="service-card__number">03</span>
+                  <h3>Мелирование волос</h3>
+                  <p>Деликатное осветление отдельных прядей.</p>
+                  <span class="service-card__price">от 10 000 ₽</span>
+                  <button class="service-card__open" type="button" data-service-open="highlights" aria-label="Подробнее о мелировании">→</button>
+                </div>
+                <img src="/site/img/img1bef.jpg" alt="Мелирование волос" loading="lazy" />
+              </article>
+
+              <article class="service-card service-card--tall" data-services-reveal>
+                <div class="service-card__content">
+                  <span class="service-card__number">04</span>
+                  <h3>Тотал блонд</h3>
+                  <p>Чистый светлый оттенок с сохранением качества волос.</p>
+                  <span class="service-card__price">от 14 000 ₽</span>
+                  <button class="service-card__open" type="button" data-service-open="total-blonde" aria-label="Подробнее о тотал блонд">→</button>
+                </div>
+                <img src="/site/img/img2bef.jpg" alt="Окрашивание тотал блонд" loading="lazy" />
+              </article>
+
+              <article class="service-card service-card--wide" data-services-reveal>
+                <div class="service-card__content">
+                  <span class="service-card__number">05</span>
+                  <h3>Тонирование волос</h3>
+                  <p>Глубина, блеск и коррекция оттенка без резких перемен.</p>
+                  <span class="service-card__price">от 7 000 ₽</span>
+                  <button class="service-card__open" type="button" data-service-open="toning" aria-label="Подробнее о тонировании">→</button>
+                </div>
+                <img src="/site/img/IMG_4750.PNG" alt="Тонирование волос" loading="lazy" />
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="services-care" aria-labelledby="care-title">
+          <div class="services-container">
+            <div class="services-care__title" data-services-reveal>
+              <span class="services-label">Здоровье и качество</span>
+              <h2 id="care-title">Когда волосам нужен<br />особый подход</h2>
+            </div>
+
+            <div class="services-care__list">
+              <article class="care-card" data-services-reveal>
+                <div class="care-card__content">
+                  <span class="care-card__number">06</span>
+                  <div>
+                    <span class="care-card__type">Выпрямление</span>
+                    <h3>Реконструкция волос</h3>
+                    <p>Гладкость, плотность и дисциплина волос.</p>
+                    <span class="care-card__price">от 8 000 ₽</span>
+                  </div>
+                  <button class="care-card__open" type="button" data-service-open="reconstruction" aria-label="Подробнее о реконструкции">→</button>
+                </div>
+                <img src="/site/img/IMG_4749.PNG" alt="Реконструкция и выпрямление волос" loading="lazy" />
+              </article>
+
+              <article class="care-card" data-services-reveal>
+                <div class="care-card__content">
+                  <span class="care-card__number">07</span>
+                  <div>
+                    <span class="care-card__type">Восстановление</span>
+                    <h3>Индивидуальный уход для волос</h3>
+                    <p>Персональная программа для силы, мягкости и блеска.</p>
+                    <span class="care-card__price">от 5 000 ₽</span>
+                  </div>
+                  <button class="care-card__open" type="button" data-service-open="care" aria-label="Подробнее об индивидуальном уходе">→</button>
+                </div>
+                <img src="/site/img/IMG_4750.PNG" alt="Индивидуальный уход и восстановление волос" loading="lazy" />
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="services-consultation" aria-labelledby="consultation-title">
+          <div class="services-container">
+            <div class="services-consultation__panel" data-services-reveal>
+              <img src="/site/img/img2aft.jpg" alt="Консультация мастера NADIA HAIR" loading="lazy" />
+              <div class="services-consultation__content">
+                <span class="services-label">Поможем выбрать</span>
+                <h2 id="consultation-title">Не знаете,<br />что подойдёт?</h2>
+                <p>
+                  На консультации оценим состояние волос, обсудим желаемый
+                  результат и предложим подходящую технику.
+                </p>
+                <a class="services-button services-button--brown" href="/public/contacts.html#contact-form">
+                  <span>Записаться на консультацию</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__glass">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <a class="footer__logo" href="/" aria-label="NADIA HAIR">
+              NADIA HAIR
+            </a>
+
+            <p class="footer__text">
+              Премиальный уход за волосами и безупречный результат.
+              Индивидуальный подход к каждой клиентке.
+            </p>
+
+            <a class="footer__button" href="tel:+79233906649">
+              Записаться онлайн
+            </a>
+          </div>
+
+          <nav class="footer__nav" aria-label="Меню сайта">
+            <span class="footer__title">Меню</span>
+            <a href="/">Главная</a>
+            <a href="/public/services/services.html">Услуги</a>Услуги</a>
+            <a href="/works">Работы</a>
+            <a href="/blog">Влог</a>
+            <a href="/contacts">Контакты</a>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Услуги салона">
+            <span class="footer__title">Услуги</span>
+            <a href="/services">Окрашивание</a>
+            <a href="/services">AirTouch</a>
+            <a href="/services">Уход за волосами</a>
+            <a href="/services">Стрижки</a>
+            <a href="/services">Укладки</a>
+          </nav>
+
+          <div class="footer__contacts">
+            <span class="footer__title">Контакты</span>
+            <a class="footer__contact" href="tel:+79233906649">
+              +7 (923) 390-66-49
+            </a>
+            <div class="footer__contact">Абакан</div>
+            <div class="footer__socials">
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="VK">VK</a>
+              <a href="#" aria-label="Telegram">TG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <p>© NADIA HAIR, 2026</p>
+          <a href="/privacy-policy">Политика конфиденциальности</a>
+          <a href="https://shumdev.ru" target="_blank" rel="noopener">
+            Разработка ShumDev
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <div class="service-modal" data-service-modal aria-hidden="true">
+      <div class="service-modal__backdrop" data-service-close></div>
+      <div class="service-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="service-modal-title">
+        <button class="service-modal__close" type="button" data-service-close aria-label="Закрыть окно">
+          <span></span><span></span>
+        </button>
+
+        <div class="service-modal__media">
+          <img data-modal-image src="" alt="" />
+          <span data-modal-number></span>
+        </div>
+
+        <div class="service-modal__body">
+          <span class="service-modal__eyebrow" data-modal-eyebrow></span>
+          <h2 id="service-modal-title" data-modal-title></h2>
+          <p class="service-modal__lead" data-modal-description></p>
+
+          <div class="service-modal__info">
+            <div>
+              <span>Продолжительность</span>
+              <strong data-modal-duration></strong>
+            </div>
+            <div>
+              <span>Стоимость</span>
+              <strong data-modal-price></strong>
+            </div>
+          </div>
+
+          <div class="service-modal__benefits">
+            <span>Подойдёт, если вы хотите</span>
+            <ul data-modal-benefits></ul>
+          </div>
+
+          <p class="service-modal__notice">
+            Точная стоимость и время процедуры определяются после консультации
+            и диагностики волос.
+          </p>
+
+          <a class="services-button services-button--light" data-modal-book href="tel:+79233906649">
+            <span>Записаться на услугу</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="/site/script/services.js"></script>
+  </body>
+</html>
