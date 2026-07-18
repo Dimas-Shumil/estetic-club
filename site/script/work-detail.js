@@ -9,20 +9,20 @@ const WORK_DETAIL_DEMO = {
   technique: 'AirTouch',
   duration: '5 часов',
   createdAt: '2026-07-09',
-  heroImage: '/site/img/img2aft.jpg',
-  experienceImage: '/site/img/contacts/services-intro3.png',
+  heroImage: '/site/img/img2aft.webp',
+  experienceImage: '/site/img/contacts/services-intro3.webp',
   heroQuote: 'Это не просто цвет. Это ощущение себя красивой.',
   story:
     'Задача была сохранить мягкость образа, добавить светлые переливы и сделать цвет чище, не перегружая волосы осветлением. Работа началась с диагностики полотна, подбора техники и бережного распределения прядей.',
   gallery: [
-    '/site/img/main-hero-bg.png',
-    '/site/img/contacts/services-intro3.png',
-    '/site/img/contacts/contact-hero.png',
-    '/site/img/contacts/equipment-mirror.png',
-    '/site/img/contacts/equipment-wash.png',
-    '/site/img/contacts/equipment-dyson.png',
-    '/site/img/contacts/equipment-climazon.png',
-    '/site/img/main-hero-bg.png',
+    '/site/img/main-hero-bg.webp',
+    '/site/img/contacts/services-intro3.webp',
+    '/site/img/contacts/contact-hero.webp',
+    '/site/img/contacts/equipment-mirror.webp',
+    '/site/img/contacts/equipment-wash.webp',
+    '/site/img/contacts/equipment-dyson.webp',
+    '/site/img/contacts/equipment-climazon.webp',
+    '/site/img/main-hero-bg.webp',
   ],
 };
 
@@ -492,9 +492,13 @@ function renderWorkGallery(images) {
       return `
         <figure class="work-detail-gallery__item ${modifier}">
           <img
-            src="${escapeHtml(image)}"
+            ${window.KulturaImage.attrs(image, {
+              sizes: '(max-width: 760px) calc(100vw - 32px), 50vw',
+              loading: 'lazy',
+              fallbackWidth: 1200,
+              fallbackHeight: 1500,
+            })}
             alt="Фотография преображения Культура волос ${index + 1}"
-            loading="lazy"
           />
         </figure>
       `;
@@ -837,7 +841,16 @@ function setImage(selector, src, alt = '') {
 
   if (!image || !src) return;
 
-  image.src = src;
+  const isHero = selector === '[data-work-hero-image]';
+
+  window.KulturaImage.apply(image, src, {
+    sizes: '(max-width: 900px) 100vw, 50vw',
+    loading: isHero ? 'eager' : 'lazy',
+    fetchpriority: isHero ? 'high' : '',
+    fallbackWidth: 1200,
+    fallbackHeight: 1500,
+  });
+
   image.alt = alt ? `Культура волос — ${alt}` : 'Культура волос';
 }
 

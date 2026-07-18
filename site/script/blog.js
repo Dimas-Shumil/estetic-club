@@ -372,7 +372,7 @@ function normalizeBlogPosts(payload) {
 
       const coverImage =
         String(post.coverImage || post.cover_image || '').trim() ||
-        '/site/img/blog/blog-hero.png';
+        '/site/img/blog/blog-hero.webp';
 
       const coverAlt =
         String(post.coverAlt || post.cover_alt || '').trim() || title;
@@ -439,10 +439,13 @@ function createBlogCardTemplate(post) {
       >
         <div class="blog-card__image">
           <img
-            src="${escapeHtml(post.coverImage)}"
+            ${window.KulturaImage.attrs(post.coverImage, {
+              sizes: '(max-width: 760px) calc(100vw - 32px), (max-width: 1180px) 50vw, 33vw',
+              loading: 'lazy',
+              fallbackWidth: 1000,
+              fallbackHeight: 1050,
+            })}
             alt="${escapeHtml(post.coverAlt)}"
-            loading="lazy"
-            decoding="async"
           />
         </div>
 

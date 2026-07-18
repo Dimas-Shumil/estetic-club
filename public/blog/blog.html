@@ -27,7 +27,7 @@
       content="Экспертные статьи об уходе за волосами, окрашивании и сохранении салонного результата."
     />
 
-    <meta property="og:image" content="/site/img/blog/blog-hero.png" />
+    <meta property="og:image" content="/site/img/blog/blog-hero.webp" />
 
     <meta property="og:image:alt" content="Журнал «Культура волос»" />
 
@@ -40,7 +40,7 @@
       content="Экспертные статьи об уходе за волосами, окрашивании и сохранении салонного результата."
     />
 
-    <meta name="twitter:image" content="/site/img/blog/blog-hero.png" />
+    <meta name="twitter:image" content="/site/img/blog/blog-hero.webp" />
 
     <link rel="stylesheet" href="/site/css/blog.min.css" />
 
@@ -68,7 +68,7 @@
           href="/public/index.html"
           aria-label="На главную"
         >
-          <img src="/site/img/logo.png" alt="Культура волос" />
+          <img src="/site/img/logo.png" alt="Культура волос" decoding="async" />
         </a>
 
         <nav class="header__nav header__nav">
@@ -119,7 +119,18 @@
     <main class="blog-page">
       <section class="blog-hero js-blog-hero" aria-labelledby="blog-hero-title">
         <div class="blog-hero__bg" aria-hidden="true">
-          <img src="/site/img/blog/blog-hero.png" alt="" draggable="false" />
+          <img
+            src="/site/img/blog/blog-hero.webp"
+            alt=""
+            draggable="false"
+            decoding="async"
+            loading="eager"
+            fetchpriority="high"
+            width="1672"
+            height="941"
+            srcset="/site/img/blog/blog-hero-768.webp 768w, /site/img/blog/blog-hero-1280.webp 1280w, /site/img/blog/blog-hero.webp 1672w"
+            sizes="100vw"
+          />
         </div>
 
         <div class="blog-hero__inner">
@@ -353,6 +364,7 @@
       defer
     ></script>
 
+    <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/blog.js" defer></script>
     <script src="/site/script/catalog-header.js" defer></script>
   </body>

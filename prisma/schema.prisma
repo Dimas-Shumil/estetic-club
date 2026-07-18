@@ -109,7 +109,7 @@ model BlogPost {
   category     String @default("Журнал")
   categorySlug String @default("hair-care")
 
-  coverImage  String @default("/site/img/blog/blog-hero.png")
+  coverImage  String @default("/site/img/blog/blog-hero.webp")
   readingTime String @default("3 мин")
 
   isPublished Boolean   @default(false)

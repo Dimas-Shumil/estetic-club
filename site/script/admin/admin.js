@@ -2118,7 +2118,7 @@
       fields.expertNote.value = post.expertNote || '';
 
       fields.coverImage.value =
-        post.coverImage || '/site/img/blog/blog-hero.png';
+        post.coverImage || '/site/img/blog/blog-hero.webp';
 
       fields.coverAlt.value = post.coverAlt || '';
 
@@ -2457,7 +2457,7 @@
 
       if (
         !payload.coverImage ||
-        payload.coverImage === '/site/img/blog/blog-hero.png'
+        payload.coverImage === '/site/img/blog/blog-hero.webp'
       ) {
         return 'Для публикации загрузите уникальную обложку.';
       }

@@ -733,6 +733,8 @@ body.is-lock {
 // HERO
 
 .hero {
+  --hero-image: url('/site/img/main-hero-bg.webp');
+
   position: relative;
   width: 100%;
   min-height: 100svh;
@@ -755,7 +757,7 @@ body.is-lock {
       rgba(121, 96, 70, 0.12) 44%,
       rgba(79, 59, 43, 0.38) 100%
     ),
-    url('/site/img/main-hero-bg.png') center top / cover no-repeat,
+    var(--hero-image) center top / cover no-repeat,
     $color-brown;
 
   span,
@@ -804,8 +806,15 @@ body.is-lock {
   }
 }
 
+@media (max-width: 1280px) {
+  .hero {
+    --hero-image: url('/site/img/main-hero-bg-1280.webp');
+  }
+}
+
 @media (max-width: 768px) {
   .hero {
+    --hero-image: url('/site/img/main-hero-mob-bg-768.webp');
     background-position: center;
 
     span {
@@ -2069,5 +2078,12 @@ body.is-lock {
     &__label--after {
       right: 14px;
     }
+  }
+}
+
+
+@media (max-width: 480px) {
+  .hero {
+    --hero-image: url('/site/img/main-hero-mob-bg-480.webp');
   }
 }

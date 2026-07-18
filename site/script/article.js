@@ -310,7 +310,7 @@ function renderArticle(post, slug) {
   const articleReadingTime = String(post.readingTime || '').trim() || '3 мин';
 
   const articleCover =
-    String(post.coverImage || '').trim() || '/site/img/blog/blog-hero.png';
+    String(post.coverImage || '').trim() || '/site/img/blog/blog-hero.webp';
 
   const articleCoverAlt = String(post.coverAlt || '').trim() || articleTitle;
 
@@ -339,14 +339,24 @@ function renderArticle(post, slug) {
   renderArticleDate(date, post.publishedAt || post.createdAt);
 
   if (cover) {
-    cover.src = articleCover;
+    window.KulturaImage.apply(cover, articleCover, {
+      sizes: '(max-width: 860px) 100vw, 50vw',
+      loading: 'eager',
+      fetchpriority: 'high',
+      fallbackWidth: 1000,
+      fallbackHeight: 1075,
+    });
 
     cover.alt = articleCoverAlt;
 
     cover.addEventListener(
       'error',
       () => {
-        cover.src = '/site/img/blog/blog-hero.png';
+        window.KulturaImage.apply(cover, '/site/img/blog/blog-hero.webp', {
+          sizes: '(max-width: 860px) 100vw, 50vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+        });
 
         cover.alt = articleTitle;
       },

@@ -26,7 +26,7 @@ async function seedBlogPosts() {
       `,
       category: 'Окрашивание',
       categorySlug: 'coloring',
-      coverImage: '/site/img/blog/blog-hero.png',
+      coverImage: '/site/img/blog/blog-hero.webp',
       readingTime: '4 мин',
       isPublished: true,
       publishedAt: new Date('2026-07-07T10:00:00.000Z'),
@@ -42,7 +42,7 @@ async function seedBlogPosts() {
       `,
       category: 'Домашний уход',
       categorySlug: 'home-care',
-      coverImage: '/site/img/blog/blog-hero.png',
+      coverImage: '/site/img/blog/blog-hero.webp',
       readingTime: '3 мин',
       isPublished: true,
       publishedAt: new Date('2026-07-06T10:00:00.000Z'),
@@ -109,7 +109,7 @@ async function seedBlogPosts() {
   `,
       category: 'AirTouch',
       categorySlug: 'airtouch',
-      coverImage: '/site/img/blog/blog-hero.png',
+      coverImage: '/site/img/blog/blog-hero.webp',
       readingTime: '6 мин',
       isPublished: true,
       publishedAt: new Date('2026-07-05T10:00:00.000Z'),
@@ -138,34 +138,34 @@ async function seedWorks() {
       category: 'Аиртач',
       categorySlug: 'airtouch',
 
-      beforeImage: '/site/img/img1bef.jpg',
-      afterImage: '/site/img/img2aft.jpg',
+      beforeImage: '/site/img/img1bef.webp',
+      afterImage: '/site/img/img2aft.webp',
 
       technique: 'AirTouch',
       duration: '5 часов',
 
-      heroImage: '/site/img/img2aft.jpg',
-      experienceImage: '/site/img/main-hero-bg.png',
+      heroImage: '/site/img/img2aft.webp',
+      experienceImage: '/site/img/main-hero-bg.webp',
       heroQuote: 'Это не просто цвет. Это ощущение себя красивой.',
       story:
         'Задача была сохранить мягкость образа, добавить светлые переливы и сделать цвет чище, не перегружая волосы осветлением. Мы начали с диагностики полотна, аккуратно распределили пряди и подобрали оттенок так, чтобы результат выглядел мягко, дорого и естественно.',
 
       gallery: JSON.stringify([
-        '/site/img/img2aft.jpg',
-        '/site/img/main-hero-bg.png',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
-        '/site/img/pablito.jpg',
+        '/site/img/img2aft.webp',
+        '/site/img/main-hero-bg.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
+        '/site/img/pablito.webp',
       ]),
 
       createdAt: new Date('2026-07-09T10:00:00.000Z'),
@@ -196,7 +196,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/total-blond-01-after.webp',
         '/site/img/works/total-blond-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-08T10:00:00.000Z'),
@@ -227,7 +227,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/shatush-01-after.webp',
         '/site/img/works/shatush-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-07T10:00:00.000Z'),
@@ -258,7 +258,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/toning-01-after.webp',
         '/site/img/works/toning-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-06T10:00:00.000Z'),
@@ -289,7 +289,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/gray-hair-01-after.webp',
         '/site/img/works/gray-hair-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-05T10:00:00.000Z'),
@@ -320,7 +320,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/recovery-01-after.webp',
         '/site/img/works/recovery-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-04T10:00:00.000Z'),
@@ -351,7 +351,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/care-01-after.webp',
         '/site/img/works/care-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-03T10:00:00.000Z'),
@@ -382,7 +382,7 @@ async function seedWorks() {
       gallery: JSON.stringify([
         '/site/img/works/reconstruction-01-after.webp',
         '/site/img/works/reconstruction-01-before.webp',
-        '/site/img/contacts/services-intro3.png',
+        '/site/img/contacts/services-intro3.webp',
       ]),
 
       createdAt: new Date('2026-07-02T10:00:00.000Z'),
@@ -407,10 +407,10 @@ async function seedWorks() {
 
 async function seedCatalog() {
   const categoryDefinitions = [
-    { name: 'Волосы', slug: 'hair', description: 'Профессиональный домашний уход и продукты для сохранения салонного результата.', imagePath: '/site/img/blog/blog-hero.png', sortOrder: 10 },
-    { name: 'Инструменты', slug: 'tools', description: 'Инструменты и техника для мастеров и домашнего использования.', imagePath: '/site/img/contacts/equipment-dyson.png', sortOrder: 20 },
-    { name: 'Ресницы и брови', slug: 'lashes-brows', description: 'Материалы для оформления, ухода и профессиональной работы.', imagePath: '/site/img/contacts/services-intro3.png', sortOrder: 30 },
-    { name: 'Расходные материалы', slug: 'consumables', description: 'Одноразовые и вспомогательные материалы для ежедневной работы.', imagePath: '/site/img/contacts/equipment-wash.png', sortOrder: 40 },
+    { name: 'Волосы', slug: 'hair', description: 'Профессиональный домашний уход и продукты для сохранения салонного результата.', imagePath: '/site/img/blog/blog-hero.webp', sortOrder: 10 },
+    { name: 'Инструменты', slug: 'tools', description: 'Инструменты и техника для мастеров и домашнего использования.', imagePath: '/site/img/contacts/equipment-dyson.webp', sortOrder: 20 },
+    { name: 'Ресницы и брови', slug: 'lashes-brows', description: 'Материалы для оформления, ухода и профессиональной работы.', imagePath: '/site/img/contacts/services-intro3.webp', sortOrder: 30 },
+    { name: 'Расходные материалы', slug: 'consumables', description: 'Одноразовые и вспомогательные материалы для ежедневной работы.', imagePath: '/site/img/contacts/equipment-wash.webp', sortOrder: 40 },
   ];
 
   const categories = {};

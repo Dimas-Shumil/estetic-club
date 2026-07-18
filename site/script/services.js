@@ -253,7 +253,7 @@ const servicesData = {
       'Воздушная техника осветления с мягкой растяжкой цвета. Позволяет получить объёмный оттенок без резкой границы у корней.',
     duration: '5–8 часов',
     price: 'от 15 000 ₽',
-    image: '/site/img/img1aft.jpg',
+    image: '/site/img/img1aft.webp',
     benefits: [
       'мягкий и естественный блонд',
       'плавное и аккуратное отрастание',
@@ -270,7 +270,7 @@ const servicesData = {
       'Свободная техника окрашивания с эффектом естественно выгоревших прядей. Создаёт мягкие блики и сохраняет глубину натурального цвета.',
     duration: '4–6 часов',
     price: 'от 12 000 ₽',
-    image: '/site/img/img2aft.jpg',
+    image: '/site/img/img2aft.webp',
     benefits: [
       'добавить волосам солнечные блики',
       'освежить образ без резкой смены цвета',
@@ -287,7 +287,7 @@ const servicesData = {
       'Деликатное осветление отдельных прядей для создания рельефа, движения и визуального объёма. Рисунок подбирается индивидуально.',
     duration: '4–6 часов',
     price: 'от 10 000 ₽',
-    image: '/site/img/img1bef.jpg',
+    image: '/site/img/img1bef.webp',
     benefits: [
       'сделать цвет более рельефным',
       'мягко перейти к более светлому образу',
@@ -304,7 +304,7 @@ const servicesData = {
       'Полное осветление и создание чистого светлого оттенка. Формула и домашний уход подбираются с учётом состояния волос.',
     duration: '5–8 часов',
     price: 'от 14 000 ₽',
-    image: '/site/img/img2bef.jpg',
+    image: '/site/img/img2bef.webp',
     benefits: [
       'получить выразительный светлый образ',
       'скорректировать нежелательный оттенок',
@@ -321,7 +321,7 @@ const servicesData = {
       'Мягкая коррекция оттенка, которая возвращает цвету глубину, блеск и ухоженный вид без радикального изменения образа.',
     duration: '2–3 часа',
     price: 'от 7 000 ₽',
-    image: '/site/img/IMG_4750.PNG',
+    image: '/site/img/img_4750.webp',
     benefits: [
       'обновить потускневший цвет',
       'нейтрализовать нежелательный оттенок',
@@ -338,7 +338,7 @@ const servicesData = {
       'Процедура для гладкости, плотности и дисциплины волос. Состав подбирается после диагностики с учётом структуры и желаемого результата.',
     duration: '3–5 часов',
     price: 'от 8 000 ₽',
-    image: '/site/img/IMG_4749.PNG',
+    image: '/site/img/img_4749.webp',
     benefits: [
       'уменьшить пушистость и пористость',
       'облегчить ежедневную укладку',
@@ -355,7 +355,7 @@ const servicesData = {
       'Персональная программа восстановления, составленная после диагностики. Помогает вернуть волосам мягкость, эластичность и ухоженный вид.',
     duration: '1,5–3 часа',
     price: 'от 5 000 ₽',
-    image: '/site/img/IMG_4750.PNG',
+    image: '/site/img/img_4750.webp',
     benefits: [
       'восстановить волосы после окрашивания',
       'уменьшить сухость и ломкость',
@@ -471,7 +471,12 @@ function initServiceModal() {
 
     lastFocusedElement = trigger;
 
-    image.src = service.image;
+    window.KulturaImage.apply(image, service.image, {
+      sizes: '(max-width: 760px) 100vw, 45vw',
+      loading: 'eager',
+      fallbackWidth: 1170,
+      fallbackHeight: 1390,
+    });
     image.alt = service.title;
     number.textContent = service.number;
     eyebrow.textContent = service.eyebrow;

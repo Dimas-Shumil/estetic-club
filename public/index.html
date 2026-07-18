@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/site/css/main.min.css" />
+    <link rel="preload" as="image" href="/site/img/main-hero-mob-bg-480.webp" media="(max-width: 480px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/site/img/main-hero-mob-bg-768.webp" media="(min-width: 481px) and (max-width: 768px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/site/img/main-hero-bg-1280.webp" media="(min-width: 769px) and (max-width: 1280px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/site/img/main-hero-bg.webp" media="(min-width: 1281px)" fetchpriority="high" />
     <!-- <link rel="stylesheet" href="/site/css/footer.css" /> -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +28,6 @@
             src="/site/img/logo.png"
             alt="Культура волос"
             decoding="async"
-            fetchpriority="high"
           />
         </a>
 
@@ -92,66 +95,84 @@
             <div class="section-two__track" data-section-two-track>
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/IMG_4749.PNG"
+                  src="/site/img/img_4749.webp"
                   alt="Окрашивание волос"
-                  loading="eager"
                   decoding="async"
-                  fetchpriority="high"
+                  loading="lazy"
+                  width="1170"
+                  height="2046"
+                  srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>COLOR</span>
               </a>
 
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/img1aft.jpg"
+                  src="/site/img/img1aft.webp"
                   alt="AirTouch окрашивание"
-                  loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  loading="lazy"
+                  width="1170"
+                  height="1308"
+                  srcset="/site/img/img1aft-480.webp 480w, /site/img/img1aft-768.webp 768w, /site/img/img1aft.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>AIRTOUCH</span>
               </a>
 
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/IMG_4749.PNG"
+                  src="/site/img/img_4749.webp"
                   alt="Уход за волосами"
-                  loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  loading="lazy"
+                  width="1170"
+                  height="2046"
+                  srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>CARE</span>
               </a>
 
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/img1aft.jpg"
+                  src="/site/img/img1aft.webp"
                   alt="Стрижки волос"
-                  loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  loading="lazy"
+                  width="1170"
+                  height="1308"
+                  srcset="/site/img/img1aft-480.webp 480w, /site/img/img1aft-768.webp 768w, /site/img/img1aft.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>CUT</span>
               </a>
 
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/IMG_4749.PNG"
+                  src="/site/img/img_4749.webp"
                   alt="Укладки волос"
-                  loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  loading="lazy"
+                  width="1170"
+                  height="2046"
+                  srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>STYLE</span>
               </a>
 
               <a class="section-two__card" href="#services">
                 <img
-                  src="/site/img/img1aft.jpg"
+                  src="/site/img/img1aft.webp"
                   alt="Восстановление волос"
-                  loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
+                  loading="lazy"
+                  width="1170"
+                  height="1308"
+                  srcset="/site/img/img1aft-480.webp 480w, /site/img/img1aft-768.webp 768w, /site/img/img1aft.webp 1170w"
+                  sizes="(max-width: 768px) 64vw, 25vw"
                 />
                 <span>RESTORE</span>
               </a>
@@ -167,11 +188,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4749.PNG"
+              src="/site/img/img_4749.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2046"
+              srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -180,11 +204,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4750.PNG"
+              src="/site/img/img_4750.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2205"
+              srcset="/site/img/img_4750-480.webp 480w, /site/img/img_4750-768.webp 768w, /site/img/img_4750.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -193,11 +220,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4749.PNG"
+              src="/site/img/img_4749.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2046"
+              srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -206,11 +236,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4749.PNG"
+              src="/site/img/img_4749.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2046"
+              srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -219,11 +252,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4749.PNG"
+              src="/site/img/img_4749.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2046"
+              srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -232,11 +268,14 @@
             aria-hidden="true"
           >
             <img
-              src="/site/img/IMG_4749.PNG"
+              src="/site/img/img_4749.webp"
               alt=""
-              loading="lazy"
               decoding="async"
-              fetchpriority="low"
+              loading="lazy"
+              width="1170"
+              height="2046"
+              srcset="/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w"
+              sizes="(max-width: 760px) 52vw, 20vw"
             />
           </div>
 
@@ -323,21 +362,29 @@
                 >
                   <img
                     class="compare__image compare__image--after"
-                    src="/site/img/img2bef.jpg"
+                    src="/site/img/img2bef.webp"
                     alt="Результат после окрашивания AirTouch"
                     draggable="false"
-                    loading="lazy"
                     decoding="async"
+                    loading="lazy"
+                    width="1170"
+                    height="1282"
+                    srcset="/site/img/img2bef-480.webp 480w, /site/img/img2bef-768.webp 768w, /site/img/img2bef.webp 1170w"
+                    sizes="(max-width: 760px) calc(100vw - 56px), 42vw"
                   />
 
                   <div class="compare__before">
                     <img
                       class="compare__image compare__image--before"
-                      src="/site/img/img2aft.jpg"
+                      src="/site/img/img2aft.webp"
                       alt="Волосы до окрашивания AirTouch"
                       draggable="false"
-                      loading="lazy"
                       decoding="async"
+                      loading="lazy"
+                      width="1170"
+                      height="1390"
+                      srcset="/site/img/img2aft-480.webp 480w, /site/img/img2aft-768.webp 768w, /site/img/img2aft.webp 1170w"
+                      sizes="(max-width: 760px) calc(100vw - 56px), 42vw"
                     />
                   </div>
 
@@ -375,21 +422,29 @@
                 >
                   <img
                     class="compare__image compare__image--after"
-                    src="/site/img/img1bef.jpg"
+                    src="/site/img/img1bef.webp"
                     alt="Результат после выхода в холодный блонд"
                     draggable="false"
-                    loading="lazy"
                     decoding="async"
+                    loading="lazy"
+                    width="1170"
+                    height="1269"
+                    srcset="/site/img/img1bef-480.webp 480w, /site/img/img1bef-768.webp 768w, /site/img/img1bef.webp 1170w"
+                    sizes="(max-width: 760px) calc(100vw - 56px), 42vw"
                   />
 
                   <div class="compare__before">
                     <img
                       class="compare__image compare__image--before"
-                      src="/site/img/img1aft.jpg"
+                      src="/site/img/img1aft.webp"
                       alt="Волосы до выхода в холодный блонд"
                       draggable="false"
-                      loading="lazy"
                       decoding="async"
+                      loading="lazy"
+                      width="1170"
+                      height="1308"
+                      srcset="/site/img/img1aft-480.webp 480w, /site/img/img1aft-768.webp 768w, /site/img/img1aft.webp 1170w"
+                      sizes="(max-width: 760px) calc(100vw - 56px), 42vw"
                     />
                   </div>
 

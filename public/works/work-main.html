@@ -29,7 +29,7 @@
           class="header__logo"
           aria-label="На главную"
         >
-          <img src="/site/img/logo.png" alt="Культура волос" />
+          <img src="/site/img/logo.png" alt="Культура волос" decoding="async" />
         </a>
 
         <nav class="header__nav header__nav" aria-label="Левая навигация">
@@ -105,9 +105,16 @@
 
           <div class="works-hero__media js-works-hero-reveal">
             <img
-              src="/site/img/main-hero-bg.png"
+              src="/site/img/main-hero-bg.webp"
               alt="Культура волос — результат окрашивания волос"
               draggable="false"
+              decoding="async"
+              loading="eager"
+              fetchpriority="high"
+              width="1672"
+              height="941"
+              srcset="/site/img/main-hero-bg-768.webp 768w, /site/img/main-hero-bg-1280.webp 1280w, /site/img/main-hero-bg.webp 1672w"
+              sizes="(max-width: 900px) 100vw, 50vw"
             />
 
             <div class="works-hero__note">
@@ -123,9 +130,15 @@
           <div class="works-experience__inner">
             <div class="works-experience__visual">
               <img
-                src="/site/img/main-hero-bg.png"
+                src="/site/img/main-hero-bg.webp"
                 alt="Культура волос — портфолио преображений"
                 draggable="false"
+                decoding="async"
+                loading="lazy"
+                width="1672"
+                height="941"
+                srcset="/site/img/main-hero-bg-768.webp 768w, /site/img/main-hero-bg-1280.webp 1280w, /site/img/main-hero-bg.webp 1672w"
+                sizes="(max-width: 900px) 100vw, 50vw"
               />
             </div>
 
@@ -385,6 +398,7 @@
       defer
     ></script>
 
+    <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/work-main.js" defer></script>
   </body>
 </html>

@@ -81,7 +81,7 @@ const BLOG_CATEGORIES = {
   'home-care': 'Домашний уход',
 };
 
-const DEFAULT_BLOG_COVER = '/site/img/blog/blog-hero.png';
+const DEFAULT_BLOG_COVER = '/site/img/blog/blog-hero.webp';
 
 const leadSelect = {
   id: true,

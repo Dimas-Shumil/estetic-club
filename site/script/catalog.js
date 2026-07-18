@@ -444,9 +444,12 @@
           ${
             image
               ? `<img
-                  src="${escapeHtml(image.imagePath)}"
+                  ${window.KulturaImage.attrs(image.imagePath, {
+                    loading: 'lazy',
+                    fallbackWidth: 1000,
+                    fallbackHeight: 1080,
+                  })}
                   alt="${escapeHtml(image.alt || product.title)}"
-                  loading="lazy"
                 />`
               : '<span>Изображение готовится</span>'
           }
@@ -940,7 +943,11 @@
               <span class="catalog-direction-card__media">
                 ${
                   category.imagePath
-                    ? `<img src="${escapeHtml(category.imagePath)}" alt="" loading="lazy" />`
+                    ? `<img ${window.KulturaImage.attrs(category.imagePath, {
+                        loading: 'lazy',
+                        fallbackWidth: 640,
+                        fallbackHeight: 480,
+                      })} alt="" />`
                     : ''
                 }
               </span>
@@ -1177,7 +1184,11 @@
         <div class="catalog-preview__media">
           ${
             image
-              ? `<img src="${escapeHtml(image.imagePath)}" alt="${escapeHtml(image.alt || product.title)}" />`
+              ? `<img ${window.KulturaImage.attrs(image.imagePath, {
+                  loading: 'lazy',
+                  fallbackWidth: 1000,
+                  fallbackHeight: 1080,
+                })} alt="${escapeHtml(image.alt || product.title)}" />`
               : ''
           }
           ${
@@ -1280,7 +1291,12 @@
         const image = product?.mainImage || product?.images?.[0];
 
         if (image?.imagePath) {
-          imageElement.src = image.imagePath;
+          window.KulturaImage.apply(imageElement, image.imagePath, {
+            loading: 'eager',
+            fetchpriority: index === 0 ? 'high' : '',
+            fallbackWidth: 1000,
+            fallbackHeight: 1080,
+          });
           imageElement.alt = '';
         }
       });
@@ -1401,7 +1417,11 @@
       }
 
       if (image) {
-        imageElement.src = image.imagePath;
+        window.KulturaImage.apply(imageElement, image.imagePath, {
+          loading: 'eager',
+          fallbackWidth: 1000,
+          fallbackHeight: 1080,
+        });
         imageElement.alt = image.alt || product.title;
         imageElement.hidden = false;
       } else {
@@ -1444,7 +1464,11 @@
       state.mobileVariantId = variant.id;
 
       if (image?.imagePath) {
-        imageElement.src = image.imagePath;
+        window.KulturaImage.apply(imageElement, image.imagePath, {
+          loading: 'eager',
+          fallbackWidth: 800,
+          fallbackHeight: 800,
+        });
         imageElement.alt = image.alt || product.title;
         imageElement.hidden = false;
       } else {
@@ -1524,8 +1548,17 @@
         <div class="product-detail__breadcrumbs"><a href="/catalog">Каталог</a><span>/</span><a href="/catalog?category=${escapeHtml(product.category?.slug || '')}">${escapeHtml(product.category?.name || 'Категория')}</a><span>/</span><span>${escapeHtml(product.title)}</span></div>
         <div class="product-detail__grid">
           <section class="product-detail__gallery">
-            <div class="product-detail__main-image">${images[0] ? `<img src="${escapeHtml(images[0].imagePath)}" alt="${escapeHtml(images[0].alt || product.title)}" data-product-main-image />` : ''}${product.badge ? `<b>${escapeHtml(product.badge)}</b>` : ''}</div>
-            <div class="product-detail__thumbs">${images.map((image, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-product-thumb="${index}"><img src="${escapeHtml(image.imagePath)}" alt="" /></button>`).join('')}</div>
+            <div class="product-detail__main-image">${images[0] ? `<img ${window.KulturaImage.attrs(images[0].imagePath, {
+              loading: 'eager',
+              fetchpriority: 'high',
+              fallbackWidth: 1200,
+              fallbackHeight: 1200,
+            })} alt="${escapeHtml(images[0].alt || product.title)}" data-product-main-image />` : ''}${product.badge ? `<b>${escapeHtml(product.badge)}</b>` : ''}</div>
+            <div class="product-detail__thumbs">${images.map((image, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-product-thumb="${index}"><img ${window.KulturaImage.attrs(image.imagePath, {
+              loading: 'lazy',
+              fallbackWidth: 320,
+              fallbackHeight: 320,
+            })} alt="" /></button>`).join('')}</div>
           </section>
           <section class="product-detail__info">
             <span class="product-detail__brand">${escapeHtml(product.brand?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}</span>
@@ -1550,7 +1583,12 @@
         const image = product.images[Number(button.dataset.productThumb)];
         const mainImage = content.querySelector('[data-product-main-image]');
         if (image && mainImage) {
-          mainImage.src = image.imagePath;
+          window.KulturaImage.apply(mainImage, image.imagePath, {
+            loading: 'eager',
+            fetchpriority: 'high',
+            fallbackWidth: 1200,
+            fallbackHeight: 1200,
+          });
           mainImage.alt = image.alt || product.title;
           content.querySelectorAll('[data-product-thumb]').forEach((item) => item.classList.toggle('is-active', item === button));
         }
@@ -1621,7 +1659,11 @@
         content.hidden = false;
         list.innerHTML = data.items.map((item) => `
           <article class="cart-product">
-            <a class="cart-product__image" href="/catalog/product/${encodeURIComponent(item.product.slug)}">${item.product.image ? `<img src="${escapeHtml(item.product.image.imagePath)}" alt="${escapeHtml(item.product.image.alt || item.product.title)}" />` : ''}</a>
+            <a class="cart-product__image" href="/catalog/product/${encodeURIComponent(item.product.slug)}">${item.product.image ? `<img ${window.KulturaImage.attrs(item.product.image.imagePath, {
+              loading: 'lazy',
+              fallbackWidth: 600,
+              fallbackHeight: 600,
+            })} alt="${escapeHtml(item.product.image.alt || item.product.title)}" />` : ''}</a>
             <div class="cart-product__info"><span>${escapeHtml(item.product.badge || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}</span><h2><a href="/catalog/product/${encodeURIComponent(item.product.slug)}">${escapeHtml(item.product.title)}</a></h2><p>${escapeHtml(item.variantName)}</p><strong>${formatMoney(item.price)}</strong></div>
             <div class="cart-product__quantity"><button type="button" data-cart-action="decrease" data-variant-id="${item.variantId}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="increase" data-variant-id="${item.variantId}">+</button></div>
             <strong class="cart-product__total">${formatMoney(item.lineTotal)}</strong>

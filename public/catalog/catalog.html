@@ -29,7 +29,7 @@
           href="/public/index.html"
           aria-label="На главную"
         >
-          <img src="/site/img/logo.png" alt="Культура волос" />
+          <img src="/site/img/logo.png" alt="Культура волос" decoding="async" />
         </a>
 
         <nav class="header__nav header__nav" aria-label="Левая навигация">
@@ -142,25 +142,44 @@
 
           <figure class="catalog-hero__product catalog-hero__product--one">
             <img
-              src="/site/img/blog/blog-hero.png"
+              src="/site/img/blog/blog-hero.webp"
               alt=""
               data-hero-product-image="0"
+              decoding="async"
+              loading="eager"
+              fetchpriority="high"
+              width="1672"
+              height="941"
+              srcset="/site/img/blog/blog-hero-768.webp 768w, /site/img/blog/blog-hero-1280.webp 1280w, /site/img/blog/blog-hero.webp 1672w"
+              sizes="(max-width: 760px) 42vw, 20vw"
             />
           </figure>
 
           <figure class="catalog-hero__product catalog-hero__product--two">
             <img
-              src="/site/img/blog/blog-hero.png"
+              src="/site/img/blog/blog-hero.webp"
               alt=""
               data-hero-product-image="1"
+              decoding="async"
+              loading="eager"
+              width="1672"
+              height="941"
+              srcset="/site/img/blog/blog-hero-768.webp 768w, /site/img/blog/blog-hero-1280.webp 1280w, /site/img/blog/blog-hero.webp 1672w"
+              sizes="(max-width: 760px) 42vw, 20vw"
             />
           </figure>
 
           <figure class="catalog-hero__product catalog-hero__product--three">
             <img
-              src="/site/img/blog/blog-hero.png"
+              src="/site/img/blog/blog-hero.webp"
               alt=""
               data-hero-product-image="2"
+              decoding="async"
+              loading="eager"
+              width="1672"
+              height="941"
+              srcset="/site/img/blog/blog-hero-768.webp 768w, /site/img/blog/blog-hero-1280.webp 1280w, /site/img/blog/blog-hero.webp 1672w"
+              sizes="(max-width: 760px) 42vw, 20vw"
             />
           </figure>
 
@@ -468,7 +487,14 @@
           </div>
 
           <div class="variant-sheet-product">
-            <img data-variant-product-image alt="" />
+            <img
+              data-variant-product-image
+              alt=""
+              decoding="async"
+              loading="lazy"
+              width="1000"
+              height="1080"
+            />
 
             <div>
               <span data-variant-product-meta>КУЛЬТУРА ВОЛОС</span>
@@ -485,7 +511,14 @@
       </div>
 
       <div class="catalog-mobile-add" data-catalog-mobile-add hidden>
-        <img data-mobile-add-image alt="" />
+        <img
+          data-mobile-add-image
+          alt=""
+          decoding="async"
+          loading="lazy"
+          width="800"
+          height="800"
+        />
 
         <div class="catalog-mobile-add__content">
           <span data-mobile-add-brand>КУЛЬТУРА ВОЛОС</span>
@@ -582,6 +615,7 @@
       </div>
     </footer>
 
+    <script src="/site/script/image-performance.js"></script>
     <script src="/site/script/catalog.js"></script>
   </body>
 </html>

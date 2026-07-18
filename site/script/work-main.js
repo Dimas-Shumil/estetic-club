@@ -630,18 +630,26 @@ function createWorkCardTemplate(work) {
         <div class="work-card__media">
           <div class="work-card__image work-card__image--after">
             <img
-              src="${escapeHtml(work.afterImage)}"
+              ${window.KulturaImage.attrs(work.afterImage, {
+                sizes: '(max-width: 760px) 50vw, 22vw',
+                loading: 'lazy',
+                fallbackWidth: 1200,
+                fallbackHeight: 1500,
+              })}
               alt="После: ${escapeHtml(work.title)}"
-              loading="lazy"
             />
             <span>После</span>
           </div>
 
           <div class="work-card__image work-card__image--before">
             <img
-              src="${escapeHtml(work.beforeImage)}"
+              ${window.KulturaImage.attrs(work.beforeImage, {
+                sizes: '(max-width: 760px) 50vw, 22vw',
+                loading: 'lazy',
+                fallbackWidth: 1200,
+                fallbackHeight: 1500,
+              })}
               alt="До: ${escapeHtml(work.title)}"
-              loading="lazy"
             />
             <span>До</span>
           </div>
