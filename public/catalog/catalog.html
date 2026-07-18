@@ -24,6 +24,28 @@
   <body class="catalog-body">
     <header class="header" data-header>
       <div class="header__inner glass">
+        <a
+          class="header__logo"
+          href="/public/index.html"
+          aria-label="На главную"
+        >
+          <img src="/site/img/logo.png" alt="NADIA HAIR" />
+        </a>
+
+        <nav class="header__nav header__nav" aria-label="Левая навигация">
+          <a href="/public/index.html">Главная</a>
+          <a href="/public/index.html#services">Услуги</a>
+          <a href="/catalog"  aria-current="page">Каталог</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
+        </nav>
+
+        <nav
+          class="header__nav header__nav"
+          aria-label="Правая навигация"
+        ></nav>
+
         <button
           class="header__burger"
           type="button"
@@ -34,29 +56,6 @@
           <span></span>
           <span></span>
         </button>
-
-        <nav class="header__nav header__nav--left" aria-label="Левая навигация">
-          <a href="/public/index.html">Главная</a>
-          <a href="/public/index.html#services">Услуги</a>
-          <a href="/public/works/work-main.html">Работы</a>
-          <a href="/public/blog/blog.html">Блог</a>
-        </nav>
-
-        <a
-          class="header__logo"
-          href="/public/index.html"
-          aria-label="На главную"
-        >
-          <img src="/site/img/logo.png" alt="NADIA HAIR" />
-        </a>
-
-        <nav
-          class="header__nav header__nav--right"
-          aria-label="Правая навигация"
-        >
-          <a href="/catalog" aria-current="page">Каталог</a>
-          <a href="/public/contacts.html">Контакты</a>
-        </nav>
 
         <div class="header__commerce-actions" data-header-commerce-actions>
           <button
@@ -95,9 +94,9 @@
         <div class="header__mobile-nav">
           <a href="/public/index.html">Главная</a>
           <a href="/public/index.html#services">Услуги</a>
+          <a href="/catalog" aria-current="page">Каталог</a> 
           <a href="/public/works/work-main.html">Работы</a>
           <a href="/public/blog/blog.html">Блог</a>
-          <a href="/catalog" aria-current="page">Каталог</a>
           <a href="/public/contacts.html">Контакты</a>
         </div>
 

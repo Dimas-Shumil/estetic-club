@@ -5,100 +5,285 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Оформление заказа — NADIA HAIR</title>
     <meta name="robots" content="noindex, nofollow" />
-<link rel="stylesheet" href="/site/css/catalog.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/site/css/catalog.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="catalog-body">
     <header class="header" data-header>
-  <div class="header__inner glass">
-    <button class="header__burger" type="button" aria-label="Открыть меню" aria-expanded="false" data-burger><span></span><span></span></button>
-    <nav class="header__nav header__nav--left" aria-label="Левая навигация">
-      <a href="/public/index.html">Главная</a>
-      <a href="/public/index.html#services">Услуги</a>
-      <a href="/public/works/work-main.html">Работы</a>
-      <a href="/public/blog/blog.html">Блог</a>
-    </nav>
-    <a class="header__logo" href="/public/index.html" aria-label="На главную"><img
-        src="/site/img/logo.png"
-        alt="NADIA HAIR"
-        decoding="async"
-        fetchpriority="high"
-      /></a>
-    <nav class="header__nav header__nav--right" aria-label="Правая навигация">
-      <a href="/catalog" aria-current="page">Каталог</a>
-      <a href="/public/contacts.html">Контакты</a>
-    </nav>
-    <div class="header__commerce-actions" data-header-commerce-actions>
-      <button class="header__commerce-button" type="button" aria-label="Открыть поиск" aria-expanded="false" data-header-search-open>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-      </button>
-      <a class="header__commerce-button header__commerce-button--cart" href="/cart" aria-label="Открыть корзину">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"></path><path d="M9 9V6a3 3 0 0 1 6 0v3"></path></svg>
-        <span data-header-cart-count hidden>0</span>
-      </a>
-    </div>
-  </div>
-  <nav class="header__mobile" aria-label="Мобильная навигация" data-mobile-menu>
-    <div class="header__mobile-nav">
-      <a href="/public/index.html">Главная</a>
-      <a href="/public/index.html#services">Услуги</a>
-      <a href="/public/works/work-main.html">Работы</a>
-      <a href="/public/blog/blog.html">Блог</a>
-      <a href="/catalog" aria-current="page">Каталог</a>
-      <a href="/public/contacts.html">Контакты</a>
-    </div>
-    <div class="header__mobile-contact"><span>Записаться в салон</span><a href="tel:+79233906649">+7 (923) 390-66-49</a></div>
-  </nav>
-</header>
-    <main class="checkout-page" data-checkout-page>
-  <div class="checkout-page__head">
-    <a href="/cart">← Вернуться в корзину</a>
-    <span>NADIA STORE</span>
-    <h1>Оформление заказа</h1>
-  </div>
-  <div class="catalog-status" data-checkout-loading>Проверяем состав заказа…</div>
-  <p class="checkout-message" data-checkout-message hidden></p>
-  <div class="checkout-layout" data-checkout-content hidden>
-    <form class="checkout-form" data-checkout-form novalidate>
-      <input class="checkout-form__trap" type="text" name="company" tabindex="-1" autocomplete="off" />
-      <section>
-        <span>01</span><h2>Контактные данные</h2>
-        <label><span>Ваше имя</span><input type="text" name="customerName" minlength="2" maxlength="80" autocomplete="name" required /></label>
-        <label><span>Телефон</span><input type="tel" name="phone" minlength="10" maxlength="24" autocomplete="tel" placeholder="+7 923 000-00-00" required /></label>
-      </section>
-      <section>
-        <span>02</span><h2>Способ получения</h2>
-        <div class="checkout-methods">
-          <label><input type="radio" name="fulfillmentMethod" value="PICKUP" checked /><span><strong>Самовывоз</strong><small>Адрес и время подтвердит менеджер</small></span></label>
-          <label><input type="radio" name="fulfillmentMethod" value="DELIVERY" /><span><strong>Доставка</strong><small>Условия уточняются после заказа</small></span></label>
+      <div class="header__inner glass">
+        <a
+          class="header__logo"
+          href="/public/index.html"
+          aria-label="На главную"
+        >
+          <img src="/site/img/logo.png" alt="NADIA HAIR" />
+        </a>
+
+        <nav class="header__nav header__nav" aria-label="Левая навигация">
+          <a href="/public/index.html">Главная</a>
+          <a href="/public/index.html#services">Услуги</a>
+          <a href="/catalog" aria-current="page">Каталог</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
+        </nav>
+
+        <nav
+          class="header__nav header__nav"
+          aria-label="Правая навигация"
+        ></nav>
+
+        <button
+          class="header__burger"
+          type="button"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+          data-burger
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="header__commerce-actions" data-header-commerce-actions>
+          <button
+            class="header__commerce-button"
+            type="button"
+            aria-label="Открыть поиск"
+            aria-expanded="false"
+            data-header-search-open
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+          </button>
+
+          <a
+            class="header__commerce-button header__commerce-button--cart"
+            href="/cart"
+            aria-label="Открыть корзину"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 8h14l-1 12H6L5 8Z"></path>
+              <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+            </svg>
+
+            <span data-header-cart-count hidden>0</span>
+          </a>
         </div>
-        <label data-delivery-address hidden><span>Адрес доставки</span><input type="text" name="deliveryAddress" maxlength="300" /></label>
-      </section>
-      <section>
-        <span>03</span><h2>Комментарий</h2>
-        <label><span>Пожелания к заказу</span><textarea name="comment" rows="5" maxlength="1200" placeholder="Например: позвонить после 18:00"></textarea></label>
-      </section>
-      <label class="checkout-consent"><input type="checkbox" name="consentAccepted" value="true" required /><span>Я согласен на обработку персональных данных для оформления и подтверждения заказа.</span></label>
-      <button type="submit">Подтвердить заказ</button>
-    </form>
-    <aside class="checkout-summary">
-      <span>Состав заказа</span>
-      <div data-checkout-items></div>
-      <div class="checkout-summary__total"><span>Итого</span><strong data-checkout-total>0 ₽</strong></div>
-      <p>Цены и доступность вариантов проверяются ещё раз в момент оформления.</p>
-    </aside>
-  </div>
-</main>
-    <footer class="catalog-footer">
-  <div class="catalog-footer__inner">
-    <div><a href="/public/index.html">NADIA HAIR</a><p>Профессиональные товары для красоты, ухода и работы мастера.</p></div>
-    <nav aria-label="Каталог"><span>Каталог</span><a href="/catalog?category=hair">Волосы</a><a href="/catalog?category=tools">Инструменты</a><a href="/catalog?category=lashes-brows">Ресницы и брови</a><a href="/catalog?category=consumables">Расходные материалы</a></nav>
-    <nav aria-label="Информация"><span>Информация</span><a href="/public/contacts.html">Контакты</a><a href="/cart">Корзина</a><a href="/public/blog/blog.html">Журнал</a></nav>
-  </div>
-  <div class="catalog-footer__bottom"><span>© 2026 Клуб Эстетики</span><span>Абакан</span></div>
-</footer>
+      </div>
+
+      <nav
+        class="header__mobile"
+        aria-label="Мобильная навигация"
+        data-mobile-menu
+      >
+        <div class="header__mobile-nav">
+          <a href="/public/index.html">Главная</a>
+          <a href="/public/index.html#services">Услуги</a>
+          <a href="/catalog" aria-current="page">Каталог</a>
+          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
+        </div>
+
+        <div class="header__mobile-contact">
+          <span>Записаться в салон</span>
+          <a href="tel:+79233906649">+7 (923) 390-66-49</a>
+        </div>
+      </nav>
+    </header>
+    <main class="checkout-page" data-checkout-page>
+      <div class="checkout-page__head">
+        <a href="/cart">← Вернуться в корзину</a>
+        <span>NADIA STORE</span>
+        <h1>Оформление заказа</h1>
+      </div>
+      <div class="catalog-status" data-checkout-loading>
+        Проверяем состав заказа…
+      </div>
+      <p class="checkout-message" data-checkout-message hidden></p>
+      <div class="checkout-layout" data-checkout-content hidden>
+        <form class="checkout-form" data-checkout-form novalidate>
+          <input
+            class="checkout-form__trap"
+            type="text"
+            name="company"
+            tabindex="-1"
+            autocomplete="off"
+          />
+          <section>
+            <span>01</span>
+            <h2>Контактные данные</h2>
+            <label
+              ><span>Ваше имя</span
+              ><input
+                type="text"
+                name="customerName"
+                minlength="2"
+                maxlength="80"
+                autocomplete="name"
+                required
+            /></label>
+            <label
+              ><span>Телефон</span
+              ><input
+                type="tel"
+                name="phone"
+                minlength="10"
+                maxlength="24"
+                autocomplete="tel"
+                placeholder="+7 923 000-00-00"
+                required
+            /></label>
+          </section>
+          <section>
+            <span>02</span>
+            <h2>Способ получения</h2>
+            <div class="checkout-methods">
+              <label
+                ><input
+                  type="radio"
+                  name="fulfillmentMethod"
+                  value="PICKUP"
+                  checked
+                /><span
+                  ><strong>Самовывоз</strong
+                  ><small>Адрес и время подтвердит менеджер</small></span
+                ></label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="fulfillmentMethod"
+                  value="DELIVERY"
+                /><span
+                  ><strong>Доставка</strong
+                  ><small>Условия уточняются после заказа</small></span
+                ></label
+              >
+            </div>
+            <label data-delivery-address hidden
+              ><span>Адрес доставки</span
+              ><input type="text" name="deliveryAddress" maxlength="300"
+            /></label>
+          </section>
+          <section>
+            <span>03</span>
+            <h2>Комментарий</h2>
+            <label
+              ><span>Пожелания к заказу</span
+              ><textarea
+                name="comment"
+                rows="5"
+                maxlength="1200"
+                placeholder="Например: позвонить после 18:00"
+              ></textarea>
+            </label>
+          </section>
+          <label class="checkout-consent"
+            ><input
+              type="checkbox"
+              name="consentAccepted"
+              value="true"
+              required
+            /><span
+              >Я согласен на обработку персональных данных для оформления и
+              подтверждения заказа.</span
+            ></label
+          >
+          <button type="submit">Подтвердить заказ</button>
+        </form>
+        <aside class="checkout-summary">
+          <span>Состав заказа</span>
+          <div data-checkout-items></div>
+          <div class="checkout-summary__total">
+            <span>Итого</span><strong data-checkout-total>0 ₽</strong>
+          </div>
+          <p>
+            Цены и доступность вариантов проверяются ещё раз в момент
+            оформления.
+          </p>
+        </aside>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer__glass">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <a
+              class="footer__logo"
+              href="/public/index.html"
+              aria-label="NADIA HAIR"
+            >
+              NADIA HAIR
+            </a>
+
+            <p class="footer__text">
+              Премиальный уход за волосами и безупречный результат.
+              Индивидуальный подход к каждой клиентке.
+            </p>
+
+            <a class="footer__button" href="tel:+79233906649">
+              Записаться онлайн
+            </a>
+          </div>
+
+          <nav class="footer__nav" aria-label="Меню сайта">
+            <span class="footer__title">Меню</span>
+
+            <a href="/public/index.html">Главная</a>
+            <a href="/public/index.html#services">Услуги</a>
+            <a href="/public/works/work-main.html">Работы</a>
+            <a href="/catalog">Каталог</a>
+            <a href="/public/blog/blog.html">Блог</a>
+            <a href="/public/contacts.html">Контакты</a>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Каталог">
+            <span class="footer__title">Каталог</span>
+
+            <a href="/catalog?category=hair">Волосы</a>
+            <a href="/catalog?category=tools">Инструменты</a>
+            <a href="/catalog?category=lashes-brows">Ресницы и брови</a>
+            <a href="/catalog?category=consumables">Расходные материалы</a>
+          </nav>
+
+          <div class="footer__contacts">
+            <span class="footer__title">Контакты</span>
+
+            <a class="footer__contact" href="tel:+79233906649">
+              +7 (923) 390-66-49
+            </a>
+
+            <div class="footer__contact">Абакан</div>
+
+            <div class="footer__socials">
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="VK">VK</a>
+              <a href="#" aria-label="Telegram">TG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <p>© NADIA HAIR, 2026</p>
+
+          <a href="/public/privacy-policy.html">
+            Политика конфиденциальности
+          </a>
+
+          <a href="https://shumdev.ru" target="_blank" rel="noopener">
+            Разработка ShumDev
+          </a>
+        </div>
+      </div>
+    </footer>
     <script src="/site/script/catalog.js"></script>
   </body>
 </html>

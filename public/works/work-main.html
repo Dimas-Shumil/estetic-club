@@ -19,17 +19,11 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600&display=swap"
       rel="stylesheet"
     />
-      <link rel="stylesheet" href="/site/css/catalog-header.css" />
   </head>
 
   <body class="works-body">
     <header class="header" data-header>
       <div class="header__inner glass">
-        <nav class="header__nav header__nav--left" aria-label="Левая навигация">
-          <a href="/public/index.html">Главная</a>
-          <a href="/public/contacts.html">Контакты</a>
-        </nav>
-
         <a
           href="/public/index.html"
           class="header__logo"
@@ -38,14 +32,16 @@
           <img src="/site/img/logo.png" alt="Nadia Hair Studio" />
         </a>
 
-        <nav
-          class="header__nav header__nav--right"
-          aria-label="Правая навигация"
-        >
+        <nav class="header__nav header__nav" aria-label="Левая навигация">
+          <a href="/public/index.html">Главная</a>
           <a href="/public/index.html#services">Услуги</a>
-          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/catalog/catalog.html">Каталог</a>
+          <a href="/public/works/work-main.html" aria-current="page">Работы</a>
           <a href="/public/blog/blog.html">Блог</a>
+          <a href="/public/contacts.html">Контакты</a>
         </nav>
+
+        <a class="header__button" href="tel:+79235853333"> Записаться</a>
 
         <button
           class="header__burger"
@@ -67,7 +63,7 @@
         <div class="header__mobile-nav">
           <a href="/public/index.html">Главная</a>
           <a href="/public/index.html#services">Услуги</a>
-          <a href="/public/works/work-main.html">Работы</a>
+          <a href="/public/works/work-main.html" aria-current="page">Работы</a>
           <a href="/public/blog/blog.html">Блог</a>
           <a href="/public/contacts.html">Контакты</a>
         </div>
@@ -390,6 +386,5 @@
     ></script>
 
     <script src="/site/script/work-main.js" defer></script>
-      <script src="/site/script/catalog-header.js" defer></script>
   </body>
 </html>

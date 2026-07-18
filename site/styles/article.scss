@@ -235,7 +235,7 @@ a {
 
   &__inner {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
 
     width: 100%;
@@ -254,6 +254,7 @@ a {
   &__nav {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: clamp(18px, 2vw, 34px);
 
     a {
@@ -317,7 +318,8 @@ a {
           opacity $transition-base;
       }
 
-      &:hover {
+      &:hover,
+      &[aria-current='page'] {
         color: #fff7ef;
 
         &::before {
@@ -331,18 +333,10 @@ a {
         }
       }
     }
-
-    &--left {
-      justify-self: start;
-    }
-
-    &--right {
-      justify-self: end;
-    }
   }
 
   &__logo {
-    justify-self: center;
+    justify-self: start;
 
     display: inline-flex;
     align-items: center;
@@ -383,6 +377,57 @@ a {
       transform: scale(1.035);
       filter: brightness(1.08);
     }
+  }
+
+
+  &__button {
+    color: rgba(255, 247, 239, 0.78);
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 8px 16px;
+
+    font-family: $font-text;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 247, 239, 0.22);
+
+    background: rgba(121, 96, 70, 0.82);
+    backdrop-filter: blur(22px) saturate(1.18);
+    -webkit-backdrop-filter: blur(22px) saturate(1.18);
+
+    box-shadow:
+      0 22px 80px rgba(47, 35, 26, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+
+    transition: all 0.6s ease;
+
+    &:hover {
+      color: #fff7ef;
+
+      &::before {
+        opacity: 1;
+        transform: translateX(-50%) translateY(10px) scale(1);
+      }
+
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    // opacity: 0;
+    // visibility: hidden;
+    // transform: translateY(-10px);
+    // pointer-events: none;
+
+    // transition:
   }
 
   &__burger {
@@ -475,6 +520,10 @@ body.is-lock {
         width: 108px;
         max-height: 36px;
       }
+    }
+
+    &__button {
+      display: none;
     }
 
     &__burger {
@@ -832,7 +881,7 @@ body.is-lock {
     align-items: center;
 
     width: fit-content;
-    margin-bottom: clamp(14px, 4.5vw, 32px);
+    margin-bottom: clamp(14px, 3.5vw, 32px);
 
     color: rgba(79, 59, 43, 0.68);
 
@@ -846,11 +895,6 @@ body.is-lock {
     transition:
       color $transition-base,
       transform $transition-base;
-
-    &::before {
-      content: '←';
-      margin-right: 10px;
-    }
 
     &:hover {
       color: $color-text;
@@ -1228,7 +1272,7 @@ body.is-lock {
 
 @media (max-width: 820px) {
   .article-hero {
-    padding: 124px 20px 72px;
+    padding: 96px 20px 72px;
 
     &__inner {
       display: flex;
@@ -1242,7 +1286,7 @@ body.is-lock {
     }
 
     &__back {
-      margin-bottom: 48px;
+      margin-bottom: 24px;
     }
 
     &__title {

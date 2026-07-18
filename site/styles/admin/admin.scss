@@ -5373,6 +5373,9 @@ a.admin-content-stat {
   min-height: 38px;
   padding: 0 14px;
   border: 1px solid var(--catalog-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   background: transparent;
   color: var(--catalog-ink);
