@@ -94,6 +94,130 @@ async function sendSeoPage(req, res, next, relativePath, canonicalPath) {
   }
 }
 
+function escapeXml(value) {
+  const symbols = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&apos;',
+  };
+
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+    (symbol) => symbols[symbol],
+  );
+}
+
+function createSitemapUrl(siteOrigin, pathname, lastModified) {
+  const location = new URL(pathname, `${siteOrigin}/`).href;
+  const lines = [
+    '  <url>',
+    `    <loc>${escapeXml(location)}</loc>`,
+  ];
+
+  if (lastModified) {
+    lines.push(
+      `    <lastmod>${escapeXml(
+        new Date(lastModified).toISOString(),
+      )}</lastmod>`,
+    );
+  }
+
+  lines.push('  </url>');
+
+  return lines.join('\n');
+}
+
+async function getSitemapEntries(siteOrigin) {
+  const now = new Date();
+
+  const [posts, works, products] = await Promise.all([
+    prisma.blogPost.findMany({
+      where: {
+        isPublished: true,
+        OR: [
+          {
+            publishedAt: null,
+          },
+          {
+            publishedAt: {
+              lte: now,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        slug: 'asc',
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+    prisma.work.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: {
+        slug: 'asc',
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+    prisma.product.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: {
+        slug: 'asc',
+      },
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    }),
+  ]);
+
+  const staticPaths = [
+    '/',
+    '/services',
+    '/works',
+    '/blog',
+    '/catalog',
+    '/contacts',
+  ];
+
+  return [
+    ...staticPaths.map((pathname) =>
+      createSitemapUrl(siteOrigin, pathname),
+    ),
+    ...posts.map((post) =>
+      createSitemapUrl(
+        siteOrigin,
+        `/blog/${encodeURIComponent(post.slug)}`,
+        post.updatedAt,
+      ),
+    ),
+    ...works.map((work) =>
+      createSitemapUrl(
+        siteOrigin,
+        `/works/${encodeURIComponent(work.slug)}`,
+        work.updatedAt,
+      ),
+    ),
+    ...products.map((product) =>
+      createSitemapUrl(
+        siteOrigin,
+        `/catalog/product/${encodeURIComponent(product.slug)}`,
+        product.updatedAt,
+      ),
+    ),
+  ];
+}
+
 // смтп
 
 function parseBoolean(value) {
@@ -846,6 +970,56 @@ app.use('/admin/api/uploads', uploadRoutes);
 app.use('/admin', adminCatalogRoutes);
 
 app.use('/admin', adminRoutes);
+
+// seo
+
+app.get('/robots.txt', (req, res) => {
+  const siteOrigin = getSiteOrigin(req);
+  const sitemapUrl = new URL('/sitemap.xml', `${siteOrigin}/`).href;
+  const content = [
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /admin/',
+    'Disallow: /admin/api/',
+    'Disallow: /api/',
+    '',
+    'User-agent: OAI-SearchBot',
+    'Allow: /',
+    'Disallow: /admin/',
+    'Disallow: /admin/api/',
+    'Disallow: /api/',
+    '',
+    `Sitemap: ${sitemapUrl}`,
+    '',
+  ].join('\n');
+
+  res.set('Cache-Control', 'public, max-age=3600');
+
+  return res.type('text/plain').send(content);
+});
+
+app.get('/sitemap.xml', async (req, res, next) => {
+  try {
+    const siteOrigin = getSiteOrigin(req);
+    const entries = await getSitemapEntries(siteOrigin);
+    const xml = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      ...entries,
+      '</urlset>',
+      '',
+    ].join('\n');
+
+    res.set(
+      'Cache-Control',
+      'public, max-age=300, stale-while-revalidate=3600',
+    );
+
+    return res.type('application/xml').send(xml);
+  } catch (error) {
+    return next(error);
+  }
+});
 
 // паблик пейджс
 
