@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
@@ -31,6 +32,67 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const ROOT_DIR = __dirname;
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const SITE_DIR = path.join(ROOT_DIR, 'site');
+const HTML_TEMPLATE_CACHE = new Map();
+
+function normalizeSiteOrigin(value) {
+  try {
+    const url = new URL(String(value || '').trim());
+
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      return '';
+    }
+
+    return url.origin;
+  } catch {
+    return '';
+  }
+}
+
+function getSiteOrigin(req) {
+  const configuredOrigin = normalizeSiteOrigin(process.env.SITE_URL);
+
+  if (configuredOrigin) {
+    return configuredOrigin;
+  }
+
+  const requestOrigin = normalizeSiteOrigin(
+    `${req.protocol}://${req.get('host') || ''}`,
+  );
+
+  return requestOrigin || `http://localhost:${PORT}`;
+}
+
+async function getHtmlTemplate(relativePath) {
+  if (IS_PRODUCTION && HTML_TEMPLATE_CACHE.has(relativePath)) {
+    return HTML_TEMPLATE_CACHE.get(relativePath);
+  }
+
+  const template = await fs.promises.readFile(
+    path.join(PUBLIC_DIR, relativePath),
+    'utf8',
+  );
+
+  if (IS_PRODUCTION) {
+    HTML_TEMPLATE_CACHE.set(relativePath, template);
+  }
+
+  return template;
+}
+
+async function sendSeoPage(req, res, next, relativePath, canonicalPath) {
+  try {
+    const siteOrigin = getSiteOrigin(req);
+    const canonicalUrl = new URL(canonicalPath, `${siteOrigin}/`).href;
+    const template = await getHtmlTemplate(relativePath);
+    const html = template
+      .replaceAll('{{SITE_ORIGIN}}', siteOrigin)
+      .replaceAll('{{CANONICAL_URL}}', canonicalUrl);
+
+    return res.type('html').send(html);
+  } catch (error) {
+    return next(error);
+  }
+}
 
 // смтп
 
@@ -787,36 +849,60 @@ app.use('/admin', adminRoutes);
 
 // паблик пейджс
 
-app.get('/', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+app.get('/', (req, res, next) => {
+  return sendSeoPage(req, res, next, 'index.html', '/');
 });
 
-app.get('/services', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'services', 'services.html'));
+app.get('/services', (req, res, next) => {
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    path.join('services', 'services.html'),
+    '/services',
+  );
 });
 
-app.get('/works', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'works', 'work-main.html'));
+app.get('/works', (req, res, next) => {
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    path.join('works', 'work-main.html'),
+    '/works',
+  );
 });
 
 app.get('/works/:slug', (req, res) => {
   return res.sendFile(path.join(PUBLIC_DIR, 'works', 'work-detail.html'));
 });
 
-app.get('/blog', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'blog', 'blog.html'));
+app.get('/blog', (req, res, next) => {
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    path.join('blog', 'blog.html'),
+    '/blog',
+  );
 });
 
 app.get('/blog/:slug', (req, res) => {
   return res.sendFile(path.join(PUBLIC_DIR, 'blog', 'article.html'));
 });
 
-app.get('/contacts', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'contacts.html'));
+app.get('/contacts', (req, res, next) => {
+  return sendSeoPage(req, res, next, 'contacts.html', '/contacts');
 });
 
-app.get('/catalog', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'catalog', 'catalog.html'));
+app.get('/catalog', (req, res, next) => {
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    path.join('catalog', 'catalog.html'),
+    '/catalog',
+  );
 });
 
 app.get('/catalog/product/:slug', (req, res) => {
