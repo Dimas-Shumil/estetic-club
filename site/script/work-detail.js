@@ -286,6 +286,24 @@ async function initWorkDetailPage() {
   }
 }
 
+function readInitialWork() {
+  const script = document.querySelector('[data-initial-work]');
+
+  if (!script) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(script.textContent || '{}');
+
+    return payload?.work && typeof payload.work === 'object'
+      ? payload.work
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 function getWorkSlug() {
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   const pathSlug =
@@ -305,6 +323,12 @@ async function loadWorkDetail() {
 
   if (!slug) {
     throw new Error('Адрес работы не указан.');
+  }
+
+  const initialWork = readInitialWork();
+
+  if (initialWork) {
+    return normalizeWorkDetail(initialWork);
   }
 
   const response = await fetch(

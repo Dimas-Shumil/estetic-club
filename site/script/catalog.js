@@ -1521,6 +1521,28 @@
 
     async function loadProduct() {
       try {
+        const initialScript = document.querySelector('[data-initial-product]');
+        let initialProduct = null;
+
+        if (initialScript) {
+          try {
+            const initialPayload = JSON.parse(initialScript.textContent || '{}');
+            initialProduct = initialPayload?.product || null;
+          } catch {
+            initialProduct = null;
+          }
+        }
+
+        if (initialProduct) {
+          product = initialProduct;
+          selectedVariantId = product.variants?.[0]?.id || null;
+          renderProduct();
+          loading.hidden = true;
+          content.hidden = false;
+
+          return;
+        }
+
         const response = await fetch(`/api/catalog/products/${encodeURIComponent(slug)}`);
         const data = await response.json();
         if (!response.ok || !data.product) throw new Error(data?.message || 'Товар не найден');
@@ -1537,9 +1559,19 @@
     }
 
     function renderProduct() {
-      document.title = product.seoTitle || `${product.title} — Культура волос`;
+      const rawTitle = String(product.seoTitle || product.title || '').trim();
+      document.title = /культура волос/i.test(rawTitle)
+        ? rawTitle
+        : `${rawTitle} | Культура волос`;
+
       const descriptionMeta = document.querySelector('meta[name="description"]');
-      if (descriptionMeta && product.seoDescription) descriptionMeta.content = product.seoDescription;
+      const seoDescription = String(
+        product.seoDescription || product.shortDescription || '',
+      ).trim();
+
+      if (descriptionMeta && seoDescription) {
+        descriptionMeta.content = seoDescription;
+      }
 
       const images = product.images || [];
       const selected = product.variants.find((variant) => variant.id === selectedVariantId) || product.variants[0];

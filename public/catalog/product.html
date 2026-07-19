@@ -3,11 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Товар — Культура волос</title>
-    <meta
-      name="description"
-      content="Профессиональный товар из каталога «Культура волос»."
-    />
+    <title>{{SEO_TITLE}}</title>
+    <meta name="description" content="{{SEO_DESCRIPTION}}" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="{{CANONICAL_URL}}" />
+
+    <meta property="og:type" content="product" />
+    <meta property="og:site_name" content="Культура волос" />
+    <meta property="og:title" content="{{SEO_TITLE}}" />
+    <meta property="og:description" content="{{SEO_DESCRIPTION}}" />
+    <meta property="og:url" content="{{CANONICAL_URL}}" />
+    <meta property="og:image" content="{{OG_IMAGE_URL}}" />
+    <meta property="og:image:alt" content="{{OG_IMAGE_ALT}}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{SEO_TITLE}}" />
+    <meta name="twitter:description" content="{{SEO_DESCRIPTION}}" />
+    <meta name="twitter:image" content="{{OG_IMAGE_URL}}" />
+
+    <script type="application/ld+json">{{JSON_LD}}</script>
     <link rel="stylesheet" href="/site/css/catalog.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -121,6 +135,7 @@
         <span>© 2026 Культура волос</span><span>Абакан</span>
       </div>
     </footer>
+    <script type="application/json" data-initial-product>{{INITIAL_PRODUCT_JSON}}</script>
     <script src="/site/script/image-performance.js"></script>
     <script src="/site/script/catalog.js"></script>
   </body>

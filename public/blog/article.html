@@ -5,11 +5,11 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Статья — Культура волос</title>
+    <title>{{SEO_TITLE}}</title>
 
     <meta
       name="description"
-      content="Экспертный материал студии «Культура волос» об уходе за волосами и окрашивании."
+      content="{{SEO_DESCRIPTION}}"
       data-article-description
     />
 
@@ -17,7 +17,7 @@
 
     <link
       rel="canonical"
-      href=""
+      href="{{CANONICAL_URL}}"
       data-article-canonical
     />
 
@@ -27,39 +27,39 @@
 
     <meta
       property="og:title"
-      content="Статья — Культура волос"
+      content="{{SEO_TITLE}}"
       data-article-og-title
     />
 
     <meta
       property="og:description"
-      content="Экспертный материал студии «Культура волос»."
+      content="{{SEO_DESCRIPTION}}"
       data-article-og-description
     />
 
-    <meta property="og:url" content="" data-article-og-url />
+    <meta property="og:url" content="{{CANONICAL_URL}}" data-article-og-url />
 
     <meta
       property="og:image"
-      content="/site/img/blog/blog-hero.webp"
+      content="{{OG_IMAGE_URL}}"
       data-article-og-image
     />
 
     <meta
       property="og:image:alt"
-      content="Культура волос"
+      content="{{OG_IMAGE_ALT}}"
       data-article-og-image-alt
     />
 
     <meta
       property="article:published_time"
-      content=""
+      content="{{PUBLISHED_AT}}"
       data-article-published-time
     />
 
     <meta
       property="article:modified_time"
-      content=""
+      content="{{MODIFIED_AT}}"
       data-article-modified-time
     />
 
@@ -67,24 +67,24 @@
 
     <meta
       name="twitter:title"
-      content="Статья — Культура волос"
+      content="{{SEO_TITLE}}"
       data-article-twitter-title
     />
 
     <meta
       name="twitter:description"
-      content="Экспертный материал студии «Культура волос»."
+      content="{{SEO_DESCRIPTION}}"
       data-article-twitter-description
     />
 
     <meta
       name="twitter:image"
-      content="/site/img/blog/blog-hero.webp"
+      content="{{OG_IMAGE_URL}}"
       data-article-twitter-image
     />
 
     <script type="application/ld+json" data-article-json-ld>
-      {}
+      {{JSON_LD}}
     </script>
 
     <link rel="stylesheet" href="/site/css/article.min.css" />
@@ -362,6 +362,7 @@
       </div>
     </footer>
 
+    <script type="application/json" data-initial-article>{{INITIAL_ARTICLE_JSON}}</script>
     <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/article.js" defer></script>
     <script src="/site/script/catalog-header.js" defer></script>

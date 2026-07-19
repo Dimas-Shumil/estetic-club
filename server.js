@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const { rateLimit } = require('express-rate-limit');
 const { z } = require('zod');
+const sanitizeHtml = require('sanitize-html');
 
 const prisma = require('./lib/prisma');
 
@@ -94,6 +95,371 @@ async function sendSeoPage(req, res, next, relativePath, canonicalPath) {
   }
 }
 
+const DYNAMIC_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+function normalizeDynamicSlug(value) {
+  const slug = String(value || '')
+    .trim()
+    .toLowerCase();
+
+  return DYNAMIC_SLUG_PATTERN.test(slug) ? slug : '';
+}
+
+function stripHtml(value) {
+  return sanitizeHtml(String(value || ''), {
+    allowedTags: [],
+    allowedAttributes: {},
+  })
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function createSeoDescription(...values) {
+  const description =
+    values.map((value) => stripHtml(value)).find(Boolean) ||
+    'Культура волос — окрашивание, уход и профессиональные товары для волос в Абакане.';
+
+  if (description.length <= 180) {
+    return description;
+  }
+
+  const shortened = description.slice(0, 177);
+  const lastSpace = shortened.lastIndexOf(' ');
+
+  return `${shortened.slice(0, lastSpace > 120 ? lastSpace : 177).trim()}…`;
+}
+
+function createSeoTitle(value, fallback) {
+  const title = stripHtml(value) || fallback;
+
+  return /культура волос/i.test(title)
+    ? title
+    : `${title} | Культура волос`;
+}
+
+function createAbsoluteUrl(siteOrigin, value, fallbackPath = '/') {
+  try {
+    return new URL(String(value || fallbackPath), `${siteOrigin}/`).href;
+  } catch {
+    return new URL(fallbackPath, `${siteOrigin}/`).href;
+  }
+}
+
+function escapeJsonForHtml(value) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+function replaceTemplateTokens(template, replacements) {
+  return template.replace(/\{\{([A-Z0-9_]+)\}\}/g, (match, key) => {
+    if (!Object.prototype.hasOwnProperty.call(replacements, key)) {
+      return match;
+    }
+
+    return String(replacements[key]);
+  });
+}
+
+function setDynamicPageCache(res) {
+  res.set(
+    'Cache-Control',
+    'public, max-age=60, stale-while-revalidate=300',
+  );
+}
+
+function sendPublicNotFound(res) {
+  return res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'));
+}
+
+function parseLegacyWorkGallery(value) {
+  if (!value) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+
+    return Array.isArray(parsed)
+      ? parsed.map((item) => String(item || '').trim()).filter(Boolean)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function createWorkPageData(work) {
+  const relationGallery = Array.isArray(work.images)
+    ? work.images.map((image) => image.imagePath).filter(Boolean)
+    : [];
+  const legacyGallery = parseLegacyWorkGallery(work.gallery);
+
+  return {
+    id: work.id,
+    slug: work.slug,
+    title: work.title,
+    excerpt: work.excerpt,
+    category: work.category,
+    categorySlug: work.categorySlug,
+    beforeImage: work.beforeImage,
+    afterImage: work.afterImage,
+    technique: work.technique || work.category,
+    duration: work.duration,
+    heroImage: work.heroImage || work.afterImage,
+    experienceImage:
+      work.experienceImage || work.heroImage || work.afterImage,
+    heroQuote: work.heroQuote,
+    story: work.story,
+    gallery: relationGallery.length ? relationGallery : legacyGallery,
+    images: work.images,
+    isPublished: work.isPublished,
+    showOnHome: work.showOnHome,
+    createdAt: work.createdAt,
+    updatedAt: work.updatedAt,
+  };
+}
+
+function createProductPageData(product) {
+  const variants = Array.isArray(product.variants) ? product.variants : [];
+  const images = Array.isArray(product.images) ? product.images : [];
+  const prices = variants.map((variant) => variant.price);
+
+  return {
+    id: product.id,
+    slug: product.slug,
+    title: product.title,
+    shortDescription: product.shortDescription,
+    description: product.description,
+    badge: product.badge,
+    sku: product.sku,
+    seoTitle: product.seoTitle,
+    seoDescription: product.seoDescription,
+    category: product.category,
+    brand: product.brand,
+    variants,
+    images,
+    mainImage: images[0] || null,
+    minPrice: prices.length ? Math.min(...prices) : 0,
+    maxPrice: prices.length ? Math.max(...prices) : 0,
+    createdAt: product.createdAt,
+    updatedAt: product.updatedAt,
+  };
+}
+
+async function createArticlePageHtml(req, post) {
+  const siteOrigin = getSiteOrigin(req);
+  const canonicalUrl = createAbsoluteUrl(
+    siteOrigin,
+    `/blog/${encodeURIComponent(post.slug)}`,
+  );
+  const seoTitle = createSeoTitle(post.seoTitle || post.title, post.title);
+  const seoDescription = createSeoDescription(
+    post.seoDescription,
+    post.excerpt,
+    post.content,
+  );
+  const coverUrl = createAbsoluteUrl(
+    siteOrigin,
+    post.coverImage,
+    '/site/img/blog/blog-hero.webp',
+  );
+  const coverAlt = stripHtml(post.coverAlt) || post.title;
+  const publishedAt = post.publishedAt || post.createdAt;
+  const authorName = stripHtml(post.authorName);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: seoDescription,
+    image: [coverUrl],
+    datePublished: publishedAt.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    author: authorName
+      ? {
+          '@type': 'Person',
+          name: authorName,
+        }
+      : {
+          '@type': 'Organization',
+          name: 'Культура волос',
+        },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Культура волос',
+      url: siteOrigin,
+    },
+  };
+  const template = await getHtmlTemplate(path.join('blog', 'article.html'));
+
+  return replaceTemplateTokens(template, {
+    SEO_TITLE: escapeHtml(seoTitle),
+    SEO_DESCRIPTION: escapeHtml(seoDescription),
+    CANONICAL_URL: escapeHtml(canonicalUrl),
+    OG_IMAGE_URL: escapeHtml(coverUrl),
+    OG_IMAGE_ALT: escapeHtml(coverAlt),
+    PUBLISHED_AT: escapeHtml(publishedAt.toISOString()),
+    MODIFIED_AT: escapeHtml(post.updatedAt.toISOString()),
+    JSON_LD: escapeJsonForHtml(schema),
+    INITIAL_ARTICLE_JSON: escapeJsonForHtml({ post }),
+  });
+}
+
+async function createWorkPageHtml(req, work) {
+  const data = createWorkPageData(work);
+  const siteOrigin = getSiteOrigin(req);
+  const canonicalUrl = createAbsoluteUrl(
+    siteOrigin,
+    `/works/${encodeURIComponent(data.slug)}`,
+  );
+  const seoTitle = createSeoTitle(data.title, 'Работа студии');
+  const seoDescription = createSeoDescription(
+    data.excerpt,
+    data.story,
+    `${data.title}. Результат работы студии «Культура волос».`,
+  );
+  const imageUrl = createAbsoluteUrl(
+    siteOrigin,
+    data.heroImage,
+    '/site/img/main-hero-bg.webp',
+  );
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': `${canonicalUrl}#webpage`,
+        url: canonicalUrl,
+        name: seoTitle,
+        description: seoDescription,
+        datePublished: data.createdAt.toISOString(),
+        dateModified: data.updatedAt.toISOString(),
+        primaryImageOfPage: {
+          '@id': `${canonicalUrl}#primaryimage`,
+        },
+        breadcrumb: {
+          '@id': `${canonicalUrl}#breadcrumb`,
+        },
+      },
+      {
+        '@type': 'ImageObject',
+        '@id': `${canonicalUrl}#primaryimage`,
+        url: imageUrl,
+        contentUrl: imageUrl,
+        caption: data.title,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonicalUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Главная',
+            item: createAbsoluteUrl(siteOrigin, '/'),
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Работы',
+            item: createAbsoluteUrl(siteOrigin, '/works'),
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: data.title,
+            item: canonicalUrl,
+          },
+        ],
+      },
+    ],
+  };
+  const template = await getHtmlTemplate(
+    path.join('works', 'work-detail.html'),
+  );
+
+  return replaceTemplateTokens(template, {
+    SEO_TITLE: escapeHtml(seoTitle),
+    SEO_DESCRIPTION: escapeHtml(seoDescription),
+    CANONICAL_URL: escapeHtml(canonicalUrl),
+    OG_IMAGE_URL: escapeHtml(imageUrl),
+    OG_IMAGE_ALT: escapeHtml(data.title),
+    PUBLISHED_AT: escapeHtml(data.createdAt.toISOString()),
+    MODIFIED_AT: escapeHtml(data.updatedAt.toISOString()),
+    JSON_LD: escapeJsonForHtml(schema),
+    INITIAL_WORK_JSON: escapeJsonForHtml({ work: data }),
+  });
+}
+
+async function createProductPageHtml(req, product) {
+  const data = createProductPageData(product);
+  const siteOrigin = getSiteOrigin(req);
+  const canonicalUrl = createAbsoluteUrl(
+    siteOrigin,
+    `/catalog/product/${encodeURIComponent(data.slug)}`,
+  );
+  const seoTitle = createSeoTitle(data.seoTitle || data.title, data.title);
+  const seoDescription = createSeoDescription(
+    data.seoDescription,
+    data.shortDescription,
+    data.description,
+  );
+  const imageUrls = data.images.map((image) =>
+    createAbsoluteUrl(siteOrigin, image.imagePath),
+  );
+  const mainImageUrl = imageUrls[0] || createAbsoluteUrl(
+    siteOrigin,
+    '/site/img/main-hero-bg.webp',
+  );
+  const offers = data.variants.map((variant) => ({
+    '@type': 'Offer',
+    url: canonicalUrl,
+    priceCurrency: 'RUB',
+    price: String(variant.price),
+    availability: 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+    ...(variant.sku ? { sku: variant.sku } : {}),
+  }));
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: data.title,
+    description: seoDescription,
+    image: imageUrls,
+    url: canonicalUrl,
+    ...(data.sku ? { sku: data.sku } : {}),
+    ...(data.brand?.name
+      ? {
+          brand: {
+            '@type': 'Brand',
+            name: data.brand.name,
+          },
+        }
+      : {}),
+    ...(data.category?.name ? { category: data.category.name } : {}),
+    offers: offers.length === 1 ? offers[0] : offers,
+  };
+  const template = await getHtmlTemplate(
+    path.join('catalog', 'product.html'),
+  );
+
+  return replaceTemplateTokens(template, {
+    SEO_TITLE: escapeHtml(seoTitle),
+    SEO_DESCRIPTION: escapeHtml(seoDescription),
+    CANONICAL_URL: escapeHtml(canonicalUrl),
+    OG_IMAGE_URL: escapeHtml(mainImageUrl),
+    OG_IMAGE_ALT: escapeHtml(data.title),
+    JSON_LD: escapeJsonForHtml(schema),
+    INITIAL_PRODUCT_JSON: escapeJsonForHtml({ product: data }),
+  });
+}
+
 function escapeXml(value) {
   const symbols = {
     '&': '&amp;',
@@ -170,6 +536,17 @@ async function getSitemapEntries(siteOrigin) {
     prisma.product.findMany({
       where: {
         isPublished: true,
+        category: {
+          isPublished: true,
+        },
+        variants: {
+          some: {
+            isActive: true,
+          },
+        },
+        images: {
+          some: {},
+        },
       },
       orderBy: {
         slug: 'asc',
@@ -1047,8 +1424,78 @@ app.get('/works', (req, res, next) => {
   );
 });
 
-app.get('/works/:slug', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'works', 'work-detail.html'));
+app.get('/works/:slug', async (req, res, next) => {
+  try {
+    const rawSlug = String(req.params.slug || '').trim();
+    const slug = normalizeDynamicSlug(rawSlug);
+
+    if (!slug) {
+      return sendPublicNotFound(res);
+    }
+
+    if (rawSlug !== slug) {
+      return res.redirect(
+        301,
+        buildRedirectUrl(req, `/works/${encodeURIComponent(slug)}`),
+      );
+    }
+
+    const work = await prisma.work.findFirst({
+      where: {
+        slug,
+        isPublished: true,
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        category: true,
+        categorySlug: true,
+        beforeImage: true,
+        afterImage: true,
+        technique: true,
+        duration: true,
+        heroImage: true,
+        experienceImage: true,
+        heroQuote: true,
+        story: true,
+        gallery: true,
+        isPublished: true,
+        showOnHome: true,
+        createdAt: true,
+        updatedAt: true,
+        images: {
+          orderBy: [
+            {
+              sortOrder: 'asc',
+            },
+            {
+              id: 'asc',
+            },
+          ],
+          select: {
+            id: true,
+            imagePath: true,
+            alt: true,
+            sortOrder: true,
+          },
+        },
+      },
+    });
+
+    if (!work) {
+      return sendPublicNotFound(res);
+    }
+
+    const html = await createWorkPageHtml(req, work);
+
+    setDynamicPageCache(res);
+
+    return res.type('html').send(html);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.get('/blog', (req, res, next) => {
@@ -1061,8 +1508,72 @@ app.get('/blog', (req, res, next) => {
   );
 });
 
-app.get('/blog/:slug', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'blog', 'article.html'));
+app.get('/blog/:slug', async (req, res, next) => {
+  try {
+    const rawSlug = String(req.params.slug || '').trim();
+    const slug = normalizeDynamicSlug(rawSlug);
+
+    if (!slug) {
+      return sendPublicNotFound(res);
+    }
+
+    if (rawSlug !== slug) {
+      return res.redirect(
+        301,
+        buildRedirectUrl(req, `/blog/${encodeURIComponent(slug)}`),
+      );
+    }
+
+    const post = await prisma.blogPost.findFirst({
+      where: {
+        slug,
+        isPublished: true,
+        OR: [
+          {
+            publishedAt: null,
+          },
+          {
+            publishedAt: {
+              lte: new Date(),
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        content: true,
+        category: true,
+        categorySlug: true,
+        coverImage: true,
+        coverAlt: true,
+        readingTime: true,
+        authorName: true,
+        authorRole: true,
+        expertNote: true,
+        seoTitle: true,
+        seoDescription: true,
+        isPublished: true,
+        publishedAt: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!post) {
+      return sendPublicNotFound(res);
+    }
+
+    const html = await createArticlePageHtml(req, post);
+
+    setDynamicPageCache(res);
+
+    return res.type('html').send(html);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.get('/contacts', (req, res, next) => {
@@ -1079,8 +1590,125 @@ app.get('/catalog', (req, res, next) => {
   );
 });
 
-app.get('/catalog/product/:slug', (req, res) => {
-  return res.sendFile(path.join(PUBLIC_DIR, 'catalog', 'product.html'));
+app.get('/catalog/product/:slug', async (req, res, next) => {
+  try {
+    const rawSlug = String(req.params.slug || '').trim();
+    const slug = normalizeDynamicSlug(rawSlug);
+
+    if (!slug) {
+      return sendPublicNotFound(res);
+    }
+
+    if (rawSlug !== slug) {
+      return res.redirect(
+        301,
+        buildRedirectUrl(
+          req,
+          `/catalog/product/${encodeURIComponent(slug)}`,
+        ),
+      );
+    }
+
+    const product = await prisma.product.findFirst({
+      where: {
+        slug,
+        isPublished: true,
+        category: {
+          isPublished: true,
+        },
+        variants: {
+          some: {
+            isActive: true,
+          },
+        },
+        images: {
+          some: {},
+        },
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        shortDescription: true,
+        description: true,
+        badge: true,
+        sku: true,
+        seoTitle: true,
+        seoDescription: true,
+        createdAt: true,
+        updatedAt: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            parentId: true,
+          },
+        },
+        brand: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            logoPath: true,
+          },
+        },
+        variants: {
+          where: {
+            isActive: true,
+          },
+          orderBy: [
+            {
+              sortOrder: 'asc',
+            },
+            {
+              id: 'asc',
+            },
+          ],
+          select: {
+            id: true,
+            name: true,
+            sku: true,
+            price: true,
+            oldPrice: true,
+            sortOrder: true,
+          },
+        },
+        images: {
+          orderBy: [
+            {
+              isMain: 'desc',
+            },
+            {
+              sortOrder: 'asc',
+            },
+            {
+              id: 'asc',
+            },
+          ],
+          select: {
+            id: true,
+            imagePath: true,
+            alt: true,
+            isMain: true,
+            sortOrder: true,
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return sendPublicNotFound(res);
+    }
+
+    const html = await createProductPageHtml(req, product);
+
+    setDynamicPageCache(res);
+
+    return res.type('html').send(html);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.get('/cart', (req, res) => {

@@ -110,6 +110,24 @@ function initHeaderSafe() {
   updateHeader();
 }
 
+function readInitialArticle() {
+  const script = document.querySelector('[data-initial-article]');
+
+  if (!script) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(script.textContent || '{}');
+
+    return payload?.post && typeof payload.post === 'object'
+      ? payload.post
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 function getArticleSlug() {
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   const pathSlug =
@@ -141,6 +159,18 @@ async function initArticlePage() {
 
   if (!isValidArticleSlug(slug)) {
     showArticleError();
+
+    return;
+  }
+
+  const initialPost = readInitialArticle();
+
+  if (initialPost) {
+    renderArticle(initialPost, slug);
+
+    if (loading) {
+      loading.hidden = true;
+    }
 
     return;
   }
@@ -450,7 +480,7 @@ function updateArticleSeo({
   const seoDescription =
     String(post.seoDescription || '').trim() || articleExcerpt;
 
-  const documentTitle = /клуб эстетики/i.test(seoTitle)
+  const documentTitle = /культура волос/i.test(seoTitle)
     ? seoTitle
     : `${seoTitle} | Культура волос`;
 
@@ -514,7 +544,7 @@ function updateArticleJsonLd({
   const schema = {
     '@context': 'https://schema.org',
 
-    '@type': 'Article',
+    '@type': 'BlogPosting',
 
     headline: articleTitle,
 
@@ -545,11 +575,7 @@ function updateArticleJsonLd({
 
       name: 'Культура волос',
 
-      logo: {
-        '@type': 'ImageObject',
-
-        url: new URL('/site/img/logo.png', window.location.origin).href,
-      },
+      url: window.location.origin,
     },
   };
 

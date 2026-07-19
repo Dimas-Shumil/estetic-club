@@ -4,13 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title data-page-title>История преображения | Культура волос</title>
+    <title data-page-title>{{SEO_TITLE}}</title>
 
     <meta
       name="description"
-      content="История преображения студии «Культура волос»: результат, детали процедуры и галерея фотографий."
+      content="{{SEO_DESCRIPTION}}"
       data-page-description
     />
+
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="{{CANONICAL_URL}}" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Культура волос" />
+    <meta property="og:title" content="{{SEO_TITLE}}" />
+    <meta property="og:description" content="{{SEO_DESCRIPTION}}" />
+    <meta property="og:url" content="{{CANONICAL_URL}}" />
+    <meta property="og:image" content="{{OG_IMAGE_URL}}" />
+    <meta property="og:image:alt" content="{{OG_IMAGE_ALT}}" />
+    <meta property="article:published_time" content="{{PUBLISHED_AT}}" />
+    <meta property="article:modified_time" content="{{MODIFIED_AT}}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{SEO_TITLE}}" />
+    <meta name="twitter:description" content="{{SEO_DESCRIPTION}}" />
+    <meta name="twitter:image" content="{{OG_IMAGE_URL}}" />
+
+    <script type="application/ld+json">{{JSON_LD}}</script>
 
     <link rel="stylesheet" href="/site/css/work-detail.min.css" />
 
@@ -352,6 +372,7 @@
       src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"
       defer
     ></script>
+    <script type="application/json" data-initial-work>{{INITIAL_WORK_JSON}}</script>
     <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/work-detail.js" defer></script>
   </body>
