@@ -424,3 +424,40 @@ body.is-home-light-header .header__burger:hover {
   border-color: rgba(79, 59, 43, 0.32);
   background: rgba(255, 247, 239, 0.68);
 }
+
+/* подпись в hero */
+.hero__signature {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: "Marck Script", "Segoe Print", cursive;
+  font-size: clamp(48px, 4.2vw, 72px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (max-width: 768px) {
+  .hero__signature {
+    margin-top: 10px;
+    font-size: clamp(40px, 11vw, 56px);
+  }
+}
+
+/* слоган в hero */
+.hero > span {
+  font-size: clamp(64px, 6.2vw, 104px);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-shadow: 0 12px 36px rgba(47, 35, 26, 0.22);
+}
+
+@media (max-width: 768px) {
+  .hero > span {
+    font-size: clamp(48px, 14vw, 76px);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+  }
+}
