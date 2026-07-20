@@ -39,6 +39,7 @@ function initHeader() {
   const header = document.querySelector('[data-header]');
   const burger = document.querySelector('[data-burger]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
+  const lightSection = document.querySelector('.section-two');
 
   if (!header || !burger || !mobileMenu) return;
 
@@ -51,8 +52,16 @@ function initHeader() {
     const isScrolled = currentScrollY > 24;
     const isScrollingDown = currentScrollY > lastScrollY;
     const isMenuOpen = header.classList.contains('is-menu-open');
+    const isLightHeader =
+      lightSection &&
+      lightSection.getBoundingClientRect().top <=
+        header.getBoundingClientRect().bottom + 12;
 
     header.classList.toggle('is-scrolled', isScrolled);
+    document.body.classList.toggle(
+      'is-home-light-header',
+      Boolean(isLightHeader),
+    );
 
     if (currentScrollY > 140 && isScrollingDown && !isMenuOpen) {
       header.classList.add('is-hidden');
@@ -124,6 +133,8 @@ function initHeader() {
   window.addEventListener('scroll', requestHeaderUpdate, {
     passive: true,
   });
+
+  window.addEventListener('resize', requestHeaderUpdate);
 
   window.addEventListener('wheel', closeMenuAfterScrollIntent, {
     passive: true,

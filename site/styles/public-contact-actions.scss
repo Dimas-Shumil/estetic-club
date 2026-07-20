@@ -274,24 +274,39 @@
 
 .footer__social-icon--instagram {
   -webkit-mask-image: url("/site/img/social/instagram.svg");
-  mask-image: url("/site/img/social/instagram.svg");\n  background: linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 50%, #962FBF 75%, #4F5BD5 100%);
+  mask-image: url("/site/img/social/instagram.svg");
+  background: linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 50%, #962FBF 75%, #4F5BD5 100%);
 }
 
 .footer__social-icon--vk {
   -webkit-mask-image: url("/site/img/social/vk.svg");
-  mask-image: url("/site/img/social/vk.svg");\n  background-color: #0077FF;
+  mask-image: url("/site/img/social/vk.svg");
+  background-color: #0077FF;
 }
 
 .footer__social-icon--telegram {
   -webkit-mask-image: url("/site/img/social/telegram.svg");
-  mask-image: url("/site/img/social/telegram.svg");\n  background-color: #26A5E4;
+  mask-image: url("/site/img/social/telegram.svg");
+  background-color: #26A5E4;
 }
 
 .footer__social-icon--whatsapp {
   -webkit-mask-image: url("/site/img/social/whatsapp.svg");
-  mask-image: url("/site/img/social/whatsapp.svg");\n  background-color: #25D366;
+  mask-image: url("/site/img/social/whatsapp.svg");
+  background-color: #25D366;
 }
-\n\n.footer__social-icon {\n  transition: transform 180ms ease, filter 180ms ease;\n}\n\n.footer__socials a:hover .footer__social-icon,\n.footer__socials a:focus-visible .footer__social-icon {\n  transform: translateY(-1px) scale(1.08);\n  filter: brightness(1.08);\n}\n
+
+
+.footer__social-icon {
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.footer__socials a:hover .footer__social-icon,
+.footer__socials a:focus-visible .footer__social-icon {
+  transform: translateY(-1px) scale(1.08);
+  filter: brightness(1.08);
+}
+
 /* social brand colors start */
 .footer__socials a .footer__social-icon {
   background: currentColor;
@@ -313,3 +328,99 @@
   background: #25d366;
 }
 /* social brand colors end */
+
+/* логотип */
+.header__logo--brand {
+  min-width: 0;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.header__logo--brand .header__logo-mark {
+  display: block;
+  width: 46px;
+  height: 46px;
+  max-height: none;
+  flex: 0 0 46px;
+  color: inherit;
+  padding: 0;
+  border: 0;
+  background: currentColor;
+  box-shadow: none;
+  -webkit-mask: url("/site/img/logo/logo-mark.png") center / contain no-repeat;
+  mask: url("/site/img/logo/logo-mark.png") center / contain no-repeat;
+}
+
+.header__logo--brand .header__logo-text {
+  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  color: inherit;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .header__logo--brand {
+    gap: 0;
+  }
+
+  .header__logo--brand .header__logo-mark {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .header__logo--brand .header__logo-text {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .header__logo--brand .header__logo-mark {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+}
+
+
+/* светлый header главной */
+body.is-home-light-header .header .glass {
+  --glass-bg: rgba(255, 247, 239, 0.78);
+  --glass-border: rgba(79, 59, 43, 0.18);
+  --glass-shadow: 0 18px 70px rgba(47, 35, 26, 0.16);
+}
+
+body.is-home-light-header .header__nav a {
+  color: rgba(47, 35, 26, 0.68);
+}
+
+body.is-home-light-header .header__nav a:hover,
+body.is-home-light-header .header__nav a[aria-current="page"] {
+  color: #2f231a;
+}
+
+body.is-home-light-header .header__logo {
+  color: #2f231a;
+}
+
+body.is-home-light-header .header__logo-text {
+  color: #2f231a;
+  text-shadow: none;
+}
+
+body.is-home-light-header .header__burger {
+  border-color: rgba(79, 59, 43, 0.2);
+  background: rgba(255, 247, 239, 0.42);
+}
+
+body.is-home-light-header .header__burger span {
+  background: #2f231a;
+}
+
+body.is-home-light-header .header__burger:hover {
+  border-color: rgba(79, 59, 43, 0.32);
+  background: rgba(255, 247, 239, 0.68);
+}
