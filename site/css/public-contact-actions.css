@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @media (max-width: 767px) {
   .header__mobile .header__mobile-call {
     display: inline-flex;
@@ -20,24 +21,20 @@
     text-transform: uppercase;
     transition: transform 0.28s ease, box-shadow 0.28s ease;
   }
-
   .header__mobile .header__mobile-call:hover {
     color: #2f231a;
     transform: translateY(-2px);
     box-shadow: 0 18px 42px rgba(47, 35, 26, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.92);
   }
-
   .header__mobile .header__mobile-call:focus-visible {
     outline: 2px solid rgba(255, 247, 239, 0.92);
     outline-offset: 3px;
   }
-
   .header__mobile-call span {
     color: inherit;
     opacity: 1;
     -webkit-text-fill-color: currentColor;
   }
-
   .header__mobile-call svg {
     flex: 0 0 auto;
     width: 18px;
@@ -49,7 +46,6 @@
     stroke-linejoin: round;
   }
 }
-
 .mobile-call-fab {
   display: none;
 }
@@ -73,22 +69,18 @@
     -webkit-tap-highlight-color: transparent;
     transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
-
   .mobile-call-fab:hover {
     color: #2f231a;
     transform: translateY(-2px);
     box-shadow: 0 18px 42px rgba(47, 35, 26, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.94);
   }
-
   .mobile-call-fab:active {
     transform: scale(0.95);
   }
-
   .mobile-call-fab:focus-visible {
     outline: 2px solid rgba(116, 84, 59, 0.9);
     outline-offset: 4px;
   }
-
   .mobile-call-fab svg {
     width: 23px;
     height: 23px;
@@ -98,22 +90,18 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-
   body.has-catalog-mobile-bar .mobile-call-fab {
     bottom: calc(92px + env(safe-area-inset-bottom));
   }
-
   body.has-product-mobile-bar .mobile-call-fab {
     bottom: calc(96px + env(safe-area-inset-bottom));
   }
-
   .mobile-call-fab.mobile-call-fab--hidden {
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
     transform: translateY(10px);
   }
-
   body.is-lock .mobile-call-fab,
   body.modal-open .mobile-call-fab,
   body.is-sheet-open .mobile-call-fab,
@@ -124,27 +112,23 @@
     transform: translateY(10px);
   }
 }
-
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .mobile-call-fab {
     transition: none;
   }
 }
-
 /* mobile footer layout */
 @media (max-width: 767px) {
   .footer {
     padding-right: 16px;
     padding-left: 16px;
   }
-
   .footer__glass {
     width: 100%;
     padding: 30px 20px 24px;
     border-radius: 24px;
     box-sizing: border-box;
   }
-
   .footer__top {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -152,26 +136,22 @@
     row-gap: 34px;
     align-items: start;
   }
-
   .footer__brand {
-    grid-column: 1 / -1;
+    grid-column: 1/-1;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     min-width: 0;
   }
-
   .footer__logo {
     width: fit-content;
     max-width: 100%;
   }
-
   .footer__text {
     width: 100%;
     max-width: none;
     margin-right: 0;
   }
-
   .footer__button {
     display: inline-flex;
     align-items: center;
@@ -183,7 +163,6 @@
     box-sizing: border-box;
     text-align: center;
   }
-
   .footer__nav,
   .footer__contacts {
     display: flex;
@@ -191,17 +170,14 @@
     align-items: flex-start;
     min-width: 0;
   }
-
   .footer__nav a,
   .footer__contact {
     max-width: 100%;
     overflow-wrap: anywhere;
   }
-
   .footer__contacts {
-    grid-column: 1 / -1;
+    grid-column: 1/-1;
   }
-
   .footer__socials {
     display: grid;
     grid-template-columns: repeat(4, 44px);
@@ -209,7 +185,6 @@
     width: auto;
     margin-top: 20px;
   }
-
   .footer__socials a {
     display: inline-flex;
     align-items: center;
@@ -219,7 +194,6 @@
     margin: 0;
     box-sizing: border-box;
   }
-
   .footer__bottom {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -228,7 +202,6 @@
     margin-top: 30px;
     padding-top: 20px;
   }
-
   .footer__bottom p,
   .footer__bottom a {
     width: fit-content;
@@ -236,22 +209,18 @@
     margin: 0;
   }
 }
-
 @media (max-width: 360px) {
   .footer__top {
     grid-template-columns: minmax(0, 1fr);
   }
-
   .footer__brand,
   .footer__contacts {
     grid-column: auto;
   }
-
   .footer__socials {
     grid-template-columns: repeat(4, 42px);
     gap: 8px;
   }
-
   .footer__socials a {
     width: 42px;
     height: 42px;
@@ -296,7 +265,6 @@
   background-color: #25D366;
 }
 
-
 .footer__social-icon {
   transition: transform 180ms ease, filter 180ms ease;
 }
@@ -327,8 +295,8 @@
 .footer__socials a .footer__social-icon--whatsapp {
   background: #25d366;
 }
-/* social brand colors end */
 
+/* social brand colors end */
 /* логотип */
 .header__logo--brand {
   min-width: 0;
@@ -347,8 +315,8 @@
   border: 0;
   background: currentColor;
   box-shadow: none;
-  -webkit-mask: url("/site/img/logo/logo-mark.png") center / contain no-repeat;
-  mask: url("/site/img/logo/logo-mark.png") center / contain no-repeat;
+  -webkit-mask: url("/site/img/logo/logo-mark.png") center/contain no-repeat;
+  mask: url("/site/img/logo/logo-mark.png") center/contain no-repeat;
 }
 
 .header__logo--brand .header__logo-text {
@@ -365,18 +333,15 @@
   .header__logo--brand {
     gap: 0;
   }
-
   .header__logo--brand .header__logo-mark {
     width: 40px;
     height: 40px;
     flex-basis: 40px;
   }
-
   .header__logo--brand .header__logo-text {
     display: none;
   }
 }
-
 @media (max-width: 360px) {
   .header__logo--brand .header__logo-mark {
     width: 36px;
@@ -384,8 +349,6 @@
     flex-basis: 36px;
   }
 }
-
-
 /* светлый header главной */
 body.is-home-light-header .header .glass {
   --glass-bg: rgba(255, 247, 239, 0.78);
@@ -398,7 +361,7 @@ body.is-home-light-header .header__nav a {
 }
 
 body.is-home-light-header .header__nav a:hover,
-body.is-home-light-header .header__nav a[aria-current="page"] {
+body.is-home-light-header .header__nav a[aria-current=page] {
   color: #2f231a;
 }
 
@@ -444,7 +407,6 @@ body.is-home-light-header .header__burger:hover {
     font-size: clamp(40px, 11vw, 56px);
   }
 }
-
 /* слоган в hero */
 .hero > span {
   font-size: clamp(64px, 6.2vw, 104px);

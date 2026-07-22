@@ -174,6 +174,7 @@ a {
 
 html {
   min-width: 320px;
+  background: var(--color-brown);
   font-family: var(--font-text);
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
@@ -999,7 +1000,7 @@ button {
 .catalog-page {
   position: relative;
   overflow: clip;
-  padding-bottom: 28px;
+  padding-bottom: clamp(76px, 7vw, 112px);
 }
 
 .catalog-hero,
@@ -2443,9 +2444,9 @@ button {
 }
 
 .product-detail {
-  min-height: 70vh;
+  min-height: auto;
   padding-top: 118px;
-  padding-bottom: 44px;
+  padding-bottom: clamp(76px, 7vw, 112px);
 
   &__loading,
   &__error {
@@ -3323,7 +3324,7 @@ button {
   }
 
   .catalog-page {
-    padding-bottom: 18px;
+    padding-bottom: 72px;
   }
 
   .catalog-hero,

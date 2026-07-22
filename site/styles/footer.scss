@@ -5,11 +5,15 @@ $color-brown: #796046;
   position: relative;
   overflow: hidden;
 
+
   width: 100%;
 
   margin: 0 auto;
   padding: 28px 24px 28px;
 
+  $font-text: 'Manrope', Arial, Helvetica, sans-serif;
+
+  font-family: $font-text;
   color: #2f231a;
   background: $color-brown;
 
@@ -129,7 +133,7 @@ $color-brown: #796046;
 
     color: #2f231a;
 
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: $font-text;
     font-size: clamp(38px, 3.2vw, 62px);
     font-weight: 400;
     line-height: 0.92;
