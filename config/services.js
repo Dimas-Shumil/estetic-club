@@ -17,11 +17,11 @@ const SERVICES = Object.freeze([
     priceLabel: 'от 15 000 ₽',
     priceNote:
       'Точная стоимость зависит от длины, густоты, исходного цвета, истории окрашиваний и необходимого объёма работы.',
-    image: '/site/img/img1aft.webp',
+    image: '/site/img/airTach/airtouch-01.webp',
     imageWidth: 1170,
     imageHeight: 1308,
     imageSrcset:
-      '/site/img/img1aft-480.webp 480w, /site/img/img1aft-768.webp 768w, /site/img/img1aft.webp 1170w',
+      '/site/img/airTach/airtouch-01-480.webp 480w, /site/img/airTach/airtouch-01-768.webp 768w, /site/img/airTach/airtouch-01.webp 1170w',
     imageAlt:
       'Результат окрашивания волос в технике AirTouch в студии Культура волос',
     benefits: [
@@ -143,11 +143,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, исходного цвета и состояния волос. Точную цену мастер определит после диагностики и согласования техники окрашивания.',
 
-    image: '/site/img/img2aft.webp',
+    image: '/site/img/shatush/shatush-01.webp',
     imageWidth: 1170,
     imageHeight: 1390,
     imageSrcset:
-      '/site/img/img2aft-480.webp 480w, /site/img/img2aft-768.webp 768w, /site/img/img2aft.webp 1170w',
+      '/site/img/shatush/shatush-01-480.webp 480w, /site/img/shatush/shatush-01-768.webp 768w, /site/img/shatush/shatush-01.webp 1170w',
     imageAlt: 'Окрашивание шатуш с мягкими светлыми бликами на длинных волосах',
 
     lead: 'Шатуш создаёт мягкий рельеф цвета без резкой границы у корней. Светлые блики распределяются по длине свободно, благодаря чему окрашивание выглядит естественно и сохраняет глубину натурального оттенка.',
@@ -277,11 +277,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, исходного цвета, истории окрашиваний и выбранного рисунка прядей. Точную цену мастер определит после диагностики волос.',
 
-    image: '/site/img/img1bef.webp',
+    image: '/site/img/airTach/airtouch-19.webp',
     imageWidth: 1170,
     imageHeight: 1269,
     imageSrcset:
-      '/site/img/img1bef-480.webp 480w, /site/img/img1bef-768.webp 768w, /site/img/img1bef.webp 1170w',
+      '/site/img/airTach/airtouch-19-480.webp 480w, /site/img/airTach/airtouch-19-768.webp 768w, /site/img/airTach/airtouch-19.webp 1170w',
     imageAlt:
       'Подготовка волос к мелированию: разделение прядей зажимами перед окрашиванием',
 
@@ -408,11 +408,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, исходной базы, истории окрашиваний и состояния волос. Точную цену и возможный результат мастер определит после диагностики.',
 
-    image: '/site/img/img2bef.webp',
+    image: '/site/img/total/total-blond-01.webp',
     imageWidth: 1170,
-    imageHeight: 1282,
+    imageHeight: 1308,
     imageSrcset:
-      '/site/img/img2bef-480.webp 480w, /site/img/img2bef-768.webp 768w, /site/img/img2bef.webp 1170w',
+      '/site/img/total/total-blond-01-480.webp 480w, /site/img/total/total-blond-01-768.webp 768w, /site/img/total/total-blond-01.webp 1170w',
     imageAlt:
       'Крупный план осветлённых волос с тёплым оттенком перед коррекцией цвета',
 
@@ -543,11 +543,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, исходного оттенка и количества используемого состава. Точную цену мастер определит после диагностики волос.',
 
-    image: '/site/img/img_4750.webp',
+    image: '/site/img/tonirovanie/toning-17.webp',
     imageWidth: 1170,
     imageHeight: 2205,
     imageSrcset:
-      '/site/img/img_4750-480.webp 480w, /site/img/img_4750-768.webp 768w, /site/img/img_4750.webp 1170w',
+      '/site/img/tonirovanie/toning-17-480.webp 480w, /site/img/tonirovanie/toning-17-768.webp 768w, /site/img/tonirovanie/toning-17.webp 1170w',
     imageAlt:
       'Светлые прямые волосы каре с ровным холодным бежевым оттенком после тонирования',
 
@@ -675,11 +675,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, состояния волос и выбранного состава. Подходящий протокол и точную цену мастер определит после диагностики.',
 
-    image: '/site/img/img_4749.webp',
+    image: '/site/img/reconstrukcia/reconstruction-06.webp',
     imageWidth: 1170,
     imageHeight: 2046,
     imageSrcset:
-      '/site/img/img_4749-480.webp 480w, /site/img/img_4749-768.webp 768w, /site/img/img_4749.webp 1170w',
+      '/site/img/reconstrukcia/reconstruction-06-480.webp 480w, /site/img/reconstrukcia/reconstruction-06-768.webp 768w, /site/img/reconstrukcia/reconstruction-06.webp 1170w',
     imageAlt:
       'Длинные тёмные волосы после реконструкции и выпрямления — гладкий блестящий результат',
 
@@ -810,11 +810,11 @@ const SERVICES = Object.freeze([
     priceNote:
       'Итоговая стоимость зависит от длины, густоты, состояния волос и выбранного протокола. Подходящую процедуру и точную цену мастер определит после диагностики.',
 
-    image: '/site/img/img_4750.webp',
+    image: '/site/img/care/care-04.webp',
     imageWidth: 1170,
     imageHeight: 2205,
     imageSrcset:
-      '/site/img/img_4750-480.webp 480w, /site/img/img_4750-768.webp 768w, /site/img/img_4750.webp 1170w',
+      '/site/img/care/care-04-480.webp 480w, /site/img/care/care-04-768.webp 768w, /site/img/care/care-04.webp 1170w',
     imageAlt: 'Светлые прямые волосы каре с гладким и блестящим полотном',
 
     lead: 'Индивидуальный уход подбирается не по названию одной универсальной процедуры, а по текущему состоянию волос. Мастер оценивает сухость, пористость, эластичность и последствия окрашиваний, после чего составляет подходящий протокол.',
