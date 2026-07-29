@@ -29,6 +29,7 @@ const validateOrigin = require('./middleware/validate-origin');
 const app = express();
 
 const PORT = Number(process.env.PORT) || 3000;
+const HOST = String(process.env.HOST || '127.0.0.1').trim();
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const ROOT_DIR = __dirname;
@@ -2150,8 +2151,8 @@ process.on('SIGTERM', () => {
 
 //  START
 
-app.listen(PORT, async () => {
-  console.log(`Kultura Volos server started: http://localhost:${PORT}`);
+app.listen(PORT, HOST, async () => {
+  console.log(`Kultura Volos server started: http://${HOST}:${PORT}`);
 
   try {
     await smtpTransporter.verify();

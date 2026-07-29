@@ -5,23 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{SEO_TITLE}}</title>
     <meta name="description" content="{{SEO_DESCRIPTION}}" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Культура волос" />
+    <meta name="geo.region" content="RU-KK" />
+    <meta name="geo.placename" content="Абакан" />
+    <meta name="format-detection" content="telephone=yes" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="author" href="https://kulturavolos.ru/contacts" />
+    <link rel="alternate" hreflang="ru-RU" href="{{CANONICAL_URL}}" />
+    <link rel="alternate" hreflang="x-default" href="{{CANONICAL_URL}}" />
     <link rel="canonical" href="{{CANONICAL_URL}}" />
 
-    <meta property="og:type" content="product" />
+        <meta property="og:locale" content="ru_RU" />
+<meta property="og:type" content="product" />
     <meta property="og:site_name" content="Культура волос" />
     <meta property="og:title" content="{{SEO_TITLE}}" />
     <meta property="og:description" content="{{SEO_DESCRIPTION}}" />
     <meta property="og:url" content="{{CANONICAL_URL}}" />
     <meta property="og:image" content="{{OG_IMAGE_URL}}" />
+    <meta property="og:image:secure_url" content="{{OG_IMAGE_URL}}" />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:alt" content="{{OG_IMAGE_ALT}}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{SEO_TITLE}}" />
     <meta name="twitter:description" content="{{SEO_DESCRIPTION}}" />
     <meta name="twitter:image" content="{{OG_IMAGE_URL}}" />
+    <meta name="twitter:image:alt" content="{{OG_IMAGE_ALT}}" />
 
     <script type="application/ld+json">{{JSON_LD}}</script>
+    <link rel="preload" as="image" href="{{OG_IMAGE_URL}}" fetchpriority="high" />
+    <script type="application/ld+json" data-site-entities>
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://kulturavolos.ru/#website",
+            "url": "https://kulturavolos.ru/",
+            "name": "Культура волос",
+            "alternateName": "Kultura Volos",
+            "inLanguage": "ru-RU",
+            "publisher": {
+              "@id": "https://kulturavolos.ru/#organization"
+            }
+          },
+          {
+            "@type": [
+              "HairSalon",
+              "LocalBusiness"
+            ],
+            "@id": "https://kulturavolos.ru/#organization",
+            "name": "Культура волос",
+            "url": "https://kulturavolos.ru/",
+            "telephone": "+79235853333",
+            "description": "Студия окрашивания, реконструкции и профессионального ухода за волосами в Абакане. Работа по предварительной записи.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Абакан",
+              "addressRegion": "Республика Хакасия",
+              "addressCountry": "RU"
+            },
+            "areaServed": {
+              "@type": "City",
+              "name": "Абакан"
+            },
+            "employee": {
+              "@id": "https://kulturavolos.ru/#nadezhda-shumilova"
+            },
+            "sameAs": [
+              "https://www.instagram.com/nadezdashumilova/",
+              "https://vk.ru/id444945734",
+              "https://t.me/knv_898"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+79235853333",
+              "contactType": "appointments",
+              "availableLanguage": [
+                "ru"
+              ],
+              "url": "https://kulturavolos.ru/contacts#contact-form"
+            },
+            "knowsAbout": [
+              "AirTouch",
+              "Шатуш",
+              "Мелирование волос",
+              "Тотал блонд",
+              "Тонирование волос",
+              "Реконструкция волос",
+              "Уход и восстановление волос"
+            ],
+            "potentialAction": {
+              "@type": "ReserveAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://kulturavolos.ru/contacts#contact-form",
+                "inLanguage": "ru-RU"
+              },
+              "result": {
+                "@type": "Reservation",
+                "name": "Запись на консультацию"
+              }
+            }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://kulturavolos.ru/#nadezhda-shumilova",
+            "name": "Надежда Шумилова",
+            "jobTitle": "Мастер по окрашиванию и уходу за волосами",
+            "worksFor": {
+              "@id": "https://kulturavolos.ru/#organization"
+            },
+            "url": "https://kulturavolos.ru/contacts",
+            "sameAs": [
+              "https://www.instagram.com/nadezdashumilova/",
+              "https://vk.ru/id444945734",
+              "https://t.me/knv_898"
+            ],
+            "knowsAbout": [
+              "Окрашивание волос",
+              "AirTouch",
+              "Шатуш",
+              "Тотал блонд",
+              "Тонирование волос",
+              "Реконструкция волос",
+              "Восстановление волос"
+            ]
+          }
+        ]
+      }
+    </script>
     <link rel="stylesheet" href="/site/css/catalog.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -106,7 +220,7 @@
       </nav>
     </header>
 
-    <main class="product-detail" data-product-page>
+    <main class="product-detail" data-product-page aria-label="Карточка товара">
       <div class="product-detail__loading" data-product-loading>
         Загружаем товар…
       </div>
