@@ -12,7 +12,10 @@
       data-page-description
     />
 
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <meta name="author" content="Культура волос" />
     <meta name="geo.region" content="RU-KK" />
     <meta name="geo.placename" content="Абакан" />
@@ -23,8 +26,8 @@
     <link rel="alternate" hreflang="x-default" href="{{CANONICAL_URL}}" />
     <link rel="canonical" href="{{CANONICAL_URL}}" />
 
-        <meta property="og:locale" content="ru_RU" />
-<meta property="og:type" content="article" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Культура волос" />
     <meta property="og:title" content="{{SEO_TITLE}}" />
     <meta property="og:description" content="{{SEO_DESCRIPTION}}" />
@@ -42,8 +45,15 @@
     <meta name="twitter:image" content="{{OG_IMAGE_URL}}" />
     <meta name="twitter:image:alt" content="{{OG_IMAGE_ALT}}" />
 
-    <script type="application/ld+json">{{JSON_LD}}</script>
-    <link rel="preload" as="image" href="{{OG_IMAGE_URL}}" fetchpriority="high" />
+    <script type="application/ld+json">
+      {{JSON_LD}}
+    </script>
+    <link
+      rel="preload"
+      as="image"
+      href="{{OG_IMAGE_URL}}"
+      fetchpriority="high"
+    />
     <script type="application/ld+json" data-site-entities>
       {
         "@context": "https://schema.org",
@@ -60,10 +70,7 @@
             }
           },
           {
-            "@type": [
-              "HairSalon",
-              "LocalBusiness"
-            ],
+            "@type": ["HairSalon", "LocalBusiness"],
             "@id": "https://kulturavolos.ru/#organization",
             "name": "Культура волос",
             "url": "https://kulturavolos.ru/",
@@ -91,9 +98,7 @@
               "@type": "ContactPoint",
               "telephone": "+79235853333",
               "contactType": "appointments",
-              "availableLanguage": [
-                "ru"
-              ],
+              "availableLanguage": ["ru"],
               "url": "https://kulturavolos.ru/contacts#contact-form"
             },
             "knowsAbout": [
@@ -156,6 +161,8 @@
       rel="stylesheet"
     />
 
+    <link rel="icon" href="/site/img/logo/logo-mark1254.png">
+
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -214,7 +221,16 @@
 
         <div class="header__mobile-contact">
           <span>Записаться в салон</span>
-          <a href="tel:+79235853333" class="header__mobile-call" aria-label="Позвонить в Культуру волос"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"></path></svg><span>Позвонить</span></a>
+          <a
+            href="tel:+79235853333"
+            class="header__mobile-call"
+            aria-label="Позвонить в Культуру волос"
+            ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"
+              ></path></svg
+            ><span>Позвонить</span></a
+          >
         </div>
       </nav>
     </header>
@@ -262,7 +278,7 @@
 
             <div class="work-detail-hero__actions">
               <a class="work-detail-hero__button" href="/contacts">
-                Записаться на консультацию
+                Хочу такой результат
               </a>
 
               <a class="work-detail-hero__link" href="#work-gallery">
@@ -282,7 +298,11 @@
               fetchpriority="high"
               width="1672"
               height="941"
-              srcset="/site/img/main-hero-bg-768.webp 768w, /site/img/main-hero-bg-1280.webp 1280w, /site/img/main-hero-bg.webp 1672w"
+              srcset="
+                /site/img/main-hero-bg-768.webp   768w,
+                /site/img/main-hero-bg-1280.webp 1280w,
+                /site/img/main-hero-bg.webp      1672w
+              "
               sizes="(max-width: 900px) 100vw, 50vw"
             />
 
@@ -308,7 +328,11 @@
                 loading="lazy"
                 width="1092"
                 height="1441"
-                srcset="/site/img/contacts/services-intro3-480.webp 480w, /site/img/contacts/services-intro3-768.webp 768w, /site/img/contacts/services-intro3.webp 1092w"
+                srcset="
+                  /site/img/contacts/services-intro3-480.webp  480w,
+                  /site/img/contacts/services-intro3-768.webp  768w,
+                  /site/img/contacts/services-intro3.webp     1092w
+                "
                 sizes="(max-width: 900px) 100vw, 50vw"
               />
             </div>
@@ -414,11 +438,7 @@
       <div class="footer__glass">
         <div class="footer__top">
           <div class="footer__brand">
-            <a
-              class="footer__logo"
-              href="/"
-              aria-label="Культура волос"
-            >
+            <a class="footer__logo" href="/" aria-label="Культура волос">
               Культура волос
             </a>
 
@@ -449,7 +469,9 @@
             <a href="/services/shatush">Шатуш</a>
             <a href="/services/total-blond">Тотал блонд</a>
             <a href="/services/rekonstrukciya-volos">Реконструкция волос</a>
-            <a href="/services/uhod-i-vosstanovlenie-volos">Уход и восстановление</a>
+            <a href="/services/uhod-i-vosstanovlenie-volos"
+              >Уход и восстановление</a
+            >
           </nav>
 
           <div class="footer__contacts">
@@ -462,10 +484,46 @@
             <div class="footer__contact">Абакан</div>
 
             <div class="footer__socials">
-              <a href="https://www.instagram.com/nadezdashumilova/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--instagram" aria-hidden="true"></span></a>
-              <a href="https://vk.ru/id444945734" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--vk" aria-hidden="true"></span></a>
-              <a href="https://t.me/knv_898" target="_blank" rel="noopener noreferrer" aria-label="Telegram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--telegram" aria-hidden="true"></span></a>
-              <a href="https://wa.me/79235853333" target="_blank" rel="noopener noreferrer" aria-label="Написать в WhatsApp в Культуру волос"><span class="footer__social-icon footer__social-icon--whatsapp" aria-hidden="true"></span></a>
+              <a
+                href="https://www.instagram.com/nadezdashumilova/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--instagram"
+                  aria-hidden="true"
+                ></span
+              ></a>
+              <a
+                href="https://vk.ru/id444945734"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ВКонтакте Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--vk"
+                  aria-hidden="true"
+                ></span
+              ></a>
+              <a
+                href="https://t.me/knv_898"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--telegram"
+                  aria-hidden="true"
+                ></span
+              ></a>
+              <a
+                href="https://wa.me/79235853333"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Написать в WhatsApp в Культуру волос"
+                ><span
+                  class="footer__social-icon footer__social-icon--whatsapp"
+                  aria-hidden="true"
+                ></span
+              ></a>
             </div>
           </div>
         </div>
@@ -490,7 +548,9 @@
       src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"
       defer
     ></script>
-    <script type="application/json" data-initial-work>{{INITIAL_WORK_JSON}}</script>
+    <script type="application/json" data-initial-work>
+      {{INITIAL_WORK_JSON}}
+    </script>
     <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/work-detail.js" defer></script>
     <script src="/site/script/public-contact-actions.js" defer></script>

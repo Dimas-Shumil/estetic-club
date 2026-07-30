@@ -1444,7 +1444,7 @@ body.is-lock {
     font-size: 12px;
   }
   .personal-service__title {
-    font-size: clamp(46px, 16vw, 72px);
+    font-size: clamp(32px, 12vw, 56px);
     line-height: 0.95;
   }
   .personal-service__link {

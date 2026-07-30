@@ -13,7 +13,10 @@
       data-article-description
     />
 
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <meta name="author" content="Культура волос" />
     <meta name="geo.region" content="RU-KK" />
     <meta name="geo.placename" content="Абакан" />
@@ -23,22 +26,14 @@
     <link rel="alternate" hreflang="ru-RU" href="{{CANONICAL_URL}}" />
     <link rel="alternate" hreflang="x-default" href="{{CANONICAL_URL}}" />
 
-    <link
-      rel="canonical"
-      href="{{CANONICAL_URL}}"
-      data-article-canonical
-    />
+    <link rel="canonical" href="{{CANONICAL_URL}}" data-article-canonical />
 
-        <meta property="og:locale" content="ru_RU" />
-<meta property="og:type" content="article" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:type" content="article" />
 
     <meta property="og:site_name" content="Культура волос" />
 
-    <meta
-      property="og:title"
-      content="{{SEO_TITLE}}"
-      data-article-og-title
-    />
+    <meta property="og:title" content="{{SEO_TITLE}}" data-article-og-title />
 
     <meta
       property="og:description"
@@ -95,7 +90,12 @@
     <script type="application/ld+json" data-article-json-ld>
       {{JSON_LD}}
     </script>
-    <link rel="preload" as="image" href="{{OG_IMAGE_URL}}" fetchpriority="high" />
+    <link
+      rel="preload"
+      as="image"
+      href="{{OG_IMAGE_URL}}"
+      fetchpriority="high"
+    />
     <script type="application/ld+json" data-site-entities>
       {
         "@context": "https://schema.org",
@@ -112,10 +112,7 @@
             }
           },
           {
-            "@type": [
-              "HairSalon",
-              "LocalBusiness"
-            ],
+            "@type": ["HairSalon", "LocalBusiness"],
             "@id": "https://kulturavolos.ru/#organization",
             "name": "Культура волос",
             "url": "https://kulturavolos.ru/",
@@ -143,9 +140,7 @@
               "@type": "ContactPoint",
               "telephone": "+79235853333",
               "contactType": "appointments",
-              "availableLanguage": [
-                "ru"
-              ],
+              "availableLanguage": ["ru"],
               "url": "https://kulturavolos.ru/contacts#contact-form"
             },
             "knowsAbout": [
@@ -203,6 +198,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="icon" href="/site/img/logo/logo-mark1254.png">
 
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600&display=swap"
@@ -268,7 +265,16 @@
         <div class="header__mobile-contact">
           <span> Записаться в салон </span>
 
-          <a href="tel:+79235853333" class="header__mobile-call" aria-label="Позвонить в Культуру волос"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"></path></svg><span>Позвонить</span></a>
+          <a
+            href="tel:+79235853333"
+            class="header__mobile-call"
+            aria-label="Позвонить в Культуру волос"
+            ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"
+              ></path></svg
+            ><span>Позвонить</span></a
+          >
         </div>
       </nav>
     </header>
@@ -277,9 +283,7 @@
       <section class="article-hero">
         <div class="article-hero__inner">
           <div class="article-hero__content">
-            <a class="article-hero__back" href="/blog">
-              Вернуться в блог
-            </a>
+            <a class="article-hero__back" href="/blog"> Вернуться в блог </a>
 
             <div class="article-hero__meta">
               <span data-article-category> Журнал </span>
@@ -309,7 +313,11 @@
               fetchpriority="high"
               width="1672"
               height="941"
-              srcset="/site/img/blog/blog-hero-768.webp 768w, /site/img/blog/blog-hero-1280.webp 1280w, /site/img/blog/blog-hero.webp 1672w"
+              srcset="
+                /site/img/blog/blog-hero-768.webp   768w,
+                /site/img/blog/blog-hero-1280.webp 1280w,
+                /site/img/blog/blog-hero.webp      1672w
+              "
               sizes="(max-width: 860px) 100vw, 50vw"
             />
           </div>
@@ -378,9 +386,7 @@
             </aside>
 
             <div class="article-content__bottom">
-              <a class="article-content__back" href="/blog">
-                Все статьи
-              </a>
+              <a class="article-content__back" href="/blog"> Все статьи </a>
 
               <a class="article-content__contact" href="/contacts#contact-form">
                 Задать вопрос мастеру
@@ -395,11 +401,7 @@
       <div class="footer__glass">
         <div class="footer__top">
           <div class="footer__brand">
-            <a
-              class="footer__logo"
-              href="/"
-              aria-label="Культура волос"
-            >
+            <a class="footer__logo" href="/" aria-label="Культура волос">
               Культура волос
             </a>
 
@@ -438,7 +440,9 @@
 
             <a href="/services/rekonstrukciya-volos"> Реконструкция волос </a>
 
-            <a href="/services/uhod-i-vosstanovlenie-volos"> Уход и восстановление </a>
+            <a href="/services/uhod-i-vosstanovlenie-volos">
+              Уход и восстановление
+            </a>
           </nav>
 
           <div class="footer__contacts">
@@ -451,12 +455,48 @@
             <div class="footer__contact">Абакан</div>
 
             <div class="footer__socials">
-              <a href="https://www.instagram.com/nadezdashumilova/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--instagram" aria-hidden="true"></span></a>
+              <a
+                href="https://www.instagram.com/nadezdashumilova/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--instagram"
+                  aria-hidden="true"
+                ></span
+              ></a>
 
-              <a href="https://vk.ru/id444945734" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--vk" aria-hidden="true"></span></a>
+              <a
+                href="https://vk.ru/id444945734"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ВКонтакте Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--vk"
+                  aria-hidden="true"
+                ></span
+              ></a>
 
-              <a href="https://t.me/knv_898" target="_blank" rel="noopener noreferrer" aria-label="Telegram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--telegram" aria-hidden="true"></span></a>
-              <a href="https://wa.me/79235853333" target="_blank" rel="noopener noreferrer" aria-label="Написать в WhatsApp в Культуру волос"><span class="footer__social-icon footer__social-icon--whatsapp" aria-hidden="true"></span></a>
+              <a
+                href="https://t.me/knv_898"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram Надежды Шумиловой"
+                ><span
+                  class="footer__social-icon footer__social-icon--telegram"
+                  aria-hidden="true"
+                ></span
+              ></a>
+              <a
+                href="https://wa.me/79235853333"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Написать в WhatsApp в Культуру волос"
+                ><span
+                  class="footer__social-icon footer__social-icon--whatsapp"
+                  aria-hidden="true"
+                ></span
+              ></a>
             </div>
           </div>
         </div>
@@ -464,9 +504,7 @@
         <div class="footer__bottom">
           <p>© Культура волос, 2026</p>
 
-          <a href="/privacy-policy">
-            Политика конфиденциальности
-          </a>
+          <a href="/privacy-policy"> Политика конфиденциальности </a>
 
           <a href="https://shumdev.ru" target="_blank" rel="noopener">
             Разработка ShumDev
@@ -475,7 +513,9 @@
       </div>
     </footer>
 
-    <script type="application/json" data-initial-article>{{INITIAL_ARTICLE_JSON}}</script>
+    <script type="application/json" data-initial-article>
+      {{INITIAL_ARTICLE_JSON}}
+    </script>
     <script src="/site/script/image-performance.js" defer></script>
     <script src="/site/script/article.js" defer></script>
     <script src="/site/script/public-contact-actions.js" defer></script>
