@@ -664,6 +664,10 @@ function initContactBookingForm() {
     '[data-booking-honeypot]',
   );
 
+  const tokenInput = form.querySelector(
+    '[data-booking-token]',
+  );
+
   const submitButton = form.querySelector(
     '[data-booking-submit]',
   );
@@ -692,12 +696,15 @@ function initContactBookingForm() {
     '[data-booking-new-request]',
   );
 
+  const formStartedAt = performance.now();
+
   if (
     !nameInput ||
     !phoneInput ||
     !serviceInput ||
     !messageInput ||
     !consentInput ||
+    !tokenInput ||
     !submitButton ||
     !status
   ) {
@@ -744,6 +751,8 @@ function initContactBookingForm() {
       message: messageInput.value.trim(),
       source: 'contacts-page',
       company: honeypotInput?.value || '',
+      formToken: tokenInput.value,
+      formElapsedMs: Math.round(performance.now() - formStartedAt),
       consentAccepted: consentInput.checked,
     };
 
@@ -828,14 +837,7 @@ function initContactBookingForm() {
   });
 
   newRequestButton?.addEventListener('click', () => {
-    if (success) {
-      success.hidden = true;
-    }
-
-    form.hidden = false;
-    hideBookingStatus(status);
-
-    nameInput.focus();
+    window.location.reload();
   });
 
   function validateBookingForm(payload) {
@@ -858,7 +860,7 @@ function initContactBookingForm() {
 
     if (
       phoneDigits.length !== 11 ||
-      phoneDigits[0] !== '7'
+      !phoneDigits.startsWith('79')
     ) {
       setFieldError(
         'phone',

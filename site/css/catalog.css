@@ -799,14 +799,7 @@ button {
     display: none;
   }
   .header__logo {
-    grid-column: 2;
-    justify-self: center;
-    min-width: 0;
-    order: 2;
-  }
-  .header__logo img {
-    width: 108px;
-    max-height: 36px;
+    display: none;
   }
   .header__burger {
     grid-column: 1;
