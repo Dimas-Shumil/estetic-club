@@ -74,6 +74,9 @@ model Lead {
 
   source String @default("website")
 
+  ipAddress String @default("")
+  userAgent String @default("")
+
   consentAccepted   Boolean   @default(false)
   consentAcceptedAt DateTime?
 
@@ -85,6 +88,7 @@ model Lead {
 
   @@index([status])
   @@index([assignedToId])
+  @@index([ipAddress])
   @@index([createdAt])
 }
 

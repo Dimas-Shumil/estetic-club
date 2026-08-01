@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const express = require('express');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
@@ -82,14 +83,24 @@ async function getHtmlTemplate(relativePath) {
   return template;
 }
 
-async function sendSeoPage(req, res, next, relativePath, canonicalPath) {
+async function sendSeoPage(
+  req,
+  res,
+  next,
+  relativePath,
+  canonicalPath,
+  replacements = {},
+) {
   try {
     const siteOrigin = getSiteOrigin(req);
     const canonicalUrl = new URL(canonicalPath, `${siteOrigin}/`).href;
     const template = await getHtmlTemplate(relativePath);
-    const html = template
-      .replaceAll('{{SITE_ORIGIN}}', siteOrigin)
-      .replaceAll('{{CANONICAL_URL}}', canonicalUrl);
+    const html = replaceTemplateTokens(
+      template
+        .replaceAll('{{SITE_ORIGIN}}', siteOrigin)
+        .replaceAll('{{CANONICAL_URL}}', canonicalUrl),
+      replacements,
+    );
 
     return res.type('html').send(html);
   } catch (error) {
@@ -878,6 +889,142 @@ const ALLOWED_SERVICES = [
   'Другая услуга',
 ];
 
+const LEAD_FORM_MIN_AGE_MS = 3_000;
+const LEAD_FORM_MAX_AGE_MS = 2 * 60 * 60 * 1000;
+const LEAD_FORM_CHALLENGE_LIMIT = 5_000;
+const LEAD_DUPLICATE_WINDOW_MS = 10 * 60 * 1000;
+const LEAD_SPAM_SCORE_LIMIT = 3;
+
+const leadFormChallenges = new Map();
+
+const LEAD_SPAM_RULES = [
+  {
+    score: 2,
+    pattern:
+      /(?:https?:\/\/|www\.|[\w.+-]+@[\w.-]+\.[a-z]{2,}|[a-z0-9-]+\.(?:ru|com|net|org|рф)\b)/iu,
+  },
+  {
+    score: 1,
+    pattern: /(?:виджет|чат[-\s]?бот|интеграц|автоматизац)\w*/iu,
+  },
+  {
+    score: 1,
+    pattern:
+      /(?:продвижени|маркетинг|таргет|реклам|seo|лидогенерац)\w*/iu,
+  },
+  {
+    score: 1,
+    pattern:
+      /(?:разработк|создани)\w*\s+(?:сайт|лендинг|приложени)\w*/iu,
+  },
+  {
+    score: 1,
+    pattern:
+      /(?:предлага\w*|предложени\w*|сотрудничеств\w*|увеличим\w*|привлеч[её]м\w*)/iu,
+  },
+  {
+    score: 1,
+    pattern: /(?:ваших?|для ваших?)\s+клиент\w*/iu,
+  },
+  {
+    score: 1,
+    pattern: /онлайн[-\s]?запис\w*/iu,
+  },
+];
+
+function cleanupLeadFormChallenges(now = Date.now()) {
+  for (const [token, createdAt] of leadFormChallenges) {
+    if (now - createdAt <= LEAD_FORM_MAX_AGE_MS) {
+      continue;
+    }
+
+    leadFormChallenges.delete(token);
+  }
+
+  while (leadFormChallenges.size >= LEAD_FORM_CHALLENGE_LIMIT) {
+    const oldestToken = leadFormChallenges.keys().next().value;
+
+    if (!oldestToken) {
+      break;
+    }
+
+    leadFormChallenges.delete(oldestToken);
+  }
+}
+
+function createLeadFormChallenge() {
+  cleanupLeadFormChallenges();
+
+  const token = crypto.randomBytes(32).toString('base64url');
+
+  leadFormChallenges.set(token, Date.now());
+
+  return token;
+}
+
+function isValidLeadFormChallenge(token, formElapsedMs) {
+  const normalizedToken = String(token || '').trim();
+  const createdAt = leadFormChallenges.get(normalizedToken);
+
+  if (!createdAt) {
+    return false;
+  }
+
+  const serverElapsedMs = Date.now() - createdAt;
+
+  return (
+    serverElapsedMs >= LEAD_FORM_MIN_AGE_MS &&
+    serverElapsedMs <= LEAD_FORM_MAX_AGE_MS &&
+    Number.isInteger(formElapsedMs) &&
+    formElapsedMs >= LEAD_FORM_MIN_AGE_MS &&
+    formElapsedMs <= LEAD_FORM_MAX_AGE_MS
+  );
+}
+
+function consumeLeadFormChallenge(token) {
+  leadFormChallenges.delete(String(token || '').trim());
+}
+
+function isValidLeadName(value) {
+  const name = String(value || '').trim();
+  const letters = name.match(/\p{L}/gu) || [];
+
+  return (
+    letters.length >= 2 &&
+    /^[\p{L}\s.'’`-]+$/u.test(name)
+  );
+}
+
+function calculateLeadSpamScore(data) {
+  const content = `${data.name} ${data.message}`.toLowerCase();
+
+  return LEAD_SPAM_RULES.reduce(
+    (score, rule) => score + (rule.pattern.test(content) ? rule.score : 0),
+    0,
+  );
+}
+
+function getRequestIp(req) {
+  return String(req.ip || req.socket?.remoteAddress || '')
+    .replace(/^::ffff:/, '')
+    .trim()
+    .slice(0, 64);
+}
+
+function getRequestUserAgent(req) {
+  return String(req.get('user-agent') || '')
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, 500);
+}
+
+function acceptLeadSilently(res) {
+  return res.status(201).json({
+    ok: true,
+    message: 'Заявка отправлена',
+  });
+}
+
 const leadSchema = z
   .object({
     name: z
@@ -902,6 +1049,10 @@ const leadSchema = z
       .default('contacts-page'),
 
     company: z.string().trim().max(200).optional().default(''),
+
+    formToken: z.string().trim().min(32).max(200),
+
+    formElapsedMs: z.number().int().min(0).max(LEAD_FORM_MAX_AGE_MS),
 
     consentAccepted: z.literal(true),
   })
@@ -930,7 +1081,7 @@ function normalizeRussianPhone(value) {
     digits = `7${digits}`;
   }
 
-  if (!/^7\d{10}$/.test(digits)) {
+  if (!/^79\d{9}$/.test(digits)) {
     return '';
   }
 
@@ -1863,7 +2014,16 @@ app.get('/privacy-policy', (req, res, next) => {
   return sendSeoPage(req, res, next, 'privacy-policy.html', '/privacy-policy');
 });
 app.get('/contacts', (req, res, next) => {
-  return sendSeoPage(req, res, next, 'contacts.html', '/contacts');
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    'contacts.html',
+    '/contacts',
+    {
+      LEAD_FORM_TOKEN: createLeadFormChallenge(),
+    },
+  );
 });
 
 app.get('/catalog', (req, res, next) => {
@@ -2018,17 +2178,14 @@ app.get('/api/health', (req, res) => {
 // заявка создание
 app.post('/api/leads', leadLimiter, validateOrigin, async (req, res, next) => {
   try {
+    const ipAddress = getRequestIp(req);
+    const userAgent = getRequestUserAgent(req);
     const company = String(req.body?.company || '').trim();
 
     if (company) {
-      /*
-       * Боту возвращаем успешный ответ,
-       * но ничего не сохраняем.
-       */
-      return res.status(201).json({
-        ok: true,
-        message: 'Заявка отправлена',
-      });
+      console.warn(`Антиспам: заполнена ловушка, IP: ${ipAddress}`);
+
+      return acceptLeadSilently(res);
     }
 
     const parsed = leadSchema.safeParse(req.body);
@@ -2043,8 +2200,64 @@ app.post('/api/leads', leadLimiter, validateOrigin, async (req, res, next) => {
 
     if (!phone) {
       return res.status(400).json({
-        message: 'Введите корректный номер телефона.',
+        message: 'Введите российский мобильный номер в формате +7 (9XX) XXX-XX-XX.',
       });
+    }
+
+    if (!isValidLeadName(parsed.data.name)) {
+      return res.status(400).json({
+        message: 'Введите корректное имя без цифр и ссылок.',
+      });
+    }
+
+    const hasValidChallenge = isValidLeadFormChallenge(
+      parsed.data.formToken,
+      parsed.data.formElapsedMs,
+    );
+
+    if (!hasValidChallenge) {
+      console.warn(
+        `Антиспам: форма отправлена без корректного токена или слишком быстро, ` +
+          `IP: ${ipAddress}`,
+      );
+
+      return acceptLeadSilently(res);
+    }
+
+    const spamScore = calculateLeadSpamScore(parsed.data);
+
+    if (spamScore >= LEAD_SPAM_SCORE_LIMIT) {
+      consumeLeadFormChallenge(parsed.data.formToken);
+
+      console.warn(
+        `Антиспам: рекламный текст, score=${spamScore}, IP: ${ipAddress}`,
+      );
+
+      return acceptLeadSilently(res);
+    }
+
+    const duplicateLead = await prisma.lead.findFirst({
+      where: {
+        phone,
+        service: parsed.data.service,
+        message: parsed.data.message,
+        createdAt: {
+          gte: new Date(Date.now() - LEAD_DUPLICATE_WINDOW_MS),
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (duplicateLead) {
+      consumeLeadFormChallenge(parsed.data.formToken);
+
+      console.warn(
+        `Антиспам: повтор заявки №${duplicateLead.id}, IP: ${ipAddress}`,
+      );
+
+      return acceptLeadSilently(res);
     }
 
     const lead = await prisma.lead.create({
@@ -2055,10 +2268,15 @@ app.post('/api/leads', leadLimiter, validateOrigin, async (req, res, next) => {
         message: parsed.data.message,
         source: parsed.data.source,
 
+        ipAddress,
+        userAgent,
+
         consentAccepted: true,
         consentAcceptedAt: new Date(),
       },
     });
+
+    consumeLeadFormChallenge(parsed.data.formToken);
 
     try {
       await sendLeadEmail(lead);
