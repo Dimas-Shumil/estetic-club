@@ -1,3 +1,42 @@
+
+image(951).png
+image(952).png
+
+index(120).html
+Файл
+
+contacts(13).html
+Файл
+Посмотри файлы и давай сделаем, чтобы кнопки записаться и в футере кнопка записаться онлайн переходили в контакты, уже в форму, форму оставить заявку.
+
+Обработка заняла 1m 1s
+Готово, бро. В обоих файлах:
+
+«Записаться» в шапке → /contacts#contact-form
+
+«Записаться онлайн» в футере → /contacts#contact-form
+
+Телефонные кнопки оставил без изменений.
+
+Файлы:
+
+index(120).html
+
+contacts(13).html
+
+
+
+contacts(13).html
+
+
+
+
+
+contacts(13).html
+
+
+
+
 <!doctype html>
 <html lang="ru">
   <head>
@@ -231,7 +270,7 @@
           <a href="/contacts" aria-current="page">Контакты</a>
         </nav>
 
-        <a class="header__button" href="tel:+79235853333"> Записаться</a>
+        <a class="header__button" href="/contacts#contact-form"> Записаться</a>
 
         <button
           class="header__burger"
@@ -796,7 +835,7 @@
               Индивидуальный подход к каждой клиентке.
             </p>
 
-            <a class="footer__button" href="tel:+79235853333">
+            <a class="footer__button" href="/contacts#contact-form">
               <!-- <span class="footer__button-icon">▣</span> -->
               Записаться онлайн
             </a>
