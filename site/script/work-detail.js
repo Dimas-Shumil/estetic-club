@@ -391,7 +391,7 @@ function renderWorkDetailError(message) {
   }
 
   document.title =
-    'Работа не найдена | Культура волос';
+    'Работа не найдена | Этика волос';
 
   page.innerHTML = `
     <section class="work-detail-error">
@@ -506,7 +506,7 @@ function renderWorkDetail(work) {
   const pageDescription = document.querySelector('[data-page-description]');
 
   if (pageTitle) {
-    pageTitle.textContent = `${work.title} | Культура волос`;
+    pageTitle.textContent = `${work.title} | Этика волос`;
   }
 
   if (pageDescription) {
@@ -534,7 +534,7 @@ function renderWorkGallery(images) {
               fallbackWidth: 1200,
               fallbackHeight: 1500,
             })}
-            alt="Фотография преображения Культура волос ${index + 1}"
+            alt="Фотография преображения Этика волос ${index + 1}"
           />
         </figure>
       `;
@@ -887,7 +887,7 @@ function setImage(selector, src, alt = '') {
     fallbackHeight: 1500,
   });
 
-  image.alt = alt ? `Культура волос — ${alt}` : 'Культура волос';
+  image.alt = alt ? `Этика волос — ${alt}` : 'Этика волос';
 }
 
 function escapeHtml(value) {

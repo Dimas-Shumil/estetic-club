@@ -202,7 +202,7 @@
       >
         <div class="catalog-search-overlay__head">
           <div>
-            <span>КУЛЬТУРА ВОЛОС — КАТАЛОГ</span>
+            <span>ЭТИКА ВОЛОС — КАТАЛОГ</span>
             <h2 id="catalog-search-title">Поиск по каталогу</h2>
           </div>
 
@@ -463,7 +463,7 @@
 
         <div class="catalog-product-card__body">
           <span class="catalog-product-card__meta">
-            ${escapeHtml(product.brand?.name || product.category?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}
+            ${escapeHtml(product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ')}
           </span>
 
           <h3>
@@ -1200,7 +1200,7 @@
 
         <div class="catalog-preview__body">
           <span class="catalog-preview__brand">
-            ${escapeHtml(product.brand?.name || product.category?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}
+            ${escapeHtml(product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ')}
           </span>
 
           <h3>${escapeHtml(product.title)}</h3>
@@ -1413,7 +1413,7 @@
       }
 
       if (productMeta) {
-        productMeta.textContent = product.brand?.name || product.category?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ';
+        productMeta.textContent = product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ';
       }
 
       if (image) {
@@ -1475,7 +1475,7 @@
         imageElement.hidden = true;
       }
 
-      brandElement.textContent = product.brand?.name || product.category?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ';
+      brandElement.textContent = product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ';
       titleElement.textContent = product.title;
       variantElement.textContent = variant.name;
       priceElement.textContent = formatMoney(variant.price);
@@ -1560,9 +1560,9 @@
 
     function renderProduct() {
       const rawTitle = String(product.seoTitle || product.title || '').trim();
-      document.title = /культура волос/i.test(rawTitle)
+      document.title = /этика волос/i.test(rawTitle)
         ? rawTitle
-        : `${rawTitle} | Культура волос`;
+        : `${rawTitle} | Этика волос`;
 
       const descriptionMeta = document.querySelector('meta[name="description"]');
       const seoDescription = String(
@@ -1593,7 +1593,7 @@
             })} alt="" /></button>`).join('')}</div>
           </section>
           <section class="product-detail__info">
-            <span class="product-detail__brand">${escapeHtml(product.brand?.name || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}</span>
+            <span class="product-detail__brand">${escapeHtml(product.brand?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ')}</span>
             <h1>${escapeHtml(product.title)}</h1>
             <div class="product-detail__price" data-product-price>${renderVariantPrice(selected)}</div>
             <p class="product-detail__lead">${escapeHtml(product.shortDescription || '')}</p>
@@ -1696,7 +1696,7 @@
               fallbackWidth: 600,
               fallbackHeight: 600,
             })} alt="${escapeHtml(item.product.image.alt || item.product.title)}" />` : ''}</a>
-            <div class="cart-product__info"><span>${escapeHtml(item.product.badge || 'КУЛЬТУРА ВОЛОС — КАТАЛОГ')}</span><h2><a href="/catalog/product/${encodeURIComponent(item.product.slug)}">${escapeHtml(item.product.title)}</a></h2><p>${escapeHtml(item.variantName)}</p><strong>${formatMoney(item.price)}</strong></div>
+            <div class="cart-product__info"><span>${escapeHtml(item.product.badge || 'ЭТИКА ВОЛОС — КАТАЛОГ')}</span><h2><a href="/catalog/product/${encodeURIComponent(item.product.slug)}">${escapeHtml(item.product.title)}</a></h2><p>${escapeHtml(item.variantName)}</p><strong>${formatMoney(item.price)}</strong></div>
             <div class="cart-product__quantity"><button type="button" data-cart-action="decrease" data-variant-id="${item.variantId}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="increase" data-variant-id="${item.variantId}">+</button></div>
             <strong class="cart-product__total">${formatMoney(item.lineTotal)}</strong>
             <button class="cart-product__remove" type="button" aria-label="Удалить товар" data-cart-action="remove" data-variant-id="${item.variantId}">×</button>

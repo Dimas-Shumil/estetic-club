@@ -21,6 +21,10 @@
     transition: transform 0.28s ease, box-shadow 0.28s ease;
   }
 
+  .header__mobile .header__mobile-call + .header__mobile-call {
+    margin-top: 12px;
+  }
+
   .header__mobile .header__mobile-call:hover {
     color: #2f231a;
     transform: translateY(-2px);
@@ -459,5 +463,38 @@ body.is-home-light-header .header__burger:hover {
     font-size: clamp(48px, 14vw, 76px);
     line-height: 0.94;
     letter-spacing: -0.04em;
+  }
+}
+@media (max-width: 767px) {
+  .mobile-call-fab {
+    filter: opacity(88%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .mobile-booking-fab {
+    right: max(16px, env(safe-area-inset-right));
+    translate: 0 -72px;
+  }
+}
+@media (max-width: 767px) {
+  .mobile-call-fab {
+    opacity: 0.86;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .mobile-call-fab:hover,
+  .mobile-call-fab:active {
+    opacity: 1;
+  }
+
+  .mobile-call-fab--hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
   }
 }

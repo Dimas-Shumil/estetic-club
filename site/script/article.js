@@ -290,15 +290,15 @@ async function initArticlePage() {
 
     page.classList.add('is-unavailable');
 
-    document.title = `${title} | Культура волос`;
+    document.title = `${title} | Этика волос`;
 
     setMetaContent('[data-article-description]', description);
 
-    setMetaContent('[data-article-og-title]', `${title} | Культура волос`);
+    setMetaContent('[data-article-og-title]', `${title} | Этика волос`);
 
     setMetaContent('[data-article-og-description]', description);
 
-    setMetaContent('[data-article-twitter-title]', `${title} | Культура волос`);
+    setMetaContent('[data-article-twitter-title]', `${title} | Этика волос`);
 
     setMetaContent('[data-article-twitter-description]', description);
 
@@ -340,10 +340,10 @@ function renderArticle(post, slug) {
   const expertRole = document.querySelector('[data-article-expert-role]');
 
   const articleTitle =
-    String(post.title || '').trim() || 'Статья студии «Культура волос»';
+    String(post.title || '').trim() || 'Статья студии «Этика волос»';
 
   const articleExcerpt =
-    String(post.excerpt || '').trim() || 'Экспертный материал студии «Культура волос».';
+    String(post.excerpt || '').trim() || 'Экспертный материал студии «Этика волос».';
 
   const articleCategory = String(post.category || '').trim() || 'Журнал';
 
@@ -420,7 +420,7 @@ function renderArticle(post, slug) {
     author.hidden = !hasAuthor;
 
     if (authorName) {
-      authorName.textContent = articleAuthorName || 'Команда студии «Культура волос»';
+      authorName.textContent = articleAuthorName || 'Команда студии «Этика волос»';
     }
 
     if (authorRole) {
@@ -480,9 +480,9 @@ function updateArticleSeo({
   const seoDescription =
     String(post.seoDescription || '').trim() || articleExcerpt;
 
-  const documentTitle = /культура волос/i.test(seoTitle)
+  const documentTitle = /этика волос/i.test(seoTitle)
     ? seoTitle
-    : `${seoTitle} | Культура волос`;
+    : `${seoTitle} | Этика волос`;
 
   const canonicalUrl = new URL(
     `/blog/${encodeURIComponent(slug)}`,
@@ -567,13 +567,13 @@ function updateArticleJsonLd({
       : {
           '@type': 'Organization',
 
-          name: 'Культура волос',
+          name: 'Этика волос',
         },
 
     publisher: {
       '@type': 'Organization',
 
-      name: 'Культура волос',
+      name: 'Этика волос',
 
       url: window.location.origin,
     },

@@ -130,7 +130,7 @@ function stripHtml(value) {
 function createSeoDescription(...values) {
   const description =
     values.map((value) => stripHtml(value)).find(Boolean) ||
-    'Культура волос — окрашивание, уход и профессиональные товары для волос в Абакане.';
+    'Этика волос — окрашивание, уход и профессиональные товары для волос в Абакане.';
 
   if (description.length <= 180) {
     return description;
@@ -145,7 +145,7 @@ function createSeoDescription(...values) {
 function createSeoTitle(value, fallback) {
   const title = stripHtml(value) || fallback;
 
-  return /культура волос/i.test(title) ? title : `${title} | Культура волос`;
+  return /этика волос/i.test(title) ? title : `${title} | Этика волос`;
 }
 
 function createAbsoluteUrl(siteOrigin, value, fallbackPath = '/') {
@@ -295,11 +295,11 @@ async function createArticlePageHtml(req, post) {
         }
       : {
           '@type': 'Organization',
-          name: 'Культура волос',
+          name: 'Этика волос',
         },
     publisher: {
       '@type': 'Organization',
-      name: 'Культура волос',
+      name: 'Этика волос',
       url: siteOrigin,
     },
   };
@@ -330,7 +330,7 @@ async function createWorkPageHtml(req, work) {
   const seoDescription = createSeoDescription(
     data.excerpt,
     data.story,
-    `${data.title}. Результат работы студии «Культура волос».`,
+    `${data.title}. Результат работы студии «Этика волос».`,
   );
   const imageUrl = createAbsoluteUrl(
     siteOrigin,
@@ -620,7 +620,7 @@ function createServiceSchema(req, service, canonicalUrl, imageUrl) {
       provider: {
         '@type': 'HairSalon',
         '@id': `${siteOrigin}/#organization`,
-        name: 'Культура волос',
+        name: 'Этика волос',
         url: siteOrigin,
       },
       areaServed: {
@@ -1125,7 +1125,7 @@ function buildLeadEmailText(lead) {
     `Источник: ${lead.source}`,
     `Получена: ${formatLeadDate(lead.createdAt)}`,
     '',
-    'Заявка сохранена в административной панели Культура волос.',
+    'Заявка сохранена в административной панели Этика волос.',
   ].join('\n');
 }
 
@@ -1147,7 +1147,7 @@ function buildLeadEmailHtml(lead) {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <title>Новая заявка Культура волос</title>
+        <title>Новая заявка Этика волос</title>
       </head>
 
       <body
@@ -1227,7 +1227,7 @@ function buildLeadEmailHtml(lead) {
                         letter-spacing: -0.035em;
                       "
                     >
-                      Культура волос
+                      Этика волос
                     </div>
 
                     <div
@@ -1529,7 +1529,7 @@ function buildLeadEmailHtml(lead) {
                       line-height: 1.6;
                     "
                   >
-                    Заявка сохранена в административной панели Культура волос.
+                    Заявка сохранена в административной панели Этика волос.
                   </td>
                 </tr>
               </table>
@@ -1554,7 +1554,7 @@ async function sendLeadEmail(lead) {
   const safeSubjectService = cleanMailHeader(lead.service);
 
   return smtpTransporter.sendMail({
-    from: `"Культура волос" <${smtpUser}>`,
+    from: `"Этика волос" <${smtpUser}>`,
     to: toEmail,
 
     subject:

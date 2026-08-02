@@ -3,20 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Оформление заказа — Культура волос</title>
+
+    <title>Оформление заказа — Этика волос</title>
+
     <meta name="robots" content="noindex, follow" />
+
     <link rel="stylesheet" href="/site/css/catalog.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="icon" href="/site/img/logo/logo-mark1254.png">
+    <link rel="icon" href="/site/img/logo/logo-mark1254.png" />
 
     <link rel="stylesheet" href="/site/css/public-contact-actions.css" />
   </head>
+
   <body class="catalog-body">
     <header class="header" data-header>
       <div class="header__inner glass">
@@ -26,7 +32,7 @@
           aria-label="На главную"
         >
           <span class="header__logo-mark" aria-hidden="true"></span>
-          <span class="header__logo-text">Культура волос</span>
+          <span class="header__logo-text">Этика волос</span>
         </a>
 
         <nav class="header__nav" aria-label="Левая навигация">
@@ -38,10 +44,7 @@
           <a href="/contacts">Контакты</a>
         </nav>
 
-        <nav
-          class="header__nav"
-          aria-label="Правая навигация"
-        ></nav>
+        <nav class="header__nav" aria-label="Правая навигация"></nav>
 
         <button
           class="header__burger"
@@ -99,20 +102,43 @@
 
         <div class="header__mobile-contact">
           <span>Записаться в салон</span>
-          <a href="tel:+79235853333" class="header__mobile-call" aria-label="Позвонить в Культуру волос"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"></path></svg><span>Позвонить</span></a>
+
+          <a
+            href="tel:+79235853333"
+            class="header__mobile-call"
+            aria-label="Позвонить в Этику волос"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92z"
+              ></path>
+            </svg>
+
+            <span>Позвонить</span>
+          </a>
         </div>
       </nav>
     </header>
+
     <main class="checkout-page" data-checkout-page>
       <div class="checkout-page__head">
         <a href="/cart">← Вернуться в корзину</a>
-        <span>КУЛЬТУРА ВОЛОС — КАТАЛОГ</span>
+
+        <span>ЭТИКА ВОЛОС — КАТАЛОГ</span>
+
         <h1>Оформление заказа</h1>
       </div>
+
       <div class="catalog-status" data-checkout-loading>
         Проверяем состав заказа…
       </div>
+
       <p class="checkout-message" data-checkout-message hidden></p>
+
       <div class="checkout-layout" data-checkout-content hidden>
         <form class="checkout-form" data-checkout-form novalidate>
           <input
@@ -122,22 +148,29 @@
             tabindex="-1"
             autocomplete="off"
           />
+
           <section>
             <span>01</span>
+
             <h2>Контактные данные</h2>
-            <label
-              ><span>Ваше имя</span
-              ><input
+
+            <label>
+              <span>Ваше имя</span>
+
+              <input
                 type="text"
                 name="customerName"
                 minlength="2"
                 maxlength="80"
                 autocomplete="name"
                 required
-            /></label>
-            <label
-              ><span>Телефон</span
-              ><input
+              />
+            </label>
+
+            <label>
+              <span>Телефон</span>
+
+              <input
                 type="tel"
                 name="phone"
                 minlength="10"
@@ -145,45 +178,64 @@
                 autocomplete="tel"
                 placeholder="+7 923 000-00-00"
                 required
-            /></label>
+              />
+            </label>
           </section>
+
           <section>
             <span>02</span>
+
             <h2>Способ получения</h2>
+
             <div class="checkout-methods">
-              <label
-                ><input
+              <label>
+                <input
                   type="radio"
                   name="fulfillmentMethod"
                   value="PICKUP"
                   checked
-                /><span
-                  ><strong>Самовывоз</strong
-                  ><small>Адрес и время подтвердит менеджер</small></span
-                ></label
-              >
-              <label
-                ><input
+                />
+
+                <span>
+                  <strong>Самовывоз</strong>
+                  <small>Адрес и время подтвердит менеджер</small>
+                </span>
+              </label>
+
+              <label>
+                <input
                   type="radio"
                   name="fulfillmentMethod"
                   value="DELIVERY"
-                /><span
-                  ><strong>Доставка</strong
-                  ><small>Условия уточняются после заказа</small></span
-                ></label
-              >
+                />
+
+                <span>
+                  <strong>Доставка</strong>
+                  <small>Условия уточняются после заказа</small>
+                </span>
+              </label>
             </div>
-            <label data-delivery-address hidden
-              ><span>Адрес доставки</span
-              ><input type="text" name="deliveryAddress" maxlength="300"
-            /></label>
+
+            <label data-delivery-address hidden>
+              <span>Адрес доставки</span>
+
+              <input
+                type="text"
+                name="deliveryAddress"
+                maxlength="300"
+              />
+            </label>
           </section>
+
           <section>
             <span>03</span>
+
             <h2>Комментарий</h2>
-            <label
-              ><span>Пожелания к заказу</span
-              ><textarea
+
+            <label>
+              <span>Пожелания к заказу</span>
+
+              <textarea
                 name="comment"
                 rows="5"
                 maxlength="1200"
@@ -191,29 +243,38 @@
               ></textarea>
             </label>
           </section>
-          <label class="checkout-consent"
-            ><input
+
+          <label class="checkout-consent">
+            <input
               type="checkbox"
               name="consentAccepted"
               value="true"
               required
-            /><span
-              >Я согласен на обработку персональных данных для оформления и
+            />
+
+            <span>
+              Я согласен на обработку персональных данных для оформления и
               подтверждения заказа и
+
               <a href="/privacy-policy">
                 принимаю политику конфиденциальности
               </a>.
-            </span
-            ></label
-          >
+            </span>
+          </label>
+
           <button type="submit">Подтвердить заказ</button>
         </form>
+
         <aside class="checkout-summary">
           <span>Состав заказа</span>
+
           <div data-checkout-items></div>
+
           <div class="checkout-summary__total">
-            <span>Итого</span><strong data-checkout-total>0 ₽</strong>
+            <span>Итого</span>
+            <strong data-checkout-total>0 ₽</strong>
           </div>
+
           <p>
             Цены и доступность вариантов проверяются ещё раз в момент
             оформления.
@@ -221,6 +282,7 @@
         </aside>
       </div>
     </main>
+
     <footer class="footer">
       <div class="footer__glass">
         <div class="footer__top">
@@ -228,9 +290,9 @@
             <a
               class="footer__logo"
               href="/"
-              aria-label="Культура волос"
+              aria-label="Этика волос"
             >
-              Культура волос
+              Этика волос
             </a>
 
             <p class="footer__text">
@@ -238,7 +300,10 @@
               Индивидуальный подход к каждой клиентке.
             </p>
 
-            <a class="footer__button" href="tel:+79235853333">
+            <a
+              class="footer__button"
+              href="/contacts#contact-form"
+            >
               Записаться онлайн
             </a>
           </div>
@@ -259,43 +324,101 @@
 
             <a href="/catalog?category=hair">Волосы</a>
             <a href="/catalog?category=tools">Инструменты</a>
-            <a href="/catalog?category=lashes-brows">Ресницы и брови</a>
-            <a href="/catalog?category=consumables">Расходные материалы</a>
+            <a href="/catalog?category=lashes-brows">
+              Ресницы и брови
+            </a>
+            <a href="/catalog?category=consumables">
+              Расходные материалы
+            </a>
           </nav>
 
           <div class="footer__contacts">
             <span class="footer__title">Контакты</span>
 
-            <a class="footer__contact" href="tel:+79235853333">
+            <a
+              class="footer__contact"
+              href="tel:+79235853333"
+            >
               +7 (923) 585-33-33
             </a>
 
             <div class="footer__contact">Абакан</div>
 
             <div class="footer__socials">
-              <a href="https://www.instagram.com/nadezdashumilova/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--instagram" aria-hidden="true"></span></a>
-              <a href="https://vk.ru/id444945734" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--vk" aria-hidden="true"></span></a>
-              <a href="https://t.me/knv_898" target="_blank" rel="noopener noreferrer" aria-label="Telegram Надежды Шумиловой"><span class="footer__social-icon footer__social-icon--telegram" aria-hidden="true"></span></a>
-              <a href="https://wa.me/79235853333" target="_blank" rel="noopener noreferrer" aria-label="Написать в WhatsApp в Культуру волос"><span class="footer__social-icon footer__social-icon--whatsapp" aria-hidden="true"></span></a>
+              <a
+                href="https://www.instagram.com/nadezdashumilova/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Надежды Шумиловой"
+              >
+                <span
+                  class="footer__social-icon footer__social-icon--instagram"
+                  aria-hidden="true"
+                ></span>
+              </a>
+
+              <a
+                href="https://vk.ru/id444945734"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ВКонтакте Надежды Шумиловой"
+              >
+                <span
+                  class="footer__social-icon footer__social-icon--vk"
+                  aria-hidden="true"
+                ></span>
+              </a>
+
+              <a
+                href="https://t.me/knv_898"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram Надежды Шумиловой"
+              >
+                <span
+                  class="footer__social-icon footer__social-icon--telegram"
+                  aria-hidden="true"
+                ></span>
+              </a>
+
+              <a
+                href="https://wa.me/79235853333"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Написать в WhatsApp в Этику волос"
+              >
+                <span
+                  class="footer__social-icon footer__social-icon--whatsapp"
+                  aria-hidden="true"
+                ></span>
+              </a>
             </div>
           </div>
         </div>
 
         <div class="footer__bottom">
-          <p>© Культура волос, 2026</p>
+          <p>© Этика волос, 2026</p>
 
           <a href="/privacy-policy">
             Политика конфиденциальности
           </a>
 
-          <a href="https://shumdev.ru" target="_blank" rel="noopener">
+          <a
+            href="https://shumdev.ru"
+            target="_blank"
+            rel="noopener"
+          >
             Разработка ShumDev
           </a>
         </div>
       </div>
     </footer>
+
     <script src="/site/script/image-performance.js"></script>
     <script src="/site/script/catalog.js"></script>
-    <script src="/site/script/public-contact-actions.js" defer></script>
+    <script
+      src="/site/script/public-contact-actions.js"
+      defer
+    ></script>
   </body>
 </html>

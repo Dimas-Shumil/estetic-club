@@ -1,7 +1,7 @@
 {
   "name": "kultura-volos",
   "version": "1.0.0",
-  "description": "Сайт студии «Культура волос»",
+  "description": "Сайт студии «Этика волос»",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
