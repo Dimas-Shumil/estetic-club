@@ -5007,9 +5007,40 @@ label.admin-settings-modal__switch {
   gap: 7px;
 }
 
-.admin-order-card__controls > button {
+.admin-order-card__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.admin-order-card__actions > button {
+  min-height: 42px;
+}
+
+.admin-order-card__actions > [data-order-save] {
+  border-color: var(--catalog-accent-dark);
   background: var(--catalog-accent-dark);
   color: #fff;
+}
+
+.admin-order-card__actions > [data-order-save]:hover {
+  background: #3e2d24;
+}
+
+.admin-order-card__delete {
+  border-color: rgba(163, 61, 61, 0.28);
+  background: rgba(163, 61, 61, 0.04);
+  color: var(--catalog-danger);
+}
+
+.admin-order-card__delete:hover {
+  border-color: rgba(163, 61, 61, 0.5);
+  background: rgba(163, 61, 61, 0.09);
+}
+
+.admin-order-card__actions > button:disabled {
+  cursor: wait;
+  opacity: 0.55;
 }
 
 .admin-order-card__controls > span {
@@ -5123,5 +5154,8 @@ label.admin-settings-modal__switch {
   }
   .admin-order-card__controls {
     grid-column: auto;
+  }
+  .admin-order-card__actions {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

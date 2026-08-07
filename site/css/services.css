@@ -1823,7 +1823,9 @@ body.is-lock {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  counter-reset: aftercare;
 }
+
 .service-detail-aftercare__list li {
   position: relative;
   min-height: 150px;
@@ -1833,13 +1835,20 @@ body.is-lock {
   font-size: clamp(17px, 1.5vw, 23px);
   font-weight: 300;
   line-height: 1.45;
+  counter-increment: aftercare;
 }
+
 .service-detail-aftercare__list li::before {
-  content: "↗";
+  content: counter(aftercare, decimal-leading-zero);
   position: absolute;
-  top: 34px;
-  left: 30px;
-  font-size: 18px;
+  top: 46px;
+  left: 28px;
+  text-align: justify;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgba(48, 37, 30, 0.5);
 }
 
 .service-detail-faq {

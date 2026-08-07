@@ -1230,5 +1230,95 @@ router.patch('/api/orders/:id', validateOrigin, requireAuth, requireRole('OWNER'
     return next(error);
   }
 });
+// удаление заказа
+
+router.delete(
+  '/api/orders/:id',
+  validateOrigin,
+  requireAuth,
+  requireRole('OWNER'),
+  requireCsrf,
+  async (req, res, next) => {
+    try {
+      const parsedId = orderIdSchema.safeParse(req.params.id);
+
+      if (!parsedId.success) {
+        return res.status(400).json({
+          message: 'Некорректный ID заказа',
+        });
+      }
+
+      const orderId = parsedId.data;
+
+      const order = await prisma.order.findUnique({
+        where: {
+          id: orderId,
+        },
+
+        select: {
+          id: true,
+          publicNumber: true,
+          status: true,
+          total: true,
+          source: true,
+          createdAt: true,
+
+          _count: {
+            select: {
+              items: true,
+            },
+          },
+        },
+      });
+
+      if (!order) {
+        return res.status(404).json({
+          message: 'Заказ не найден',
+        });
+      }
+
+      const metadata = getRequestMetadata(req);
+
+      await prisma.$transaction([
+        prisma.adminAuditLog.create({
+          data: {
+            userId: req.auth.user.id,
+
+            action: 'ORDER_DELETED',
+
+            entityType: 'Order',
+
+            entityId: String(order.id),
+
+            details: JSON.stringify({
+              publicNumber: order.publicNumber,
+              status: order.status,
+              total: order.total,
+              source: order.source,
+              itemsCount: order._count.items,
+              createdAt: order.createdAt.toISOString(),
+            }),
+
+            ipAddress: metadata.ipAddress,
+
+            userAgent: metadata.userAgent,
+          },
+        }),
+
+        prisma.order.delete({
+          where: {
+            id: orderId,
+          },
+        }),
+      ]);
+
+      return res.status(204).send();
+    } catch (error) {
+      return next(error);
+    }
+  },
+);
+
+module.exports = router;
 
 module.exports = router;

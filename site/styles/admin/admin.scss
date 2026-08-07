@@ -4961,7 +4961,11 @@ a.admin-content-stat {
   padding: 34px;
   border: 1px solid var(--catalog-line);
   border-radius: 30px;
-  background: linear-gradient(135deg, rgba(255, 250, 245, 0.98), rgba(239, 227, 217, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 250, 245, 0.98),
+    rgba(239, 227, 217, 0.9)
+  );
   box-shadow: 0 20px 60px rgba(60, 42, 31, 0.07);
 }
 
@@ -5027,7 +5031,10 @@ a.admin-content-stat {
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .admin-catalog__primary,
@@ -5145,7 +5152,9 @@ a.admin-content-stat {
   color: var(--catalog-ink);
   font: inherit;
   font-size: 13px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .admin-product-field textarea,
@@ -5572,7 +5581,10 @@ a.admin-content-stat {
 
 .admin-product-variant {
   display: grid;
-  grid-template-columns: 42px minmax(130px, 1fr) minmax(120px, 0.7fr) minmax(110px, 0.6fr) minmax(110px, 0.6fr) auto auto;
+  grid-template-columns: 42px minmax(130px, 1fr) minmax(120px, 0.7fr) minmax(
+      110px,
+      0.6fr
+    ) minmax(110px, 0.6fr) auto auto;
   gap: 10px;
   align-items: end;
 }
@@ -5894,7 +5906,10 @@ label.admin-settings-modal__switch {
 
 .admin-order-card__body {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(230px, 0.7fr) minmax(270px, 0.75fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(230px, 0.7fr) minmax(
+      270px,
+      0.75fr
+    );
   gap: 22px;
   padding: 24px;
 }
@@ -5973,9 +5988,40 @@ label.admin-settings-modal__switch {
   gap: 7px;
 }
 
-.admin-order-card__controls > button {
+.admin-order-card__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+}
+
+.admin-order-card__actions > button {
+  min-height: 42px;
+}
+
+.admin-order-card__actions > [data-order-save] {
+  border-color: var(--catalog-accent-dark);
   background: var(--catalog-accent-dark);
   color: #fff;
+}
+
+.admin-order-card__actions > [data-order-save]:hover {
+  background: #3e2d24;
+}
+
+.admin-order-card__delete {
+  border-color: rgba(163, 61, 61, 0.28);
+  background: rgba(163, 61, 61, 0.04);
+  color: var(--catalog-danger);
+}
+
+.admin-order-card__delete:hover {
+  border-color: rgba(163, 61, 61, 0.5);
+  background: rgba(163, 61, 61, 0.09);
+}
+
+.admin-order-card__actions > button:disabled {
+  cursor: wait;
+  opacity: 0.55;
 }
 
 .admin-order-card__controls > span {
@@ -6114,5 +6160,9 @@ label.admin-settings-modal__switch {
 
   .admin-order-card__controls {
     grid-column: auto;
+  }
+
+  .admin-order-card__actions {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -1893,24 +1893,37 @@ body.is-lock {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 
-  li {
-    position: relative;
-    min-height: 150px;
-    padding: 34px 34px 34px 70px;
-    border: 1px solid rgba(48, 37, 30, 0.14);
-    border-radius: 22px;
-    font-size: clamp(17px, 1.5vw, 23px);
-    font-weight: 300;
-    line-height: 1.45;
+  counter-reset: aftercare;
+}
 
-    &::before {
-      content: '↗';
-      position: absolute;
-      top: 34px;
-      left: 30px;
-      font-size: 18px;
-    }
-  }
+.service-detail-aftercare__list li {
+  position: relative;
+  min-height: 150px;
+  padding: 34px 34px 34px 70px;
+  border: 1px solid rgba(48, 37, 30, 0.14);
+  border-radius: 22px;
+
+  font-size: clamp(17px, 1.5vw, 23px);
+  font-weight: 300;
+  line-height: 1.45;
+
+  counter-increment: aftercare;
+}
+
+.service-detail-aftercare__list li::before {
+  content: counter(aftercare, decimal-leading-zero);
+
+  position: absolute;
+  top: 46px;
+  left: 28px;
+
+  text-align: justify;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+
+  color: rgba(48, 37, 30, 0.5);
 }
 
 .service-detail-faq {
