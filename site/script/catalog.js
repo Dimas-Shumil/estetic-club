@@ -503,7 +503,6 @@
 
   function initCatalogPage() {
     const page = document.querySelector('[data-catalog-page]');
-    const directionList = document.querySelector('[data-catalog-directions]');
     const productsGrid = document.querySelector('[data-catalog-products]');
     const filters = document.querySelector('[data-catalog-filters]');
     const mobileFilters = document.querySelector('[data-catalog-mobile-filters]');
@@ -531,7 +530,6 @@
 
     if (
       !page ||
-      !directionList ||
       !productsGrid ||
       !filters ||
       !mobileFilters ||
@@ -585,28 +583,6 @@
       state.products = [];
       syncUrl();
       renderQuickControls();
-      await loadProducts();
-    });
-
-    directionList.addEventListener('click', async (event) => {
-      const button = event.target.closest('[data-direction]');
-
-      if (!button || state.isLoading) {
-        return;
-      }
-
-      state.category = button.dataset.direction || '';
-      state.brand = '';
-      state.selectedFilters.clear();
-      state.minPrice = '';
-      state.maxPrice = '';
-      state.page = 1;
-      state.products = [];
-      state.activeProductId = null;
-
-      updateDirectionState();
-      syncUrl();
-      await loadMeta();
       await loadProducts();
     });
 
@@ -794,7 +770,6 @@
     initialize();
 
     async function initialize() {
-      updateDirectionState();
       await loadMeta();
       await loadProducts();
     }
@@ -833,8 +808,7 @@
         }
 
         state.meta = data;
-
-        renderDirections();
+        
         renderFilters();
         renderCatalogHeading();
         renderQuickControls();
@@ -915,60 +889,6 @@
         loading.hidden = true;
         productsGrid.setAttribute('aria-busy', 'false');
       }
-    }
-
-    function renderDirections() {
-      const roots = Array.isArray(state.meta.categories) ? state.meta.categories : [];
-
-      directionList.innerHTML = `
-        <button
-          type="button"
-          class="catalog-direction-card catalog-direction-card--all ${state.category ? '' : 'is-active'}"
-          data-direction=""
-        >
-          <span class="catalog-direction-card__content">
-            <strong>Все товары</strong>
-            <span>Полный каталог</span>
-          </span>
-          <span class="catalog-direction-card__arrow" aria-hidden="true">→</span>
-        </button>
-      ` + roots
-        .map(
-          (category) => `
-            <button
-              type="button"
-              class="catalog-direction-card ${state.category === category.slug ? 'is-active' : ''}"
-              data-direction="${escapeHtml(category.slug)}"
-            >
-              <span class="catalog-direction-card__media">
-                ${
-                  category.imagePath
-                    ? `<img ${window.KulturaImage.attrs(category.imagePath, {
-                        loading: 'lazy',
-                        fallbackWidth: 640,
-                        fallbackHeight: 480,
-                      })} alt="" />`
-                    : ''
-                }
-              </span>
-              <span class="catalog-direction-card__content">
-                <strong>${escapeHtml(category.name)}</strong>
-                <span>${escapeHtml(category.description || 'Товары направления')}</span>
-              </span>
-              <span class="catalog-direction-card__arrow" aria-hidden="true">→</span>
-            </button>
-          `,
-        )
-        .join('');
-    }
-
-    function updateDirectionState() {
-      directionList.querySelectorAll('[data-direction]').forEach((button) => {
-        button.classList.toggle(
-          'is-active',
-          (button.dataset.direction || '') === state.category,
-        );
-      });
     }
 
     function renderFilters() {

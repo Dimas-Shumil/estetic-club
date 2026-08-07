@@ -3219,6 +3219,8 @@ button {
   .catalog-chip-row button b {
     font-size: 14px;
     font-weight: 400;
+    position: relative;
+    top: -5px;
   }
   .catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
