@@ -6356,6 +6356,10 @@
 
     function addVariant() {
       if (isBusy || variants.length >= 60) return;
+
+      // сохраняем введённые данные перед перерисовкой
+      readVariantsFromDom();
+
       variants.push({
         name: '',
         sku: '',
@@ -6364,6 +6368,7 @@
         isActive: true,
         sortOrder: (variants.length + 1) * 10,
       });
+
       renderVariants();
     }
 
@@ -6372,14 +6377,19 @@
         ...variantsContainer.querySelectorAll('[data-variant-row]'),
       ].map((row) => ({
         id: Number(row.dataset.variantId) || undefined,
-        name:
-          row.querySelector('[data-variant-name]').value.trim() || 'Стандарт',
+
+        name: row.querySelector('[data-variant-name]').value.trim(),
+
         sku: row.querySelector('[data-variant-sku]').value.trim(),
+
         price: rublesToKopecks(row.querySelector('[data-variant-price]').value),
+
         oldPrice: row.querySelector('[data-variant-old-price]').value
           ? rublesToKopecks(row.querySelector('[data-variant-old-price]').value)
           : null,
+
         isActive: row.querySelector('[data-variant-active]').checked,
+
         sortOrder:
           Number(row.querySelector('[data-variant-sort]').value) || 100,
       }));

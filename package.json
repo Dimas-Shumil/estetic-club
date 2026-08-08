@@ -10,8 +10,7 @@
     "admin:create-owner": "node prisma/create-owner.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio",
-    "images:migrate-paths": "node scripts/migrate-image-paths.js"
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

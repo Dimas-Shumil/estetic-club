@@ -341,7 +341,10 @@
 
   function addVariantToCart(variantId, quantity = 1) {
     const id = Number(variantId);
-    const normalizedQuantity = Math.max(1, Math.min(MAX_CART_QUANTITY, Number(quantity) || 1));
+    const normalizedQuantity = Math.max(
+      1,
+      Math.min(MAX_CART_QUANTITY, Number(quantity) || 1),
+    );
 
     if (!Number.isInteger(id) || id <= 0) {
       return;
@@ -351,7 +354,10 @@
     const existing = cart.find((item) => Number(item.variantId) === id);
 
     if (existing) {
-      existing.quantity = Math.min(MAX_CART_QUANTITY, Number(existing.quantity || 0) + normalizedQuantity);
+      existing.quantity = Math.min(
+        MAX_CART_QUANTITY,
+        Number(existing.quantity || 0) + normalizedQuantity,
+      );
     } else {
       cart.push({ variantId: id, quantity: normalizedQuantity });
     }
@@ -367,7 +373,10 @@
 
     if (!item) return;
 
-    const nextQuantity = Math.max(0, Math.min(MAX_CART_QUANTITY, Number(quantity) || 0));
+    const nextQuantity = Math.max(
+      0,
+      Math.min(MAX_CART_QUANTITY, Number(quantity) || 0),
+    );
 
     if (nextQuantity <= 0) {
       saveCart(cart.filter((entry) => Number(entry.variantId) !== id));
@@ -379,7 +388,9 @@
   }
 
   function removeCartItem(variantId) {
-    saveCart(getCart().filter((item) => Number(item.variantId) !== Number(variantId)));
+    saveCart(
+      getCart().filter((item) => Number(item.variantId) !== Number(variantId)),
+    );
   }
 
   async function validateCart() {
@@ -403,7 +414,12 @@
     }
 
     const validItems = Array.isArray(data.items) ? data.items : [];
-    saveCart(validItems.map((item) => ({ variantId: item.variantId, quantity: item.quantity })));
+    saveCart(
+      validItems.map((item) => ({
+        variantId: item.variantId,
+        quantity: item.quantity,
+      })),
+    );
 
     return data;
   }
@@ -416,7 +432,13 @@
   }
 
   function escapeHtml(value) {
-    const symbols = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    const symbols = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+    };
     return String(value ?? '').replace(/[&<>"']/g, (symbol) => symbols[symbol]);
   }
 
@@ -505,15 +527,23 @@
     const page = document.querySelector('[data-catalog-page]');
     const productsGrid = document.querySelector('[data-catalog-products]');
     const filters = document.querySelector('[data-catalog-filters]');
-    const mobileFilters = document.querySelector('[data-catalog-mobile-filters]');
+    const mobileFilters = document.querySelector(
+      '[data-catalog-mobile-filters]',
+    );
     const searchForm = document.querySelector('[data-catalog-search-form]');
     const searchInput = document.querySelector('[data-catalog-search-input]');
-    const mobileSearchForm = document.querySelector('[data-catalog-search-form-mobile]');
-    const mobileSearchInput = document.querySelector('[data-catalog-search-input-mobile]');
+    const mobileSearchForm = document.querySelector(
+      '[data-catalog-search-form-mobile]',
+    );
+    const mobileSearchInput = document.querySelector(
+      '[data-catalog-search-input-mobile]',
+    );
     const sortSelect = document.querySelector('[data-catalog-sort]');
     const count = document.querySelector('[data-catalog-result-count]');
     const title = document.querySelector('[data-catalog-title]');
-    const breadcrumbCurrent = document.querySelector('[data-catalog-breadcrumb-current]');
+    const breadcrumbCurrent = document.querySelector(
+      '[data-catalog-breadcrumb-current]',
+    );
     const loading = document.querySelector('[data-catalog-loading]');
     const empty = document.querySelector('[data-catalog-empty]');
     const error = document.querySelector('[data-catalog-error]');
@@ -523,8 +553,12 @@
     const variantSheet = document.querySelector('[data-variant-sheet]');
     const preview = document.querySelector('[data-catalog-preview]');
     const previewEmpty = document.querySelector('[data-catalog-preview-empty]');
-    const previewContent = document.querySelector('[data-catalog-preview-content]');
-    const activeFilters = document.querySelector('[data-catalog-active-filters]');
+    const previewContent = document.querySelector(
+      '[data-catalog-preview-content]',
+    );
+    const activeFilters = document.querySelector(
+      '[data-catalog-active-filters]',
+    );
     const mobileAdd = document.querySelector('[data-catalog-mobile-add]');
     const heroImages = document.querySelectorAll('[data-hero-product-image]');
 
@@ -605,13 +639,17 @@
         '[data-catalog-filter-open], [data-catalog-filter-open-mobile], [data-chip-filter-open], [data-chip-brand-open]',
       )
       .forEach((button) => {
-        button.addEventListener('click', (event) => openSheet(filterSheet, event.currentTarget));
+        button.addEventListener('click', (event) =>
+          openSheet(filterSheet, event.currentTarget),
+        );
       });
 
     document
       .querySelectorAll('[data-catalog-sort-open], [data-chip-sort-open]')
       .forEach((button) => {
-        button.addEventListener('click', (event) => openSheet(sortSheet, event.currentTarget));
+        button.addEventListener('click', (event) =>
+          openSheet(sortSheet, event.currentTarget),
+        );
       });
 
     document.querySelectorAll('[data-sheet-close]').forEach((button) => {
@@ -707,15 +745,21 @@
       if (variantButton) {
         preview
           .querySelectorAll('[data-preview-variant]')
-          .forEach((button) => button.classList.toggle('is-active', button === variantButton));
+          .forEach((button) =>
+            button.classList.toggle('is-active', button === variantButton),
+          );
 
         updatePreviewPrice(Number(variantButton.dataset.previewVariant));
         return;
       }
 
       if (addButton) {
-        const selected = preview.querySelector('[data-preview-variant].is-active');
-        const variantId = Number(selected?.dataset.previewVariant || addButton.dataset.previewAdd);
+        const selected = preview.querySelector(
+          '[data-preview-variant].is-active',
+        );
+        const variantId = Number(
+          selected?.dataset.previewVariant || addButton.dataset.previewAdd,
+        );
 
         if (Number.isInteger(variantId) && variantId > 0) {
           addVariantToCart(variantId);
@@ -735,29 +779,37 @@
         .forEach((item) => item.classList.toggle('is-active', item === option));
     });
 
-    variantSheet.querySelector('[data-variant-add]')?.addEventListener('click', () => {
-      const selected = variantSheet.querySelector('[data-variant-choice].is-active');
+    variantSheet
+      .querySelector('[data-variant-add]')
+      ?.addEventListener('click', () => {
+        const selected = variantSheet.querySelector(
+          '[data-variant-choice].is-active',
+        );
 
-      if (!selected) {
-        return;
-      }
+        if (!selected) {
+          return;
+        }
 
-      addVariantToCart(Number(selected.dataset.variantChoice));
-      closeSheet(variantSheet);
-    });
+        addVariantToCart(Number(selected.dataset.variantChoice));
+        closeSheet(variantSheet);
+      });
 
-    mobileAdd?.querySelector('[data-mobile-add-close]')?.addEventListener('click', () => {
-      mobileAdd.hidden = true;
-      state.mobileVariantId = null;
-    });
-
-    mobileAdd?.querySelector('[data-mobile-add-submit]')?.addEventListener('click', () => {
-      if (state.mobileVariantId) {
-        addVariantToCart(state.mobileVariantId);
+    mobileAdd
+      ?.querySelector('[data-mobile-add-close]')
+      ?.addEventListener('click', () => {
         mobileAdd.hidden = true;
         state.mobileVariantId = null;
-      }
-    });
+      });
+
+    mobileAdd
+      ?.querySelector('[data-mobile-add-submit]')
+      ?.addEventListener('click', () => {
+        if (state.mobileVariantId) {
+          addVariantToCart(state.mobileVariantId);
+          mobileAdd.hidden = true;
+          state.mobileVariantId = null;
+        }
+      });
 
     activeFilters?.addEventListener('click', async (event) => {
       const reset = event.target.closest('[data-active-filter-reset]');
@@ -777,7 +829,9 @@
     async function submitSearch(event) {
       event.preventDefault();
 
-      const sourceInput = event.currentTarget.querySelector('input[type="search"]');
+      const sourceInput = event.currentTarget.querySelector(
+        'input[type="search"]',
+      );
       state.search = sourceInput?.value.trim() || '';
       state.page = 1;
       state.products = [];
@@ -808,7 +862,7 @@
         }
 
         state.meta = data;
-        
+
         renderFilters();
         renderCatalogHeading();
         renderQuickControls();
@@ -834,10 +888,16 @@
       if (state.search) url.searchParams.set('search', state.search);
       if (state.brand) url.searchParams.set('brand', state.brand);
       if (state.minPrice) {
-        url.searchParams.set('minPrice', String(Math.round(Number(state.minPrice) * 100)));
+        url.searchParams.set(
+          'minPrice',
+          String(Math.round(Number(state.minPrice) * 100)),
+        );
       }
       if (state.maxPrice) {
-        url.searchParams.set('maxPrice', String(Math.round(Number(state.maxPrice) * 100)));
+        url.searchParams.set(
+          'maxPrice',
+          String(Math.round(Number(state.maxPrice) * 100)),
+        );
       }
 
       const filterValue = serializeFilters();
@@ -862,7 +922,11 @@
         state.products = append ? [...state.products, ...products] : products;
         state.pages = Number(data.pagination?.pages) || 1;
 
-        if (!state.products.some((product) => product.id === state.activeProductId)) {
+        if (
+          !state.products.some(
+            (product) => product.id === state.activeProductId,
+          )
+        ) {
           state.activeProductId = state.products[0]?.id || null;
         }
 
@@ -883,7 +947,8 @@
         }
 
         error.hidden = false;
-        error.textContent = requestError.message || 'Не удалось загрузить товары.';
+        error.textContent =
+          requestError.message || 'Не удалось загрузить товары.';
       } finally {
         state.isLoading = false;
         loading.hidden = true;
@@ -1042,7 +1107,9 @@
 
     function syncFilterControls(container) {
       container.querySelectorAll('[data-filter-group]').forEach((input) => {
-        const selected = state.selectedFilters.get(Number(input.dataset.filterGroup));
+        const selected = state.selectedFilters.get(
+          Number(input.dataset.filterGroup),
+        );
         input.checked = selected?.has(Number(input.value)) || false;
       });
     }
@@ -1088,7 +1155,9 @@
         return;
       }
 
-      const product = state.products.find((item) => item.id === state.activeProductId);
+      const product = state.products.find(
+        (item) => item.id === state.activeProductId,
+      );
 
       if (!product) {
         previewContent.hidden = true;
@@ -1176,7 +1245,9 @@
     }
 
     function updatePreviewPrice(variantId) {
-      const product = state.products.find((item) => item.id === state.activeProductId);
+      const product = state.products.find(
+        (item) => item.id === state.activeProductId,
+      );
       const variant = product?.variants?.find((item) => item.id === variantId);
       const price = preview?.querySelector('[data-preview-price]');
       const addButton = preview?.querySelector('[data-preview-add]');
@@ -1236,7 +1307,9 @@
     }
 
     function findSelectedCategory() {
-      const categories = Array.isArray(state.meta.categories) ? state.meta.categories : [];
+      const categories = Array.isArray(state.meta.categories)
+        ? state.meta.categories
+        : [];
 
       for (const category of categories) {
         if (category.slug === state.category) {
@@ -1261,7 +1334,9 @@
       }
 
       const labels = [];
-      const brand = (state.meta.brands || []).find((item) => item.slug === state.brand);
+      const brand = (state.meta.brands || []).find(
+        (item) => item.slug === state.brand,
+      );
 
       if (brand) {
         labels.push(brand.name);
@@ -1286,9 +1361,7 @@
       }
 
       activeFilters.innerHTML = labels.length
-        ? labels
-            .map((label) => `<span>${escapeHtml(label)}</span>`)
-            .join('') +
+        ? labels.map((label) => `<span>${escapeHtml(label)}</span>`).join('') +
           '<button type="button" data-active-filter-reset>Сбросить всё</button>'
         : '<span>Все товары</span>';
     }
@@ -1301,7 +1374,9 @@
         newest: 'Сначала новые',
       };
 
-      const brand = (state.meta.brands || []).find((item) => item.slug === state.brand);
+      const brand = (state.meta.brands || []).find(
+        (item) => item.slug === state.brand,
+      );
       const sortLabel = document.querySelector('[data-chip-sort-label]');
       const brandLabel = document.querySelector('[data-chip-brand-label]');
 
@@ -1323,17 +1398,26 @@
           element.textContent = product.title;
         });
 
-      const productName = variantSheet.querySelector('[data-variant-product-name]');
-      const productMeta = variantSheet.querySelector('[data-variant-product-meta]');
+      const productName = variantSheet.querySelector(
+        '[data-variant-product-name]',
+      );
+      const productMeta = variantSheet.querySelector(
+        '[data-variant-product-meta]',
+      );
       const image = product.mainImage || product.images?.[0];
-      const imageElement = variantSheet.querySelector('[data-variant-product-image]');
+      const imageElement = variantSheet.querySelector(
+        '[data-variant-product-image]',
+      );
 
       if (productName) {
         productName.textContent = product.title;
       }
 
       if (productMeta) {
-        productMeta.textContent = product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ';
+        productMeta.textContent =
+          product.brand?.name ||
+          product.category?.name ||
+          'ЭТИКА ВОЛОС — КАТАЛОГ';
       }
 
       if (image) {
@@ -1353,14 +1437,14 @@
       )
         .map(
           (variant, index) => `
-            <button
-              type="button"
-              class="${index === 0 ? 'is-active' : ''}"
-              data-variant-choice="${variant.id}"
-            >
-              <span>${escapeHtml(variant.name)}</span>
-              <strong>${formatMoney(variant.price)}</strong>
-            </button>
+          <button
+  type="button"
+  class="${index === 0 ? 'is-active' : ''}"
+  data-variant-choice="${variant.id}"
+>
+  <span>${escapeHtml(variant.name)}</span>
+  <strong>${formatMoney(variant.price)}</strong>
+</button>
           `,
         )
         .join('');
@@ -1378,7 +1462,9 @@
       const imageElement = mobileAdd.querySelector('[data-mobile-add-image]');
       const brandElement = mobileAdd.querySelector('[data-mobile-add-brand]');
       const titleElement = mobileAdd.querySelector('[data-mobile-add-title]');
-      const variantElement = mobileAdd.querySelector('[data-mobile-add-variant]');
+      const variantElement = mobileAdd.querySelector(
+        '[data-mobile-add-variant]',
+      );
       const priceElement = mobileAdd.querySelector('[data-mobile-add-price]');
 
       state.mobileVariantId = variant.id;
@@ -1395,7 +1481,10 @@
         imageElement.hidden = true;
       }
 
-      brandElement.textContent = product.brand?.name || product.category?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ';
+      brandElement.textContent =
+        product.brand?.name ||
+        product.category?.name ||
+        'ЭТИКА ВОЛОС — КАТАЛОГ';
       titleElement.textContent = product.title;
       variantElement.textContent = variant.name;
       priceElement.textContent = formatMoney(variant.price);
@@ -1432,7 +1521,9 @@
 
     if (!page || !loading || !error || !content) return;
 
-    const slug = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() || '');
+    const slug = decodeURIComponent(
+      window.location.pathname.split('/').filter(Boolean).pop() || '',
+    );
     let product = null;
     let selectedVariantId = null;
     let quantity = 1;
@@ -1446,7 +1537,9 @@
 
         if (initialScript) {
           try {
-            const initialPayload = JSON.parse(initialScript.textContent || '{}');
+            const initialPayload = JSON.parse(
+              initialScript.textContent || '{}',
+            );
             initialProduct = initialPayload?.product || null;
           } catch {
             initialProduct = null;
@@ -1463,9 +1556,12 @@
           return;
         }
 
-        const response = await fetch(`/api/catalog/products/${encodeURIComponent(slug)}`);
+        const response = await fetch(
+          `/api/catalog/products/${encodeURIComponent(slug)}`,
+        );
         const data = await response.json();
-        if (!response.ok || !data.product) throw new Error(data?.message || 'Товар не найден');
+        if (!response.ok || !data.product)
+          throw new Error(data?.message || 'Товар не найден');
         product = data.product;
         selectedVariantId = product.variants?.[0]?.id || null;
         renderProduct();
@@ -1474,7 +1570,8 @@
       } catch (requestError) {
         loading.hidden = true;
         error.hidden = false;
-        error.querySelector('p').textContent = requestError.message || 'Товар временно недоступен.';
+        error.querySelector('p').textContent =
+          requestError.message || 'Товар временно недоступен.';
       }
     }
 
@@ -1484,7 +1581,9 @@
         ? rawTitle
         : `${rawTitle} | Этика волос`;
 
-      const descriptionMeta = document.querySelector('meta[name="description"]');
+      const descriptionMeta = document.querySelector(
+        'meta[name="description"]',
+      );
       const seoDescription = String(
         product.seoDescription || product.shortDescription || '',
       ).trim();
@@ -1494,73 +1593,242 @@
       }
 
       const images = product.images || [];
-      const selected = product.variants.find((variant) => variant.id === selectedVariantId) || product.variants[0];
+      const selected =
+        product.variants.find((variant) => variant.id === selectedVariantId) ||
+        product.variants[0];
 
       content.innerHTML = `
         <div class="product-detail__breadcrumbs"><a href="/catalog">Каталог</a><span>/</span><a href="/catalog?category=${escapeHtml(product.category?.slug || '')}">${escapeHtml(product.category?.name || 'Категория')}</a><span>/</span><span>${escapeHtml(product.title)}</span></div>
         <div class="product-detail__grid">
           <section class="product-detail__gallery">
-            <div class="product-detail__main-image">${images[0] ? `<img ${window.KulturaImage.attrs(images[0].imagePath, {
-              loading: 'eager',
-              fetchpriority: 'high',
-              fallbackWidth: 1200,
-              fallbackHeight: 1200,
-            })} alt="${escapeHtml(images[0].alt || product.title)}" data-product-main-image />` : ''}${product.badge ? `<b>${escapeHtml(product.badge)}</b>` : ''}</div>
-            <div class="product-detail__thumbs">${images.map((image, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-product-thumb="${index}"><img ${window.KulturaImage.attrs(image.imagePath, {
-              loading: 'lazy',
-              fallbackWidth: 320,
-              fallbackHeight: 320,
-            })} alt="" /></button>`).join('')}</div>
-          </section>
-          <section class="product-detail__info">
-            <span class="product-detail__brand">${escapeHtml(product.brand?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ')}</span>
-            <h1>${escapeHtml(product.title)}</h1>
-            <div class="product-detail__price" data-product-price>${renderVariantPrice(selected)}</div>
-            <p class="product-detail__lead">${escapeHtml(product.shortDescription || '')}</p>
-            ${product.variants.length > 1 ? `<div class="product-detail__variants"><span>Выберите вариант</span><div>${product.variants.map((variant, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-product-variant="${variant.id}"><span>${escapeHtml(variant.name)}</span><strong>${formatMoney(variant.price)}</strong></button>`).join('')}</div></div>` : `<div class="product-detail__single-variant"><span>Формат</span><strong>${escapeHtml(selected?.name || 'Стандарт')}</strong></div>`}
-            <div class="product-detail__quantity"><span>Количество</span><div><button type="button" data-quantity="minus">−</button><strong data-product-quantity>1</strong><button type="button" data-quantity="plus">+</button></div></div>
-            <button class="product-detail__add" type="button" data-product-add>Добавить в корзину</button>
-            <div class="product-detail__benefits"><div><strong>Подбор мастером</strong><span>Поможем выбрать продукт под состояние волос и задачу.</span></div><div><strong>Бережная упаковка</strong><span>Проверяем товар перед передачей клиенту.</span></div><div><strong>Самовывоз или доставка</strong><span>Способ получения уточняется при оформлении заказа.</span></div></div>
-          </section>
+            <div class="product-detail__main-image">${
+              images[0]
+                ? `<img ${window.KulturaImage.attrs(images[0].imagePath, {
+                    loading: 'eager',
+                    fetchpriority: 'high',
+                    fallbackWidth: 1200,
+                    fallbackHeight: 1200,
+                  })} alt="${escapeHtml(images[0].alt || product.title)}" data-product-main-image />`
+                : ''
+            }${product.badge ? `<b>${escapeHtml(product.badge)}</b>` : ''}</div>
+            <div class="product-detail__thumbs">${images
+              .map(
+                (image, index) =>
+                  `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-product-thumb="${index}"><img ${window.KulturaImage.attrs(
+                    image.imagePath,
+                    {
+                      loading: 'lazy',
+                      fallbackWidth: 320,
+                      fallbackHeight: 320,
+                    },
+                  )} alt="" /></button>`,
+              )
+              .join('')}</div>
+         </section>
+
+<section class="product-detail__info">
+  <span class="product-detail__brand">
+    ${escapeHtml(product.brand?.name || 'ЭТИКА ВОЛОС — КАТАЛОГ')}
+  </span>
+
+  <h1>
+    ${escapeHtml(product.title)}
+  </h1>
+
+  <div
+    class="product-detail__price"
+    data-product-price
+  >
+    ${renderVariantPrice(selected)}
+  </div>
+
+  <p class="product-detail__lead">
+    ${escapeHtml(product.shortDescription || '')}
+  </p>
+
+  ${
+    product.variants.length > 1
+      ? `
+        <div class="product-detail__variants">
+          <span>Объём</span>
+
+          <div>
+            ${product.variants
+              .map(
+                (variant, index) => `
+                  <button
+                    type="button"
+                    class="${index === 0 ? 'is-active' : ''}"
+                    data-product-variant="${variant.id}"
+                  >
+                    <span>
+                      ${escapeHtml(variant.name)}
+                    </span>
+                  </button>
+                `,
+              )
+              .join('')}
+          </div>
         </div>
-        <section class="product-detail__description"><span>О продукте</span><div>${product.description || `<p>${escapeHtml(product.shortDescription || '')}</p>`}</div></section>
-        <div class="product-detail__mobile-bar"><div data-product-mobile-price>${renderVariantPrice(selected)}</div><button type="button" data-product-add>В корзину</button></div>
-      `;
+      `
+      : `
+        <div class="product-detail__single-variant">
+          <span>Формат</span>
+
+          <strong>
+            ${escapeHtml(selected?.name || 'Стандарт')}
+          </strong>
+        </div>
+      `
+  }
+
+  <div class="product-detail__quantity">
+    <span>Количество</span>
+
+    <div>
+      <button
+        type="button"
+        data-quantity="minus"
+      >
+        −
+      </button>
+
+      <strong data-product-quantity>
+        1
+      </strong>
+
+      <button
+        type="button"
+        data-quantity="plus"
+      >
+        +
+      </button>
+    </div>
+  </div>
+
+  <button
+    class="product-detail__add"
+    type="button"
+    data-product-add
+  >
+    Добавить в корзину
+  </button>
+
+  <div class="product-detail__benefits">
+    <div>
+      <strong>Подбор мастером</strong>
+
+      <span>
+        Поможем выбрать продукт под состояние волос и задачу.
+      </span>
+    </div>
+
+    <div>
+      <strong>Бережная упаковка</strong>
+
+      <span>
+        Проверяем товар перед передачей клиенту.
+      </span>
+    </div>
+
+    <div>
+      <strong>Самовывоз или доставка</strong>
+
+      <span>
+        Способ получения уточняется при оформлении заказа.
+      </span>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="product-detail__description">
+  <span>О продукте</span>
+
+  <div>
+    ${
+      product.description ||
+      `<p>${escapeHtml(product.shortDescription || '')}</p>`
+    }
+  </div>
+</section>
+
+<div class="product-detail__mobile-bar">
+  <div data-product-mobile-price>
+    ${renderVariantPrice(selected)}
+  </div>
+
+  <button
+    type="button"
+    data-product-add
+  >
+    В корзину
+  </button>
+</div>
+`;
 
       bindProductEvents();
     }
 
     function bindProductEvents() {
-      content.querySelectorAll('[data-product-thumb]').forEach((button) => button.addEventListener('click', () => {
-        const image = product.images[Number(button.dataset.productThumb)];
-        const mainImage = content.querySelector('[data-product-main-image]');
-        if (image && mainImage) {
-          window.KulturaImage.apply(mainImage, image.imagePath, {
-            loading: 'eager',
-            fetchpriority: 'high',
-            fallbackWidth: 1200,
-            fallbackHeight: 1200,
-          });
-          mainImage.alt = image.alt || product.title;
-          content.querySelectorAll('[data-product-thumb]').forEach((item) => item.classList.toggle('is-active', item === button));
-        }
-      }));
+      content.querySelectorAll('[data-product-thumb]').forEach((button) =>
+        button.addEventListener('click', () => {
+          const image = product.images[Number(button.dataset.productThumb)];
+          const mainImage = content.querySelector('[data-product-main-image]');
+          if (image && mainImage) {
+            window.KulturaImage.apply(mainImage, image.imagePath, {
+              loading: 'eager',
+              fetchpriority: 'high',
+              fallbackWidth: 1200,
+              fallbackHeight: 1200,
+            });
+            mainImage.alt = image.alt || product.title;
+            content
+              .querySelectorAll('[data-product-thumb]')
+              .forEach((item) =>
+                item.classList.toggle('is-active', item === button),
+              );
+          }
+        }),
+      );
 
-      content.querySelectorAll('[data-product-variant]').forEach((button) => button.addEventListener('click', () => {
-        selectedVariantId = Number(button.dataset.productVariant);
-        content.querySelectorAll('[data-product-variant]').forEach((item) => item.classList.toggle('is-active', item === button));
-        const selected = product.variants.find((variant) => variant.id === selectedVariantId);
-        content.querySelectorAll('[data-product-price], [data-product-mobile-price]').forEach((element) => { element.innerHTML = renderVariantPrice(selected); });
-      }));
+      content.querySelectorAll('[data-product-variant]').forEach((button) =>
+        button.addEventListener('click', () => {
+          selectedVariantId = Number(button.dataset.productVariant);
+          content
+            .querySelectorAll('[data-product-variant]')
+            .forEach((item) =>
+              item.classList.toggle('is-active', item === button),
+            );
+          const selected = product.variants.find(
+            (variant) => variant.id === selectedVariantId,
+          );
+          content
+            .querySelectorAll(
+              '[data-product-price], [data-product-mobile-price]',
+            )
+            .forEach((element) => {
+              element.innerHTML = renderVariantPrice(selected);
+            });
+        }),
+      );
 
-      content.querySelectorAll('[data-quantity]').forEach((button) => button.addEventListener('click', () => {
-        quantity = button.dataset.quantity === 'plus' ? Math.min(MAX_CART_QUANTITY, quantity + 1) : Math.max(1, quantity - 1);
-        content.querySelector('[data-product-quantity]').textContent = String(quantity);
-      }));
+      content.querySelectorAll('[data-quantity]').forEach((button) =>
+        button.addEventListener('click', () => {
+          quantity =
+            button.dataset.quantity === 'plus'
+              ? Math.min(MAX_CART_QUANTITY, quantity + 1)
+              : Math.max(1, quantity - 1);
+          content.querySelector('[data-product-quantity]').textContent =
+            String(quantity);
+        }),
+      );
 
-      content.querySelectorAll('[data-product-add]').forEach((button) => button.addEventListener('click', () => {
-        if (selectedVariantId) addVariantToCart(selectedVariantId, quantity);
-      }));
+      content.querySelectorAll('[data-product-add]').forEach((button) =>
+        button.addEventListener('click', () => {
+          if (selectedVariantId) addVariantToCart(selectedVariantId, quantity);
+        }),
+      );
     }
 
     function renderVariantPrice(variant) {
@@ -1580,16 +1848,31 @@
     const checkout = document.querySelector('[data-cart-checkout]');
     const message = document.querySelector('[data-cart-message]');
 
-    if (!list || !loading || !empty || !content || !subtotal || !total || !count || !checkout || !message) return;
+    if (
+      !list ||
+      !loading ||
+      !empty ||
+      !content ||
+      !subtotal ||
+      !total ||
+      !count ||
+      !checkout ||
+      !message
+    )
+      return;
 
     list.addEventListener('click', async (event) => {
       const action = event.target.closest('[data-cart-action]');
       if (!action) return;
       const variantId = Number(action.dataset.variantId);
-      const current = getCart().find((item) => Number(item.variantId) === variantId);
+      const current = getCart().find(
+        (item) => Number(item.variantId) === variantId,
+      );
       if (!current) return;
-      if (action.dataset.cartAction === 'increase') updateCartItem(variantId, Number(current.quantity) + 1);
-      if (action.dataset.cartAction === 'decrease') updateCartItem(variantId, Number(current.quantity) - 1);
+      if (action.dataset.cartAction === 'increase')
+        updateCartItem(variantId, Number(current.quantity) + 1);
+      if (action.dataset.cartAction === 'decrease')
+        updateCartItem(variantId, Number(current.quantity) - 1);
       if (action.dataset.cartAction === 'remove') removeCartItem(variantId);
       await renderCart();
     });
@@ -1609,20 +1892,34 @@
         }
         empty.hidden = true;
         content.hidden = false;
-        list.innerHTML = data.items.map((item) => `
+        list.innerHTML = data.items
+          .map(
+            (item) => `
           <article class="cart-product">
-            <a class="cart-product__image" href="/catalog/product/${encodeURIComponent(item.product.slug)}">${item.product.image ? `<img ${window.KulturaImage.attrs(item.product.image.imagePath, {
-              loading: 'lazy',
-              fallbackWidth: 600,
-              fallbackHeight: 600,
-            })} alt="${escapeHtml(item.product.image.alt || item.product.title)}" />` : ''}</a>
+            <a class="cart-product__image" href="/catalog/product/${encodeURIComponent(item.product.slug)}">${
+              item.product.image
+                ? `<img ${window.KulturaImage.attrs(
+                    item.product.image.imagePath,
+                    {
+                      loading: 'lazy',
+                      fallbackWidth: 600,
+                      fallbackHeight: 600,
+                    },
+                  )} alt="${escapeHtml(item.product.image.alt || item.product.title)}" />`
+                : ''
+            }</a>
             <div class="cart-product__info"><span>${escapeHtml(item.product.badge || 'ЭТИКА ВОЛОС — КАТАЛОГ')}</span><h2><a href="/catalog/product/${encodeURIComponent(item.product.slug)}">${escapeHtml(item.product.title)}</a></h2><p>${escapeHtml(item.variantName)}</p><strong>${formatMoney(item.price)}</strong></div>
             <div class="cart-product__quantity"><button type="button" data-cart-action="decrease" data-variant-id="${item.variantId}">−</button><span>${item.quantity}</span><button type="button" data-cart-action="increase" data-variant-id="${item.variantId}">+</button></div>
             <strong class="cart-product__total">${formatMoney(item.lineTotal)}</strong>
             <button class="cart-product__remove" type="button" aria-label="Удалить товар" data-cart-action="remove" data-variant-id="${item.variantId}">×</button>
           </article>
-        `).join('');
-        const quantity = data.items.reduce((sum, item) => sum + item.quantity, 0);
+        `,
+          )
+          .join('');
+        const quantity = data.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
         subtotal.textContent = formatMoney(data.total);
         total.textContent = formatMoney(data.total);
         count.textContent = String(quantity);
@@ -1630,7 +1927,8 @@
       } catch (requestError) {
         loading.hidden = true;
         message.hidden = false;
-        message.textContent = requestError.message || 'Не удалось обновить корзину.';
+        message.textContent =
+          requestError.message || 'Не удалось обновить корзину.';
       }
     }
   }
@@ -1643,17 +1941,30 @@
     const total = document.querySelector('[data-checkout-total]');
     const message = document.querySelector('[data-checkout-message]');
     const deliveryAddress = document.querySelector('[data-delivery-address]');
-    const fulfillmentInputs = document.querySelectorAll('[name="fulfillmentMethod"]');
+    const fulfillmentInputs = document.querySelectorAll(
+      '[name="fulfillmentMethod"]',
+    );
 
-    if (!form || !loading || !content || !items || !total || !message || !deliveryAddress) return;
+    if (
+      !form ||
+      !loading ||
+      !content ||
+      !items ||
+      !total ||
+      !message ||
+      !deliveryAddress
+    )
+      return;
 
     let cartData = null;
 
-    fulfillmentInputs.forEach((input) => input.addEventListener('change', () => {
-      const isDelivery = form.elements.fulfillmentMethod.value === 'DELIVERY';
-      deliveryAddress.hidden = !isDelivery;
-      deliveryAddress.querySelector('input').required = isDelivery;
-    }));
+    fulfillmentInputs.forEach((input) =>
+      input.addEventListener('change', () => {
+        const isDelivery = form.elements.fulfillmentMethod.value === 'DELIVERY';
+        deliveryAddress.hidden = !isDelivery;
+        deliveryAddress.querySelector('input').required = isDelivery;
+      }),
+    );
 
     form.addEventListener('submit', submitOrder);
     initialize();
@@ -1665,14 +1976,20 @@
           window.location.replace('/cart');
           return;
         }
-        items.innerHTML = cartData.items.map((item) => `<div class="checkout-summary-item"><span>${escapeHtml(item.product.title)} · ${escapeHtml(item.variantName)} × ${item.quantity}</span><strong>${formatMoney(item.lineTotal)}</strong></div>`).join('');
+        items.innerHTML = cartData.items
+          .map(
+            (item) =>
+              `<div class="checkout-summary-item"><span>${escapeHtml(item.product.title)} · ${escapeHtml(item.variantName)} × ${item.quantity}</span><strong>${formatMoney(item.lineTotal)}</strong></div>`,
+          )
+          .join('');
         total.textContent = formatMoney(cartData.total);
         loading.hidden = true;
         content.hidden = false;
       } catch (error) {
         loading.hidden = true;
         message.hidden = false;
-        message.textContent = error.message || 'Не удалось подготовить оформление.';
+        message.textContent =
+          error.message || 'Не удалось подготовить оформление.';
       }
     }
 
@@ -1687,7 +2004,9 @@
         idempotencyKey,
         customerName: String(formData.get('customerName') || '').trim(),
         phone: String(formData.get('phone') || '').trim(),
-        fulfillmentMethod: String(formData.get('fulfillmentMethod') || 'PICKUP'),
+        fulfillmentMethod: String(
+          formData.get('fulfillmentMethod') || 'PICKUP',
+        ),
         deliveryAddress: String(formData.get('deliveryAddress') || '').trim(),
         comment: String(formData.get('comment') || '').trim(),
         source: 'checkout-page',
@@ -1707,7 +2026,8 @@
           body: JSON.stringify(payload),
         });
         const data = await response.json();
-        if (!response.ok || !data.order) throw new Error(data?.message || 'Не удалось оформить заказ');
+        if (!response.ok || !data.order)
+          throw new Error(data?.message || 'Не удалось оформить заказ');
         saveCart([]);
         sessionStorage.removeItem(ORDER_KEY);
         const url = new URL('/order-success', window.location.origin);
@@ -1730,7 +2050,11 @@
     const numberElement = document.querySelector('[data-success-number]');
     const totalElement = document.querySelector('[data-success-total]');
     if (numberElement) numberElement.textContent = number || 'Заказ принят';
-    if (totalElement) totalElement.textContent = Number.isFinite(total) && total > 0 ? formatMoney(total) : 'Сумма подтверждается';
+    if (totalElement)
+      totalElement.textContent =
+        Number.isFinite(total) && total > 0
+          ? formatMoney(total)
+          : 'Сумма подтверждается';
   }
 
   function getOrderKey() {
@@ -1792,7 +2116,8 @@
     const scope = sheet.querySelector('.catalog-sheet__dialog') || sheet;
 
     return [...scope.querySelectorAll(sheetFocusSelectors)].filter(
-      (element) => !element.hidden && element.getAttribute('aria-hidden') !== 'true',
+      (element) =>
+        !element.hidden && element.getAttribute('aria-hidden') !== 'true',
     );
   }
 
@@ -1871,7 +2196,10 @@
     toast.querySelector('p').textContent = text;
     toast.classList.add('is-visible');
     clearTimeout(toast.hideTimer);
-    toast.hideTimer = setTimeout(() => toast.classList.remove('is-visible'), 2800);
+    toast.hideTimer = setTimeout(
+      () => toast.classList.remove('is-visible'),
+      2800,
+    );
   }
 
   function productWord(count) {
