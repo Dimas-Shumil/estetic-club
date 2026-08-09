@@ -2051,6 +2051,18 @@ button {
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
+
+      transition: all 0.3s ease;
+    }
+
+    button {
+      &:hover {
+        background: $color-brown-soft;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
     }
 
     a {

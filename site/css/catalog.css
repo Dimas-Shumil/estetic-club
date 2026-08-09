@@ -1876,6 +1876,13 @@ button {
   font-size: 10px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+.catalog-preview__actions button:hover {
+  background: #8a6d50;
+}
+.catalog-preview__actions button:active {
+  transform: scale(0.98);
 }
 .catalog-preview__actions a {
   color: var(--color-text);
