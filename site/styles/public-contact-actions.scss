@@ -1,3 +1,47 @@
+// интерактивные элементы
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+input[type='submit'],
+input[type='button'],
+input[type='reset'],
+select,
+summary,
+[role='button'] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button:not(:disabled),
+input[type='submit']:not(:disabled),
+input[type='button']:not(:disabled),
+input[type='reset']:not(:disabled),
+select:not(:disabled),
+summary,
+[role='button'] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid #a98e75;
+  outline-offset: 3px;
+}
+
 @media (max-width: 767px) {
   .header__mobile .header__mobile-call {
     display: inline-flex;
@@ -208,7 +252,7 @@
 
   .footer__socials {
     display: grid;
-    grid-template-columns: repeat(4, 44px);
+    grid-template-columns: repeat(5, 44px);
     gap: 10px;
     width: auto;
     margin-top: 20px;
@@ -252,7 +296,7 @@
   }
 
   .footer__socials {
-    grid-template-columns: repeat(4, 42px);
+    grid-template-columns: repeat(5, 42px);
     gap: 8px;
   }
 
@@ -300,12 +344,6 @@
   background-color: #25D366;
 }
 
-// .footer__social-icon--max {
-//   -webkit-mask-image: url("/site/img/social/vk.svg");
-//   mask-image: url("/site/img/social/vk.svg");
-//   background-color: #b89d02;
-// }
-
 .footer__social-icon {
   transition: transform 180ms ease, filter 180ms ease;
 }
@@ -336,7 +374,25 @@
 .footer__socials a .footer__social-icon--whatsapp {
   background: #25d366;
 }
+
+.footer__socials a .footer__social-icon--max {
+  background: url('/site/img/social/max-logo.svg') center / contain no-repeat;
+  border-radius: 5px;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
 /* social brand colors end */
+
+// светлый hover футера
+.footer__button:hover,
+.footer__socials a:hover {
+  color: #2f231a;
+  background: #d4c0ad;
+  border-color: rgba(121, 96, 70, 0.28);
+  box-shadow:
+    0 16px 34px rgba(47, 35, 26, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
 
 /* логотип */
 .header__logo--brand {
