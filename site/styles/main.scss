@@ -1430,6 +1430,10 @@ body.is-lock {
   background: transparent;
   color: $color-text-light;
 
+  &[hidden] {
+    display: none;
+  }
+
   &__content {
     position: relative;
     z-index: 2;

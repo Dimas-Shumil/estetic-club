@@ -330,6 +330,10 @@ function initSectionTwoMarquee() {
 
     startX = event.clientX;
     startTargetPosition = targetPosition;
+
+    if (event.pointerType !== 'mouse') {
+      marquee.setPointerCapture?.(event.pointerId);
+    }
   }
 
   function moveDrag(event) {
@@ -431,9 +435,9 @@ function initSectionTwoMarquee() {
 function initBeautyFlowBackground() {
   const wrapper = document.querySelector('[data-beauty-flow]');
   const sectionThree = document.querySelector('.section-three');
-  const personalService = document.querySelector('.personal-service');
+  const worksPreview = document.querySelector('.works-preview');
 
-  if (!wrapper || !sectionThree || !personalService) return;
+  if (!wrapper || !sectionThree || !worksPreview) return;
 
   const beigeColor = [121, 96, 70]; // #796046
   const whiteColor = [251, 247, 240]; // #fbf7f0
@@ -450,7 +454,7 @@ function initBeautyFlowBackground() {
 
   function updateBackground() {
     const toWhiteProgress = getScrollProgress(sectionThree, 0.95, 0.25);
-    const toBeigeProgress = getScrollProgress(personalService, 0.95, 0.25);
+    const toBeigeProgress = getScrollProgress(worksPreview, 0.95, 0.25);
 
     let currentColor;
 
