@@ -1300,6 +1300,9 @@ body.is-lock {
   background: transparent;
   color: #fff7ef;
 }
+.personal-service[hidden] {
+  display: none;
+}
 .personal-service__content {
   position: relative;
   z-index: 2;

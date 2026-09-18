@@ -328,12 +328,12 @@ function initSectionTwoMarquee() {
     isPointerDown = true;
     hasMoved = false;
 
-    marquee.classList.add('is-dragging');
-
     startX = event.clientX;
     startTargetPosition = targetPosition;
 
-    marquee.setPointerCapture?.(event.pointerId);
+    if (event.pointerType !== 'mouse') {
+      marquee.setPointerCapture?.(event.pointerId);
+    }
   }
 
   function moveDrag(event) {
@@ -341,9 +341,13 @@ function initSectionTwoMarquee() {
 
     const delta = event.clientX - startX;
 
-    if (Math.abs(delta) > dragThreshold) {
+    if (!hasMoved && Math.abs(delta) > dragThreshold) {
       hasMoved = true;
+      marquee.classList.add('is-dragging');
+      marquee.setPointerCapture?.(event.pointerId);
     }
+
+    if (!hasMoved) return;
 
     targetPosition = startTargetPosition - delta * dragPower;
 
@@ -356,7 +360,9 @@ function initSectionTwoMarquee() {
     isPointerDown = false;
     marquee.classList.remove('is-dragging');
 
-    marquee.releasePointerCapture?.(event.pointerId);
+    if (marquee.hasPointerCapture?.(event.pointerId)) {
+      marquee.releasePointerCapture(event.pointerId);
+    }
 
     window.setTimeout(() => {
       hasMoved = false;
@@ -398,6 +404,8 @@ function initSectionTwoMarquee() {
   marquee.addEventListener('pointercancel', endDrag);
   marquee.addEventListener('lostpointercapture', endDrag);
   marquee.addEventListener('click', preventClickAfterDrag, true);
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
 
   window.addEventListener('resize', () => {
     window.requestAnimationFrame(refresh);
@@ -427,9 +435,9 @@ function initSectionTwoMarquee() {
 function initBeautyFlowBackground() {
   const wrapper = document.querySelector('[data-beauty-flow]');
   const sectionThree = document.querySelector('.section-three');
-  const personalService = document.querySelector('.personal-service');
+  const worksPreview = document.querySelector('.works-preview');
 
-  if (!wrapper || !sectionThree || !personalService) return;
+  if (!wrapper || !sectionThree || !worksPreview) return;
 
   const beigeColor = [121, 96, 70]; // #796046
   const whiteColor = [251, 247, 240]; // #fbf7f0
@@ -446,7 +454,7 @@ function initBeautyFlowBackground() {
 
   function updateBackground() {
     const toWhiteProgress = getScrollProgress(sectionThree, 0.95, 0.25);
-    const toBeigeProgress = getScrollProgress(personalService, 0.95, 0.25);
+    const toBeigeProgress = getScrollProgress(worksPreview, 0.95, 0.25);
 
     let currentColor;
 
