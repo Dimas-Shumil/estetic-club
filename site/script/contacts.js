@@ -711,6 +711,48 @@ function initContactBookingForm() {
     return;
   }
 
+  phoneInput.addEventListener('keydown', (event) => {
+    if (event.key !== 'Backspace') return;
+
+    const start = phoneInput.selectionStart;
+    const end = phoneInput.selectionEnd;
+
+    if (start === null || end === null || start !== end || start === 0) {
+      return;
+    }
+
+    const value = phoneInput.value;
+    const previousChar = value[start - 1];
+
+    // Если курсор стоит после символа маски, удаляем предыдущую цифру,
+    // а не даём форматтеру вернуть скобку, пробел или дефис обратно.
+    if (previousChar && !/\d/.test(previousChar)) {
+      event.preventDefault();
+
+      let digitIndex = start - 1;
+
+      while (digitIndex >= 0 && !/\d/.test(value[digitIndex])) {
+        digitIndex -= 1;
+      }
+
+      if (digitIndex < 0) {
+        phoneInput.value = '';
+        return;
+      }
+
+      const nextValue =
+        value.slice(0, digitIndex) + value.slice(digitIndex + 1);
+
+      phoneInput.value = formatRussianPhone(nextValue);
+      phoneInput.setSelectionRange(
+        phoneInput.value.length,
+        phoneInput.value.length,
+      );
+
+      clearFieldError('phone', phoneInput);
+    }
+  });
+
   phoneInput.addEventListener('input', () => {
     phoneInput.value = formatRussianPhone(
       phoneInput.value,
