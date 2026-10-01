@@ -2026,6 +2026,16 @@ app.get('/contacts', (req, res, next) => {
   );
 });
 
+app.get('/sercificaties/4000', (req, res, next) => {
+  return sendSeoPage(
+    req,
+    res,
+    next,
+    path.join('sercificaties', 'certificate-4000.html'),
+    '/sercificaties/4000',
+  );
+});
+
 app.get('/catalog', (req, res, next) => {
   return sendSeoPage(
     req,
