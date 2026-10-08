@@ -22,9 +22,10 @@
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.0.0",
     "multer": "^2.2.0",
-    "nodemailer": "^9.0.3",
+    "nodemailer": "10.0.16",
     "sanitize-html": "^2.17.6",
     "sharp": "^0.35.3",
+    "web-push": "3.6.7",
     "zod": "^4.4.3"
   },
   "devDependencies": {

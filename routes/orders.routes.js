@@ -8,6 +8,7 @@ const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
 const validateOrigin = require('../middleware/validate-origin');
+const { sendNewOrderNotification } = require('../services/push.service');
 
 const router = express.Router();
 
@@ -435,6 +436,10 @@ router.post('/', orderLimiter, validateOrigin, async (req, res, next) => {
         }
       }
     }
+
+    void sendNewOrderNotification(createdOrder).catch((error) => {
+      console.error(`Web Push заказа ${createdOrder.publicNumber}:`, error.message);
+    });
 
     sendOrderNotification(createdOrder).catch((error) => {
       console.error('Не удалось отправить уведомление о заказе:', error);

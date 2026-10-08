@@ -215,6 +215,7 @@
       csrfToken = csrfResult.data.csrfToken;
 
       bindLogout();
+      initPushSettings(data.user);
 
       if (page === 'dashboard') {
         await initDashboardPage();
@@ -413,6 +414,205 @@
     window.matchMedia('(min-width: 701px)').addEventListener('change', (event) => {
       if (event.matches) closeMenu(false);
     });
+  }
+
+  // WEB PUSH — отдельная подписка для каждого телефона и браузера.
+  function initPushSettings(adminUser) {
+    const header = document.querySelector('.admin-header');
+    if (!header || document.querySelector('.admin-push')) return;
+
+    const wrapper = document.createElement('section');
+    wrapper.className = 'admin-push';
+    wrapper.setAttribute('aria-label', 'Push-уведомления');
+    wrapper.innerHTML = `
+      <button class="admin-push__trigger" type="button" aria-expanded="false" aria-controls="admin-push-settings" data-push-toggle>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+        <span>Уведомления</span>
+        <span class="admin-push__indicator" data-push-indicator aria-hidden="true"></span>
+      </button>
+      <div class="admin-push__panel" id="admin-push-settings" data-push-panel hidden>
+        <div class="admin-push__heading">
+          <div><span class="admin-push__eyebrow">Этика волос</span><h2>Веб-пуш уведомления</h2></div>
+          <button class="admin-push__close" type="button" data-push-close aria-label="Закрыть настройки">×</button>
+        </div>
+        <p class="admin-push__description">${adminUser.role === 'OWNER' ? 'Уведомим о новой заявке или заказе, даже если админка закрыта.' : 'Уведомим о новой заявке, даже если админка закрыта.'}</p>
+        <p class="admin-push__status" data-push-status role="status" aria-live="polite">Проверяем возможность подключения…</p>
+        <div class="admin-push__actions">
+          <button class="admin-push__action admin-push__action--primary" type="button" data-push-enable>Включить на устройстве</button>
+          <button class="admin-push__action" type="button" data-push-test hidden>Проверить</button>
+          <button class="admin-push__action" type="button" data-push-disable hidden>Отключить</button>
+        </div>
+        <p class="admin-push__hint">На iPhone: откройте сайт в Safari, выберите «На экран Домой», запустите приложение оттуда и включите уведомления.</p>
+      </div>`;
+    header.insertAdjacentElement('afterend', wrapper);
+
+    const toggle = wrapper.querySelector('[data-push-toggle]');
+    const close = wrapper.querySelector('[data-push-close]');
+    const panel = wrapper.querySelector('[data-push-panel]');
+    const statusEl = wrapper.querySelector('[data-push-status]');
+    const indicator = wrapper.querySelector('[data-push-indicator]');
+    const enableButton = wrapper.querySelector('[data-push-enable]');
+    const testButton = wrapper.querySelector('[data-push-test]');
+    const disableButton = wrapper.querySelector('[data-push-disable]');
+    let registered = false;
+    const apiBase = '/admin/api/push';
+
+    const supported = () => window.isSecureContext &&
+      'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+
+    function setStatus(message, error = false, active = false) {
+      statusEl.textContent = message;
+      statusEl.dataset.state = error ? 'error' : active ? 'active' : 'neutral';
+      indicator.classList.toggle('is-active', active);
+    }
+
+    function setBusy(busy) {
+      for (const button of [enableButton, testButton, disableButton]) {
+        button.disabled = busy;
+      }
+    }
+
+    function fromBase64(value) {
+      const padded = value.replace(/-/g, '+').replace(/_/g, '/') +
+        '='.repeat((4 - (value.length % 4)) % 4);
+      return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
+    }
+
+    async function api(path, options = {}, retry = true) {
+      const method = options.method || 'GET';
+      const headers = { ...(options.headers || {}) };
+      if (method !== 'GET') {
+        headers['Content-Type'] = 'application/json';
+        headers['X-CSRF-Token'] = csrfToken;
+      }
+      const { response, data } = await requestJson(`${apiBase}${path}`, {
+        ...options,
+        headers,
+      });
+      if (response.status === 403 && retry && method !== 'GET') {
+        const renewed = await requestJson('/admin/api/auth/csrf');
+        if (renewed.response.ok && renewed.data?.csrfToken) {
+          csrfToken = renewed.data.csrfToken;
+          return api(path, options, false);
+        }
+      }
+      if (response.status === 401) {
+        redirectToLogin();
+        throw new Error('Сессия завершилась. Войдите снова.');
+      }
+      if (!response.ok) throw new Error(data?.message || 'Сервер не ответил.');
+      return data;
+    }
+
+    async function getRegistration() {
+      return navigator.serviceWorker.register('/admin-push-sw.js', { scope: '/admin/' });
+    }
+
+    async function refresh() {
+      if (!supported()) {
+        setStatus('Этот браузер не поддерживает Web Push. На iPhone запустите веб-приложение с экрана «Домой».', true);
+        enableButton.hidden = true;
+        testButton.hidden = true;
+        disableButton.hidden = true;
+        return;
+      }
+      const current = await api('/status');
+      if (!current.configured || !current.publicKey) {
+        setStatus('Web Push пока не настроен: нужны VAPID-ключи в .env на сервере.', true);
+        enableButton.hidden = true;
+        testButton.hidden = true;
+        disableButton.hidden = true;
+        return;
+      }
+      const registration = await getRegistration();
+      const subscription = await registration.pushManager.getSubscription();
+      const active = Notification.permission === 'granted' && !!subscription;
+      setStatus(active
+        ? 'На этом устройстве включены уведомления.'
+        : Notification.permission === 'denied'
+          ? 'Уведомления запрещены в настройках браузера.'
+          : 'Включите уведомления, чтобы получать новые обращения.',
+        Notification.permission === 'denied', active);
+      enableButton.hidden = false;
+      testButton.hidden = !active;
+      disableButton.hidden = !active;
+    }
+
+    async function enable() {
+      if (!supported()) throw new Error('Браузер не поддерживает уведомления.');
+      // В iOS разрешение должно запрашиваться прямо из нажатия на кнопку.
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') throw new Error('Разрешите уведомления в браузере.');
+      const state = await api('/status');
+      if (!state.configured || !state.publicKey) throw new Error('Нет VAPID-ключей на сервере.');
+      const registration = await getRegistration();
+      const newKey = fromBase64(state.publicKey);
+      let subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        const savedKey = subscription.options?.applicationServerKey;
+        if (savedKey && (savedKey.byteLength !== newKey.byteLength ||
+            !new Uint8Array(savedKey).every((byte, index) => byte === newKey[index]))) {
+          await subscription.unsubscribe();
+          subscription = null;
+        }
+      }
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: newKey,
+        });
+      }
+      await api('/subscribe', {
+        method: 'POST', body: JSON.stringify(subscription.toJSON()),
+      });
+      await refresh();
+      setStatus('Уведомления подключены! Можно закрыть админку.', false, true);
+    }
+
+    async function disable() {
+      const registration = await getRegistration();
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        await api('/subscribe', {
+          method: 'DELETE', body: JSON.stringify({ endpoint: subscription.endpoint }),
+        });
+        await subscription.unsubscribe();
+      }
+      await refresh();
+      setStatus('На этом устройстве уведомления отключены.');
+    }
+
+    function action(fn) {
+      setBusy(true);
+      Promise.resolve().then(fn).catch((error) => setStatus(error.message, true))
+        .finally(() => setBusy(false));
+    }
+
+    toggle.addEventListener('click', () => {
+      panel.hidden = !panel.hidden;
+      toggle.setAttribute('aria-expanded', String(!panel.hidden));
+      if (!panel.hidden && !registered) {
+        registered = true;
+        action(refresh);
+      }
+    });
+    close.addEventListener('click', () => {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    });
+    enableButton.addEventListener('click', () => {
+      // Вызываем enable синхронно из обработчика, не из микрозадачи;
+      // это сохраняет user activation для Safari / iOS.
+      setBusy(true);
+      enable().catch((error) => setStatus(error.message, true))
+        .finally(() => setBusy(false));
+    });
+    disableButton.addEventListener('click', () => action(disable));
+    testButton.addEventListener('click', () => action(async () => {
+      const result = await api('/test', { method: 'POST', body: '{}' });
+      setStatus(`Тест отправлен на ${result.sent} устройств(а).`, false, true);
+    }));
   }
 
   // выход

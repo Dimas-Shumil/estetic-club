@@ -29,9 +29,10 @@ model AdminUser {
 
   lastLoginAt DateTime?
 
-  sessions      AdminSession[]
-  assignedLeads Lead[]
-  auditLogs     AdminAuditLog[]
+  sessions          AdminSession[]
+  assignedLeads     Lead[]
+  auditLogs         AdminAuditLog[]
+  pushSubscriptions PushSubscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,6 +60,22 @@ model AdminSession {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  adminId   Int
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+
+  admin AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([adminId])
 }
 
 model Lead {
@@ -253,7 +270,7 @@ model Brand {
   name      String
   slug      String @unique
   logoPath  String @default("")
-  sortOrder Int    @default(100)
+  sortOrder Int     @default(100)
 
   isPublished Boolean @default(true)
 
@@ -357,7 +374,7 @@ model ProductVariant {
   oldPrice Int?
 
   isActive Boolean @default(true)
-  sortOrder Int    @default(100)
+  sortOrder Int     @default(100)
 
   orderItems OrderItem[]
 

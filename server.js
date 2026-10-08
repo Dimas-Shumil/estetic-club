@@ -23,6 +23,8 @@ const blogRoutes = require('./routes/blog.routes');
 const publicRoutes = require('./routes/public.routes');
 const catalogRoutes = require('./routes/catalog.routes');
 const ordersRoutes = require('./routes/orders.routes');
+const pushRoutes = require('./routes/push.routes');
+const { sendNewLeadNotification } = require('./services/push.service');
 const adminCatalogRoutes = require('./routes/admin-catalog.routes');
 
 const validateOrigin = require('./middleware/validate-origin');
@@ -1746,6 +1748,7 @@ app.use(express.static(PUBLIC_DIR, publicStaticOptions));
 // админ
 
 app.use('/admin/api/auth', authRoutes);
+app.use('/admin/api/push', pushRoutes);
 
 app.use('/admin/api/uploads', uploadRoutes);
 
@@ -2287,6 +2290,11 @@ app.post('/api/leads', leadLimiter, validateOrigin, async (req, res, next) => {
     });
 
     consumeLeadFormChallenge(parsed.data.formToken);
+
+    // Отправка push не должна мешать сохранению заявки или доставке письма.
+    void sendNewLeadNotification(lead).catch((error) => {
+      console.error(`Web Push заявки №${lead.id}:`, error.message);
+    });
 
     try {
       await sendLeadEmail(lead);
