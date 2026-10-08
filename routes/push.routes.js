@@ -26,6 +26,7 @@ const endpointSchema = z.string().url().max(3000).refine((value) => {
 
 const subscriptionSchema = z.object({
   endpoint: endpointSchema,
+  expirationTime: z.number().nullable().optional(),
   keys: z.object({
     p256dh: z.string().min(40).max(400).regex(/^[A-Za-z0-9_-]+$/),
     auth: z.string().min(8).max(200).regex(/^[A-Za-z0-9_-]+$/),
