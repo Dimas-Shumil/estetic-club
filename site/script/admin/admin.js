@@ -199,6 +199,7 @@
 
       renderAdminUser(data.user);
       applyRoleVisibility(data.user.role);
+      initMobileNavigation(data.user.role);
 
       const csrfResult = await requestJson('/admin/api/auth/csrf');
 
@@ -282,6 +283,135 @@
 
     document.querySelectorAll('[data-owner-only]').forEach((element) => {
       element.remove();
+    });
+  }
+
+  // Mobile navigation is created after authentication so STAFF never sees
+  // owner-only sections. The desktop sidebar stays unchanged.
+  function initMobileNavigation(role) {
+    if (document.querySelector('.admin-mobile-nav')) {
+      return;
+    }
+
+    const iconPaths = {
+      dashboard: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+      requests: '<path d="M8 3h8l5 5v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4Z"/><path d="M16 3v5h5M7.5 13h9M7.5 17h6"/>',
+      works: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
+      catalog: '<path d="M4 7h16v14H4zM2 3h20v4H2z"/><path d="M10 12h4"/>',
+      orders: '<path d="M6 3h12l1 18-3-2-4 2-4-2-3 2L6 3Z"/><path d="M9 9h6M9 13h6"/>',
+      blog: '<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21V4.5ZM4 19a2 2 0 0 1 2-2h14"/><path d="M9 7h7M9 11h5"/>',
+      staff: '<circle cx="9" cy="8" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M17 15a5 5 0 0 1 4 5v1"/>',
+      more: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+      external: '<path d="M13 5h6v6M19 5l-9 9"/><path d="M19 14v5H5V5h7"/>',
+      logout: '<path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M14 16l4-4-4-4M18 12H9"/>',
+      close: '<path d="M18 6 6 18M6 6l12 12"/>',
+    };
+
+    const svgIcon = (name) => `<svg class="admin-mobile-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name]}</svg>`;
+
+    const tabs = [
+      { key: 'dashboard', label: 'Обзор', href: '/admin/dashboard' },
+      { key: 'requests', label: 'Заявки', href: '/admin/requests' },
+      ...(role === 'OWNER'
+        ? [
+            { key: 'works', label: 'Работы', href: '/admin/works' },
+            { key: 'catalog', label: 'Каталог', href: '/admin/catalog' },
+          ]
+        : []),
+    ];
+
+    const extra = role === 'OWNER'
+      ? [
+          { key: 'orders', label: 'Заказы', href: '/admin/orders' },
+          { key: 'blog', label: 'Статьи', href: '/admin/blog' },
+          { key: 'staff', label: 'Сотрудники', href: '/admin/staff' },
+        ]
+      : [];
+
+    const activeKey = ({
+      dashboard: 'dashboard', requests: 'requests', works: 'works',
+      'work-edit': 'works', catalog: 'catalog', 'product-edit': 'catalog',
+      'catalog-settings': 'catalog', orders: 'orders', blog: 'blog',
+      'blog-edit': 'blog', staff: 'staff',
+    })[page] || 'dashboard';
+
+    const link = (item, className) => {
+      const active = item.key === activeKey;
+      return `<a class="${className}${active ? ` ${className}--active` : ''}" href="${item.href}"${active ? ' aria-current="page"' : ''}>${svgIcon(item.key)}<span>${item.label}</span></a>`;
+    };
+
+    const nav = document.createElement('nav');
+    nav.className = 'admin-mobile-nav';
+    nav.setAttribute('aria-label', 'Основные разделы управления');
+    nav.style.setProperty('--admin-mobile-nav-columns', String(tabs.length + 1));
+    nav.innerHTML = tabs.map((item) => link(item, 'admin-mobile-nav__link')).join('') +
+      `<button class="admin-mobile-nav__link admin-mobile-nav__more${extra.some((item) => item.key === activeKey) ? ' admin-mobile-nav__link--active' : ''}" type="button" aria-haspopup="dialog" aria-controls="admin-mobile-more" aria-expanded="false" data-mobile-menu-open>${svgIcon('more')}<span>Ещё</span></button>`;
+
+    const menu = document.createElement('div');
+    menu.className = 'admin-mobile-menu';
+    menu.id = 'admin-mobile-more';
+    menu.hidden = true;
+    menu.innerHTML = `
+      <button class="admin-mobile-menu__backdrop" type="button" aria-label="Закрыть меню" data-mobile-menu-close tabindex="-1"></button>
+      <section class="admin-mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Дополнительные разделы">
+        <div class="admin-mobile-menu__head">
+          <div><span class="admin-mobile-menu__eyebrow">Этика волос</span><h2>Управление</h2></div>
+          <button class="admin-mobile-menu__close" type="button" aria-label="Закрыть меню" data-mobile-menu-close>${svgIcon('close')}</button>
+        </div>
+        <nav class="admin-mobile-menu__links" aria-label="Другие разделы">
+          ${extra.map((item) => link(item, 'admin-mobile-menu__link')).join('')}
+          <a class="admin-mobile-menu__link" href="/" target="_blank" rel="noopener noreferrer">${svgIcon('external')}<span>Открыть сайт</span></a>
+        </nav>
+        <button class="admin-mobile-menu__logout" type="button" data-admin-logout>${svgIcon('logout')}<span>Выйти из аккаунта</span></button>
+      </section>`;
+
+    document.body.append(nav, menu);
+    const moreButton = nav.querySelector('[data-mobile-menu-open]');
+    const panel = menu.querySelector('.admin-mobile-menu__panel');
+
+    const closeMenu = (restoreFocus = true) => {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      document.body.classList.remove('admin-body--menu-open');
+      moreButton.setAttribute('aria-expanded', 'false');
+      if (restoreFocus && window.matchMedia('(max-width: 700px)').matches) {
+        moreButton.focus();
+      }
+    };
+
+    moreButton.addEventListener('click', () => {
+      menu.hidden = false;
+      document.body.classList.add('admin-body--menu-open');
+      moreButton.setAttribute('aria-expanded', 'true');
+      panel.querySelector('.admin-mobile-menu__close').focus();
+    });
+
+    menu.querySelectorAll('[data-mobile-menu-close]').forEach((button) => {
+      button.addEventListener('click', () => closeMenu());
+    });
+
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMenu();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusables = Array.from(panel.querySelectorAll('a[href], button:not(:disabled)'));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    window.matchMedia('(min-width: 701px)').addEventListener('change', (event) => {
+      if (event.matches) closeMenu(false);
     });
   }
 
