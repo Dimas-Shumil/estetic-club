@@ -1740,6 +1740,11 @@ const publicStaticOptions = {
   redirect: false,
 };
 
+app.get('/pwa-sw.js', (req, res) => {
+  res.set('Cache-Control', 'no-cache');
+  return res.sendFile(path.join(PUBLIC_DIR, 'pwa-sw.js'));
+});
+
 app.use('/site', express.static(SITE_DIR, publicStaticOptions));
 app.use('/public', express.static(PUBLIC_DIR, publicStaticOptions));
 
