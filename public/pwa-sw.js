@@ -1,6 +1,6 @@
 // Public PWA only. Admin push keeps its own /admin/ registration.
-const CACHE = 'etika-public-pwa-v1';
-const SHELL = ['/offline.html', '/site/css/pwa.css', '/pwa/icon-192.png'];
+const CACHE = 'etika-public-pwa-v2';
+const SHELL = ['/offline.html', '/site/css/pwa.css', '/pwa/icon-brown-192.png'];
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
   await cache.addAll(SHELL);

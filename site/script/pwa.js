@@ -24,7 +24,7 @@
     banner = document.createElement('aside');
     banner.className = 'pwa-banner';
     banner.setAttribute('aria-label', 'Установка приложения');
-    banner.innerHTML = `<div class="pwa-banner__inner"><img class="pwa-banner__icon" src="/pwa/icon-192.png" alt="" width="48" height="48"><div class="pwa-banner__copy"><strong>Этика волос — всегда рядом</strong><p>Установите приложение для удобной записи к мастеру.</p><p class="pwa-banner__help" hidden role="status"></p></div><div class="pwa-banner__actions"><button type="button" class="pwa-banner__install">Установить</button><button type="button" class="pwa-banner__later">Позже</button></div></div>`;
+    banner.innerHTML = `<div class="pwa-banner__inner"><img class="pwa-banner__icon" src="/pwa/icon-brown-192.png" alt="" width="48" height="48"><div class="pwa-banner__copy"><strong>Этика волос — всегда рядом</strong><p>Установите приложение для удобной записи к мастеру.</p><p class="pwa-banner__help" hidden role="status"></p></div><div class="pwa-banner__actions"><button type="button" class="pwa-banner__install">Установить</button><button type="button" class="pwa-banner__later">Позже</button></div></div>`;
     document.body.prepend(banner);
     document.documentElement.classList.add('has-pwa-banner');
     const measure = () => document.documentElement.style.setProperty('--pwa-banner-height', `${Math.ceil(banner.getBoundingClientRect().height)}px`);
