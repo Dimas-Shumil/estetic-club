@@ -288,6 +288,7 @@ function initBlogArticles() {
   }
 
   function renderPosts() {
+    blogCardRevealCleanups.get(grid)?.();
     const filteredPosts =
       state.activeFilter === 'all'
         ? state.posts
@@ -508,39 +509,106 @@ function initBlogCardImages(container) {
   });
 }
 
+const blogCardRevealCleanups = new WeakMap();
+
 function revealBlogCards(container) {
-  const cards = container.querySelectorAll('.js-blog-card');
+  blogCardRevealCleanups.get(container)?.();
+  const cards = Array.from(container.querySelectorAll('.js-blog-card'));
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (!cards.length) {
+  // Без поддержки анимации содержимое остаётся видимым по умолчанию.
+  if (!cards.length || motion.matches ||
+      !('IntersectionObserver' in window) || !Element.prototype.animate) {
     return;
   }
 
-  const prefersReducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)',
-  ).matches;
+  const pending = new Set(cards);
+  const animations = new Set();
+  const parts = cards.map((card) => ({
+    card,
+    link: card.querySelector('.blog-card__link'),
+    body: card.querySelector('.blog-card__body'),
+  }));
+  let observer;
 
-  if (!window.gsap || prefersReducedMotion) {
-    cards.forEach((card) => {
-      card.style.opacity = '1';
+  const reset = ({ link, body }) => {
+    if (link) link.style.removeProperty('clip-path');
+    if (body) body.style.removeProperty('opacity');
+  };
+  const cleanup = () => {
+    observer?.disconnect();
+    animations.forEach((animation) => animation.cancel());
+    animations.clear();
+    pending.clear();
+    parts.forEach(reset);
+    container.removeEventListener('focusin', onFocus);
+    motion.removeEventListener('change', onMotionChange);
+    blogCardRevealCleanups.delete(container);
+  };
+  const play = (element, frames, options) => {
+    const animation = element.animate(frames, options);
+    animations.add(animation);
+    animation.onfinish = () => {
+      animations.delete(animation);
+      animation.cancel();
+    };
+  };
+  const reveal = (card, delay = 0, immediate = false) => {
+    if (!pending.delete(card)) return;
+    observer?.unobserve(card);
+    const part = parts.find((item) => item.card === card);
+    if (!part) return;
+    reset(part);
+    if (immediate) return;
+    const timing = {
+      duration: 1050,
+      delay,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      fill: 'backwards',
+    };
+    if (part.link) {
+      play(part.link, [
+        { clipPath: 'inset(100% 0 0 0)', translate: '0 42px' },
+        { clipPath: 'inset(0% 0 0 0)', translate: '0 0' },
+      ], timing);
+    }
+    if (part.body) {
+      play(part.body, [
+        { opacity: 0, translate: '0 18px' },
+        { opacity: 1, translate: '0 0' },
+      ], { ...timing, duration: 650, delay: delay + 400 });
+    }
+  };
+  function onFocus(event) {
+    const card = event.target.closest('.js-blog-card');
+    if (card && container.contains(card)) {
+      // Клавиатурный фокус никогда не попадает в скрытую карточку.
+      animations.forEach((animation) => animation.finish());
+      reveal(card, 0, true);
+    }
+  }
+  function onMotionChange(event) {
+    if (event.matches) cleanup();
+  }
 
-      card.style.transform = 'translateY(0)';
+  try {
+    observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting);
+      visible.sort((a, b) => cards.indexOf(a.target) - cards.indexOf(b.target));
+      visible.forEach((entry, index) => reveal(entry.target, Math.min(index, 3) * 130));
+    }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+    parts.forEach((part) => {
+      if (part.link) part.link.style.clipPath = 'inset(100% 0 0 0)';
+      if (part.body) part.body.style.opacity = '0';
+      observer.observe(part.card);
     });
-
-    return;
+    container.addEventListener('focusin', onFocus);
+    motion.addEventListener('change', onMotionChange);
+    blogCardRevealCleanups.set(container, cleanup);
+  } catch (error) {
+    cleanup();
+    console.warn('Анимация статей недоступна:', error);
   }
-
-  window.gsap.set(cards, {
-    y: 28,
-    autoAlpha: 0,
-  });
-
-  window.gsap.to(cards, {
-    y: 0,
-    autoAlpha: 1,
-    duration: 0.85,
-    stagger: 0.08,
-    ease: 'power3.out',
-  });
 }
 
 function normalizeCategorySlug(value) {
